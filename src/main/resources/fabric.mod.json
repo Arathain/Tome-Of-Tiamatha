@@ -3,27 +3,30 @@
   "id": "modid",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Tome Of T'Matha",
+  "description": "GoG 2: Electric Boogaloo",
   "authors": [
-    "Me!"
+    "Arathain",
+    "punic"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/Arathain/Tome-Of-Tiamatha"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/tot/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "net.arathain.tot.TomeOfTiamatha"
+    ],
+    "client": [
+      "net.arathain.tot.client.TomeOfTiamathaClient"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "tot.mixins.json"
   ],
 
   "depends": {
@@ -33,6 +36,6 @@
     "java": ">=17"
   },
   "suggests": {
-    "another-mod": "*"
+
   }
 }
