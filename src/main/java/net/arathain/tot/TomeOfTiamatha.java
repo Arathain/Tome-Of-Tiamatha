@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.bernie.geckolib3.GeckoLib;
 
 public class TomeOfTiamatha implements ModInitializer {
 	public static String MODID = "tot";
@@ -17,5 +18,6 @@ public class TomeOfTiamatha implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ToTObjects.init();
+		GeckoLib.initialize();
 	}
 }
