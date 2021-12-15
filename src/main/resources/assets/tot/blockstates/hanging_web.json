@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "attached=false": {
+      "model": "tot:block/hanging_web"
+    },
+    "attached=true": {
+      "model": "tot:block/hanging_web_attached"
+    }
+  }
+}
