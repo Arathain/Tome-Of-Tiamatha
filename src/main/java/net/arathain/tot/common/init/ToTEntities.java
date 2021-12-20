@@ -14,10 +14,8 @@ import java.util.Map;
 
 public class ToTEntities {
     private static final Map<EntityType<?>, Identifier> ENTITY_TYPES = new LinkedHashMap<>();
-
-
     //entities
-    public static final EntityType<DriderEntity> DRIDER = createEntity("drider", DriderEntity.createDriderAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, DriderEntity::new).dimensions(EntityDimensions.fixed(1.3F, 1.3F)).build());
+    public static final EntityType<DriderEntity> DRIDER = createEntity("drider", DriderEntity.createDriderAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, DriderEntity::new).dimensions(EntityDimensions.fixed(0.9F, 1.4F)).build());
 
     private static <T extends Entity> EntityType<T> createEntity(String name, EntityType<T> type) {
         ENTITY_TYPES.put(type, new Identifier(TomeOfTiamatha.MODID, name));

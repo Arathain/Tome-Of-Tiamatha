@@ -4,9 +4,11 @@
   "package": "net.arathain.tot.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "PlayerEntityMixin"
   ],
   "client": [
-
+    "InventoryScreenMixin",
+    "PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

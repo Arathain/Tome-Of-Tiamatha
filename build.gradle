@@ -24,6 +24,24 @@ repositories {
 		url = 'https://oss.sonatype.org/content/repositories/snapshots'
 	}
 	maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+	maven {
+		url = "https://jitpack.io"
+	}
+	maven {
+		name "reach entity attributes"
+		url "https://maven.jamieswhiteshirt.com/libs-release"
+		content {
+			includeGroup "com.jamieswhiteshirt"
+		}
+	}
+	maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com/releases"
+		content {
+			includeGroup 'com.terraformersmc'
+			includeGroup 'dev.emi'
+		}
+	}
 }
 
 dependencies {
@@ -32,13 +50,23 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.22'
+	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modCompileOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
+	modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
+	modImplementation "io.github.ladysnake:locki:${project.locki_version}"
+	include "io.github.ladysnake:locki:${project.locki_version}"
+
+	include "me.lucko:fabric-permissions-api:${project.fpa_version}"
+	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 
 }
 

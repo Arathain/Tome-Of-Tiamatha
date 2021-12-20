@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 
 public class DriderEntity extends SpiderEntity implements IAnimatable {
     private final AnimationFactory factory = new AnimationFactory(this);
-    private static final TrackedData<String> TYPE = DataTracker.registerData(DriderEntity.class, TrackedDataHandlerRegistry.STRING);
+    public static final TrackedData<String> TYPE = DataTracker.registerData(DriderEntity.class, TrackedDataHandlerRegistry.STRING);
 
 
     public static DefaultAttributeContainer.Builder createDriderAttributes() {

@@ -39,7 +39,7 @@
 				{
 					"name": "head",
 					"parent": "torso",
-					"pivot": [0, 8, -4],
+					"pivot": [0, 18, -4],
 					"cubes": [
 						{"origin": [-3, 18, -7], "size": [6, 6, 6], "uv": [0, 0]},
 						{"origin": [-3, 18, -7], "size": [6, 6, 6], "inflate": 0.3, "uv": [24, 0]}
@@ -48,7 +48,7 @@
 				{
 					"name": "headdress",
 					"parent": "head",
-					"pivot": [0, 8, -4],
+					"pivot": [0, 18, -4],
 					"cubes": [
 						{"origin": [-3, 18, -7], "size": [6, 6, 6], "inflate": 0.4, "uv": [51, 0]},
 						{"origin": [-4, 21, -2], "size": [8, 8, 0], "pivot": [0, 19, -2], "rotation": [-12.5, 0, 0], "uv": [75, 0]}

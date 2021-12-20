@@ -21,6 +21,7 @@ public class ToTObjects {
 
     //registry starts here
     public static final Block HANGING_WEB = createBlock("hanging_web", new HangingWebBlock(FabricBlockSettings.of(Material.COBWEB).noCollision().requiresTool().strength(4.0F).nonOpaque()), true);
+    public static final Item SPELLWOVEN_STEEL_INGOT = createItem("spellwoven_steel_ingot", new Item(new Item.Settings().group(TomeOfTiamatha.GROUP)));
     //registry end here
 
     //funky bits (do not touch)
