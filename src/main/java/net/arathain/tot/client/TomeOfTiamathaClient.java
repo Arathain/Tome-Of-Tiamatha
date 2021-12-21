@@ -27,7 +27,6 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
             public void onEndTick(ClientWorld world) {
                 PlayerEntity player = MinecraftClient.getInstance().player;
                 if (player != null && player.hasStatusEffect(ToTEffects.BROODS_CURSE) && player.getStatusEffect(ToTEffects.BROODS_CURSE).getDuration() < 80 && !ToTComponents.DRIDER_COMPONENT.get(player).isDrider()) {
-                    player.removeStatusEffect(ToTEffects.BROODS_CURSE);
                     DriderComponentPacket.send();
 
                 }

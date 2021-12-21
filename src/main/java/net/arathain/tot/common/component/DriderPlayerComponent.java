@@ -28,6 +28,7 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
     private final PlayerEntity obj;
     private DriderEntity.Type variant = DriderEntity.Type.DARK;
     private boolean drider = false;
+    private int stage = 0;
 
     public DriderPlayerComponent(PlayerEntity obj) {
         this.obj = obj;
@@ -39,6 +40,13 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
 
     public DriderEntity.Type getVariant() {
         return variant;
+    }
+    public int getStage() {
+        return stage;
+    }
+    public void setStage(int newStage) {
+        stage = newStage;
+        ToTComponents.DRIDER_COMPONENT.sync(obj);
     }
 
     public void setVariant(DriderEntity.Type variant) {
@@ -99,6 +107,7 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
         if (tag.contains("Type")) {
             this.setVariant(DriderEntity.Type.valueOf(tag.getString("Type")));
         }
+        setStage(tag.getInt("stage"));
     }
 
     @Override
@@ -107,6 +116,7 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
         if(this.getVariant() != null) {
             tag.putString("Type", this.getVariant().toString());
         }
+        tag.putInt("stage", this.getStage());
     }
 
 }
