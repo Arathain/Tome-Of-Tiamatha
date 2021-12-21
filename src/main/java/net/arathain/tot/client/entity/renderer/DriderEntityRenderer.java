@@ -3,10 +3,10 @@ package net.arathain.tot.client.entity.renderer;
 import net.arathain.tot.client.entity.model.DriderEntityModel;
 import net.arathain.tot.common.entity.DriderEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
@@ -47,9 +46,10 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
         }
         if (bone.getName().equals("leftItem")) {
             stack.push();
-            stack.translate(-1,0,0);
-            stack.scale(0.5f, 0.5f, 0.5f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(offStack, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+            stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
+            stack.scale(0.6f, 0.6f, 0.6f);
+            stack.translate(-0.35,0.6,1.1f);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(offStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
         }
