@@ -1,15 +1,8 @@
 package net.arathain.tot.client.entity.model;
 
-import io.github.ladysnake.locki.DefaultInventoryNodes;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.DriderEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.CrossbowPosing;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
@@ -26,7 +19,7 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
 
     @Override
     public Identifier getTextureLocation(DriderEntity object) {
-        return new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider_" + object.getDriderType().toString().toLowerCase() + ".png");
+        return new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/drider_" + object.getDriderType().toString().toLowerCase() + ".png");
     }
 
     @Override
@@ -40,15 +33,15 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
         IBone head = this.getAnimationProcessor().getBone("head");
         IBone headDress = this.getAnimationProcessor().getBone("headdress");
         IBone armor = this.getAnimationProcessor().getBone("armor");
-        IBone glove1 = this.getAnimationProcessor().getBone("glove");
+        IBone glove1 = this.getAnimationProcessor().getBone("glove1");
         IBone glove2 = this.getAnimationProcessor().getBone("glove2");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        IBone leftarm = this.getAnimationProcessor().getBone("leftarm");
-        IBone rightarm = this.getAnimationProcessor().getBone("rightarm");
+        IBone leftarm = this.getAnimationProcessor().getBone("leftArm");
+        IBone rightarm = this.getAnimationProcessor().getBone("rightArm");
         headDress.setHidden(entity.getEquippedStack(EquipmentSlot.HEAD).isEmpty());
         armor.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
-        glove1.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
         glove2.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
+        glove1.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
 
         if (head != null) {
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));

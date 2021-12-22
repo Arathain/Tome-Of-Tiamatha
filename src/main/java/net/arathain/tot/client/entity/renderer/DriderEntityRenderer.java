@@ -1,6 +1,8 @@
 package net.arathain.tot.client.entity.renderer;
 
 import net.arathain.tot.client.entity.model.DriderEntityModel;
+import net.arathain.tot.client.entity.renderer.layer.DriderChestplateLayer;
+import net.arathain.tot.client.entity.renderer.layer.DriderHelmetLayer;
 import net.arathain.tot.common.entity.DriderEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
@@ -22,6 +24,8 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
     private VertexConsumerProvider vertexConsumerProvider;
     public DriderEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new DriderEntityModel());
+        this.addLayer(new DriderHelmetLayer(this));
+        this.addLayer(new DriderChestplateLayer(this));
     }
 
     @Override

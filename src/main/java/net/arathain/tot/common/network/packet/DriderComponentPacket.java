@@ -1,7 +1,5 @@
 package net.arathain.tot.common.network.packet;
 
-import io.github.ladysnake.locki.DefaultInventoryNodes;
-import io.github.ladysnake.locki.InventoryLock;
 import io.netty.buffer.Unpooled;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.init.ToTComponents;
@@ -10,20 +8,15 @@ import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.init.ToTScaleTypes;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import virtuoel.pehkui.api.ScaleData;
-
-import java.util.Objects;
 
 public class DriderComponentPacket {
     public static final Identifier ID = new Identifier(TomeOfTiamatha.MODID, "drider");

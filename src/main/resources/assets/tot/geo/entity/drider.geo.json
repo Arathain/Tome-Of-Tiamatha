@@ -55,7 +55,7 @@
 					]
 				},
 				{
-					"name": "rightarm",
+					"name": "rightArm",
 					"parent": "torso",
 					"pivot": [-3, 17, -4],
 					"rotation": [0, 0, 5],
@@ -64,20 +64,20 @@
 					]
 				},
 				{
-					"name": "glove",
-					"parent": "rightarm",
+					"name": "glove1",
+					"parent": "leftArm",
 					"pivot": [-3, 17, -4],
 					"cubes": [
-						{"origin": [-4.5, 10, -5], "size": [2, 8, 2], "inflate": 0.2, "uv": [36, 22]}
+						{"origin": [2.5, 10, -5], "size": [2, 8, 2], "inflate": 0.2, "uv": [36, 22]}
 					]
 				},
 				{
 					"name": "rightItem",
-					"parent": "rightarm",
+					"parent": "rightArm",
 					"pivot": [-3, 11, -4]
 				},
 				{
-					"name": "leftarm",
+					"name": "leftArm",
 					"parent": "torso",
 					"pivot": [3, 17, -4],
 					"rotation": [0, 0, -5],
@@ -87,15 +87,15 @@
 				},
 				{
 					"name": "glove2",
-					"parent": "leftarm",
+					"parent": "rightArm",
 					"pivot": [3, 17, -4],
 					"cubes": [
-						{"origin": [2.5, 10, -5], "size": [2, 8, 2], "inflate": 0.1, "uv": [44, 22]}
+						{"origin": [-4.5, 10, -5], "size": [2, 8, 2], "inflate": 0.2, "uv": [36, 22]}
 					]
 				},
 				{
 					"name": "leftItem",
-					"parent": "leftarm",
+					"parent": "leftArm",
 					"pivot": [3, 11, -4]
 				},
 				{
