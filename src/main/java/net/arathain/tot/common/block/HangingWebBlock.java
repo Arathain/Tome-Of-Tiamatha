@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
-public class HangingWebBlock extends Block {
+public class HangingWebBlock extends CobwebBlock {
     private static final BooleanProperty ATTACHED = Properties.ATTACHED;
 
     public HangingWebBlock(Settings settings) {

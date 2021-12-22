@@ -86,7 +86,7 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
             attackRange.addPersistentModifier(DRIDER_ATTACK_RANGE_MODIFIER);
             reach.addPersistentModifier(DRIDER_REACH_MODIFIER);
             if(!obj.world.isClient) {
-                TomeOfTiamatha.DRIDER_LOCK.lock(obj, DefaultInventoryNodes.INVENTORY);
+                TomeOfTiamatha.DRIDER_LOCK.lock(obj, DefaultInventoryNodes.LEGS);
                 TomeOfTiamatha.DRIDER_LOCK.lock(obj, DefaultInventoryNodes.FEET);
             }
         }
