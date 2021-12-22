@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "tot:block/hanging_web"
+    "layer0": "tot:item/silksteel_chestplate"
   }
 }
