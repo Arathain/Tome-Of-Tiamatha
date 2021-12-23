@@ -8,7 +8,6 @@ import net.arathain.tot.common.entity.spider.IClimberEntity;
 import net.arathain.tot.common.entity.spider.IEntityMovementHook;
 import net.arathain.tot.common.entity.spider.Orientation;
 import net.arathain.tot.common.entity.spider.PathingTarget;
-import net.fabricmc.fabric.mixin.networking.accessor.ThreadedAnvilChunkStorageAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
@@ -30,22 +29,23 @@ import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.CollisionView;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.util.shape.ArrayVoxelShape;
+
 import java.lang.invoke.MethodHandles;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -371,9 +371,9 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         }
 
         if(closestFacing == null) {
-            this.groundDirection = Pair.of(Direction.DOWN, new Vec3d(0, -1, 0));
+            this.groundDirection = new Pair<>(Direction.DOWN, new Vec3d(0, -1, 0));
         } else {
-            this.groundDirection = Pair.of(closestFacing, new Vec3d(weighting.normalize().add(0, -0.001f, 0).normalize().x, weighting.normalize().add(0, -0.001f, 0).normalize().y, weighting.normalize().add(0, -0.001f, 0).normalize().z));
+            this.groundDirection = new Pair<>(closestFacing, new Vec3d(weighting.normalize().add(0, -0.001f, 0).normalize().x, weighting.normalize().add(0, -0.001f, 0).normalize().y, weighting.normalize().add(0, -0.001f, 0).normalize().z));
         }
     }
 
@@ -389,7 +389,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
 
     @Override
     public Direction getGroundSide() {
-        return this.groundDirection.getKey();
+        return this.groundDirection.getLeft();
     }
 
     @Override
@@ -430,10 +430,6 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
     @Override
     public void tick() {
         if(!this.world.isClient() && this.world instanceof ServerWorld) {
-            (ThreadedAnvilChunkStorage.EntityTracker) EntityTrackerAccessor entityTracker = ((ThreadedAnvilChunkStorageAccessor)((ServerWorld) this.world).getChunkManager().threadedAnvilChunkStorage).getEntityTrackers().get(this.getId());
-
-            //Prevent premature syncing of position causing overly smoothed movement
-            if(entityTracker != null && entityTracker.entry.updateCounter % entityTracker.entry.updateFrequency == 0) {
                 Orientation orientation = this.getOrientation();
 
                 Vec3d look = orientation.getGlobal(this.getYaw(), this.getPitch());
@@ -498,7 +494,6 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
                     }
                 }
             }
-        }
         super.tick();
     }
 
@@ -561,7 +556,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
     private void forEachClimbableCollisonBox(Box aabb, VoxelShapes.BoxConsumer action) {
         CollisionView cachedCollisionReader = new CachedCollisionView(this.world, aabb);
 
-        Stream<VoxelShape> shapes = StreamSupport.stream(new VoxelShapeSpliterator(cachedCollisionReader, this, aabb, this::canClimbOnBlock);
+        Stream<VoxelShape> shapes = StreamSupport.stream(cachedCollisionReader.getEntityCollisions(this, aabb).stream().spliterator(), false);
 
         shapes.forEach(shape ->shape.forEachBox(action));
 
@@ -602,7 +597,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
             //get stuck in an incorrect orientation
             if(this.groundDirection != null) {
                 double groundDirectionBlend = 0.25D;
-                Vec3d scaledGroundDirection = this.groundDirection.getValue().multiply(groundDirectionBlend);
+                Vec3d scaledGroundDirection = this.groundDirection.getRight().multiply(groundDirectionBlend);
                 pp = pp.add(scaledGroundDirection.multiply(-1));
                 pn = pn.multiply(1.0D - groundDirectionBlend).add(scaledGroundDirection);
             }
@@ -663,8 +658,8 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         this.prevYaw = this.wrapAngleInRange(this.prevYaw/* + yawDelta*/, this.bodyYaw);
         this.serverYaw = MathHelper.wrapDegrees(this.serverYaw + yawDelta);
 
-        this.renderYawOffset = MathHelper.wrapDegrees(this.renderYawOffset + yawDelta);
-        this.prevRenderYawOffset = this.wrapAngleInRange(this.prevRenderYawOffset/* + yawDelta*/, this.renderYawOffset);
+        this.orientationYawDelta = MathHelper.wrapDegrees(this.orientationYawDelta  + yawDelta);
+        this.prevOrientationYawDelta = this.wrapAngleInRange(this.prevOrientationYawDelta/* + yawDelta*/, this.orientationYawDelta);
 
         this.headYaw = MathHelper.wrapDegrees(this.headYaw + yawDelta);
         this.prevHeadYaw = this.wrapAngleInRange(this.prevHeadYaw/* + yawDelta*/, this.headYaw);
@@ -716,68 +711,69 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         m.multiply(new Matrix4f(new Quaternion((float) Math.toRadians(yaw), 0, 1, 0)));
         m.multiply(new Matrix4f(new Quaternion((float) Math.toRadians(pitch), 1, 0, 0)));
         m.multiply(new Matrix4f(new Quaternion((float) Math.toRadians((float) Math.signum(0.5f - componentY - componentZ - componentX) * yaw), 0, 1, 0)));
-
-        localZ = m.multiply(Quaternion.fromEulerXyz(new Vec3d(0, 0, -1)));
-        localY = m.multiply(new Vec3d(0, 1, 0));
-        localX = m.multiply(new Vec3d(1, 0, 0));
+        float a = 0;
+        float b = 0;
+        float c = -1;
+        float d = 0;
+        float e = 1;
+        float f = 0;
+        float g = 1;
+        float h = 0;
+        float i = 0;
+        m.multiplyByTranslation(a, b, c);
+        m.multiplyByTranslation(d, e, f);
+        m.multiplyByTranslation(g, h, i);
+        localZ= new Vec3d(a, b, c);
+        localY = new Vec3d(d, e, f);
+        localX = new Vec3d(g, h, i);
 
         return new Orientation(attachmentNormal, localZ, localY, localX, componentZ, componentY, componentX, yaw, pitch);
     }
 
-    @Override
+    //@Override
     public float getServerYaw(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-        return (float) this.interpTargetYaw;
+        return (float) this.serverYaw;
     }
 
-    @Override
+    //@Override
     public float getTargetPitch(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-        return (float) this.interpTargetPitch;
+        return (float) this.serverPitch;
     }
 
-    @Override
+    //@Override
     public float getTargetHeadYaw(float yaw, int rotationIncrements) {
-        return (float) this.interpTargetHeadYaw;
+        return (float) this.serverHeadYaw;
     }
 
+
     @Override
-    public void onNotifyChange(TrackedData<?> key) {
-        if(ROTATION_BODY.equals(key)) {
+    public void onTrackedDataSet(TrackedData<?> data) {
+        if(ROTATION_BODY.equals(data)) {
             EulerAngle rotation = this.dataTracker.get(ROTATION_BODY);
-            Vec3d look = new Vec3d(rotation.getX(), rotation.getY(), rotation.getZ());
+            Vec3d look = new Vec3d(rotation.getWrappedPitch(), rotation.getWrappedYaw(), rotation.getWrappedRoll());
 
-            Pair<Float, Float> eulerAngle = this.getOrientation().getLocalRotation(look);
+            net.minecraft.util.Pair<Float, Float> eulerAngle = this.getOrientation().getLocalRotation(look);
 
-            this.interpTargetYaw = eulerAngle.getLeft();
-            this.interpTargetPitch = eulerAngle.getRight();
-        } else if(ROTATION_HEAD.equals(key)) {
+            this.serverYaw = eulerAngle.getLeft();
+            this.serverPitch = eulerAngle.getRight();
+        } else if(ROTATION_HEAD.equals(data)) {
             EulerAngle rotation = this.dataTracker.get(ROTATION_HEAD);
-            Vec3d look = new Vec3d(rotation.getX(), rotation.getY(), rotation.getZ());
+            Vec3d look = new Vec3d(rotation.getWrappedPitch(), rotation.getWrappedYaw(), rotation.getWrappedRoll());
 
             Pair<Float, Float> eulerAngle = this.getOrientation().getLocalRotation(look);
 
-            this.interpTargetHeadYaw = eulerAngle.getLeft();
-            this.interpTicksHead = 3;
+            this.serverHeadYaw = eulerAngle.getLeft();
+            this.headTrackingIncrements = 3;
         }
     }
+
 
     private double getGravity() {
         if(this.hasNoGravity()) {
             return 0;
+        } else {
+            return 0.32;
         }
-
-        ModifiableAttributeInstance gravity = this.getAttribute(net.minecraftforge.common.ForgeMod.ENTITY_GRAVITY.get());
-
-        boolean isFalling = this.getVelocity().y <= 0.0D;
-
-        if(isFalling && this.hasStatusEffect(Effects.SLOW_FALLING)) {
-            if(!gravity.hasModifier(SLOW_FALLING)) {
-                gravity.func_233767_b_(SLOW_FALLING);
-            }
-        } else if(gravity.hasModifier(SLOW_FALLING)) {
-            gravity.removeModifier(SLOW_FALLING);
-        }
-
-        return gravity.getValue();
     }
 
     private Vec3d getStickingForce(Pair<Direction, Vec3d> walkingSide) {
@@ -787,12 +783,12 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         return walkingSide.getRight().multiply(stickingForce);
     }
 
-    @Override
+    //@Override
     public void setJumpDirection(Vec3d dir) {
         this.jumpDir = dir != null ? dir.normalize() : null;
     }
 
-    @Override
+    //@Override
     public boolean onJump() {
         if(this.jumpDir != null) {
             float jumpStrength = this.getJumpVelocity();
@@ -812,8 +808,8 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
                 this.setVelocity(this.getVelocity().add(boost));
             }
 
-            this.isAirBorne = true;
-            net.minecraftforge.common.ForgeHooks.onLivingJump(this);
+            this.onGround = false;
+            //net.minecraftforge.common.ForgeHooks.onLivingJump(this);
 
             return true;
         }
@@ -821,7 +817,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         return false;
     }
 
-    @Override
+    //@Override
     public boolean onTravel(Vec3d relative, boolean pre) {
         if(pre) {
             boolean canTravel = !this.getWorld().isClient || this.canBeControlledByRider();
@@ -830,13 +826,13 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
 
             FluidState fluidState = this.world.getFluidState(this.getBlockPos());
 
-            if(!this.canClimbInWater && this.isInsideWaterOrBubbleColumn() && this.isPushedByFluids() && !this.func_230285_a_(fluidState.getFluid())) {
+            if(!this.canClimbInWater && this.isInsideWaterOrBubbleColumn() && this.isPushedByFluids() && !this.canWalkOnFluid(fluidState.getFluid())) {
                 this.isClimbingDisabled = true;
 
                 if(canTravel) {
                     return false;
                 }
-            } else if(!this.canClimbInLava && this.isInLava() && this.isPushedByFluids() && !this.func_230285_a_(fluidState.getFluid())) {
+            } else if(!this.canClimbInLava && this.isInLava() && this.isPushedByFluids() && !this.canWalkOnFluid(fluidState.getFluid())) {
                 this.isClimbingDisabled = true;
 
                 if(canTravel) {
@@ -847,7 +843,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
             }
 
             if(!canTravel) {
-                this.func_233629_a_(this, true);
+                this.updateLimbs(this, true);
             }
 
             this.updateOffsetsAndOrientation();
@@ -978,10 +974,10 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
             this.stepHeight = 0;
 
             boolean prevOnGround = this.onGround;
-            boolean prevCollidedHorizontally = this.collidedHorizontally;
-            boolean prevCollidedVertically = this.collidedVertically;
+            boolean prevCollidedHorizontally = this.horizontalCollision;
+            boolean prevCollidedVertically = this.verticalCollision;
 
-            //Offset so that AABB is moved above the new surface
+            //Offset so that Box is moved above the new surface
             this.move(MovementType.SELF, new Vec3d(detachedX ? -this.prevAttachedSides.x * 0.25f : 0, detachedY ? -this.prevAttachedSides.y * 0.25f : 0, detachedZ ? -this.prevAttachedSides.z * 0.25f : 0));
 
             Vec3d axis = this.prevAttachedSides.normalize();
@@ -1014,14 +1010,14 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
                 this.calculateBoundingBox();
                 this.setVelocity(motion);
                 this.onGround = prevOnGround;
-                this.collidedHorizontally = prevCollidedHorizontally;
-                this.collidedVertically = prevCollidedVertically;
+                this.horizontalCollision = prevCollidedHorizontally;
+                this.verticalCollision = prevCollidedVertically;
             } else {
                 this.setVelocity(Vec3d.ZERO);
             }
         }
 
-        this.func_233629_a_(this, true);
+        this.updateLimbs(this, true);
     }
 
 
@@ -1033,10 +1029,10 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
             this.preMoveY = this.getY();
         } else {
             if(Math.abs(this.getY() - this.preMoveY - pos.y) > 0.000001D) {
-                this.setVelocity(this.getVelocity().mul(1, 0, 1));
+                this.setVelocity(this.getVelocity().multiply(1, 0, 1));
             }
 
-            this.onGround |= this.collidedHorizontally || this.collidedVertically;
+            this.onGround |= this.horizontalCollision || this.verticalCollision;
         }
 
         return false;
@@ -1081,12 +1077,12 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
 
             Vec3d tangentialMovement = moved.subtract(this.attachmentNormal.multiply(this.attachmentNormal.dotProduct(moved)));
 
-            this.distanceWalkedModified = (float) ((double) this.distanceWalkedModified + tangentialMovement.length() * 0.6D);
+            this.distanceTraveled = (float) ((double) this.distanceTraveled + tangentialMovement.length() * 0.6D);
 
-            this.distanceWalkedOnStepModified = (float) ((double) this.distanceWalkedOnStepModified + (double) MathHelper.sqrt(dx * dx + dy * dy + dz * dz) * 0.6D);
+            this.nextStepDistance = (float) ((double) this.nextStepDistance + (double) MathHelper.sqrt((float) (dx * dx + dy * dy + dz * dz)) * 0.6D);
 
-            if(this.distanceWalkedOnStepModified > this.nextStepDistance && !state.isAir(this.world, pos)) {
-                this.nextStepDistance = this.determineNextStepDistance();
+            if(this.nextStepDistance > this.nextStepDistance && !state.isAir()) {
+                this.nextStepDistance = this.calculateNextStepSoundDistance();
 
                 if(this.isInsideWaterOrBubbleColumn()) {
                     Entity controller = this.hasPassengers() && this.getPrimaryPassenger() != null ? this.getPrimaryPassenger() : this;
@@ -1095,7 +1091,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
 
                     Vec3d motion = controller.getVelocity();
 
-                    float swimStrength = MathHelper.sqrt(motion.x * motion.x * (double) 0.2F + motion.y * motion.y + motion.z * motion.z * 0.2F) * multiplier;
+                    float swimStrength = MathHelper.sqrt((float) (motion.x * motion.x * (double) 0.2F + motion.y * motion.y + motion.z * motion.z * 0.2F)) * multiplier;
                     if(swimStrength > 1.0F) {
                         swimStrength = 1.0F;
                     }
@@ -1104,8 +1100,8 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
                 } else {
                     this.playStepSound(pos, state);
                 }
-            } else if(this.distanceWalkedOnStepModified > this.nextFlap && this.makeFlySound() && state.isAir(this.world, pos)) {
-                this.nextFlap = this.playFlySound(this.distanceWalkedOnStepModified);
+            } else if(this.nextStepDistance > this.nextFlap && state.isAir()) {
+                this.nextFlap = this.calculateNextStepSoundDistance();
             }
         }
 

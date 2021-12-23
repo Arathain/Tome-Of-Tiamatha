@@ -4,6 +4,7 @@ import net.arathain.tot.common.entity.spider.IClimberEntity;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.ai.control.JumpControl;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
 
@@ -11,7 +12,7 @@ public class ClimberJumpControl<T extends MobEntity & IClimberEntity> extends Ju
     protected final T climber;
 
     @Nullable
-    protected Vector3d dir;
+    protected Vec3d dir;
 
 
     public ClimberJumpControl(MobEntity entity) {
@@ -24,7 +25,7 @@ public class ClimberJumpControl<T extends MobEntity & IClimberEntity> extends Ju
         this.setJumping(null);
     }
 
-    public void setJumping(Vector3d dir) {
+    public void setJumping(Vec3d dir) {
         super.setActive();
         this.dir = dir;
     }

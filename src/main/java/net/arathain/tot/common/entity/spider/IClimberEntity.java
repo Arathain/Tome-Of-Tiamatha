@@ -2,11 +2,10 @@ package net.arathain.tot.common.entity.spider;
 
 import net.arathain.tot.common.entity.movement.IAdvancedPathfindingEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.util.Pair;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -33,7 +32,7 @@ public interface IClimberEntity extends IAdvancedPathfindingEntity {
     public boolean shouldTrackPathingTargets();
 
     @Nullable
-    public Vector3d getTrackedMovementTarget();
+    public Vec3d getTrackedMovementTarget();
 
     @Nullable
     public List<PathingTarget> getTrackedPathingTargets();
@@ -62,5 +61,5 @@ public interface IClimberEntity extends IAdvancedPathfindingEntity {
 
     public void setCollisionsSmoothingRange(float range);
 
-    public void setJumpDirection(@Nullable Vector3d dir);
+    public void setJumpDirection(@Nullable Vec3d dir);
 }

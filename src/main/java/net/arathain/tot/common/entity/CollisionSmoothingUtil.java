@@ -5,7 +5,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.util.Pair;;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -198,7 +198,7 @@ public class CollisionSmoothingUtil {
             pz += gz * step;
 
             if(absDst < threshold) {
-                return Pair.of(new Vec3d(p.x + px, p.y + py, p.z + pz), new Vec3d(-gx, -gy, -gz).normalize());
+                return new Pair<>(new Vec3d(p.x + px, p.y + py, p.z + pz), new Vec3d(-gx, -gy, -gz).normalize());
             }
         }
 

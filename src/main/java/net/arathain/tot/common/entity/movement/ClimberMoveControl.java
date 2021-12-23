@@ -200,7 +200,7 @@ public class ClimberMoveControl<T extends MobEntity & IClimberEntity> extends Mo
 
             Direction groundDir = ((IClimberEntity) this.entity).getGroundDirection().getLeft();
 
-            Vector3d jumpDir = null;
+            Vec3d jumpDir = null;
 
             if(this.side != null && verticalOffset > reach - 0.05f && groundDir != this.side && groundDir.getAxis() != this.side.getAxis()) {
                 double hdx = (1 - Math.abs(mainOffsetDir.getOffsetX())) * dx;
@@ -214,7 +214,7 @@ public class ClimberMoveControl<T extends MobEntity & IClimberEntity> extends Mo
                     dz -= this.side.getOffsetZ() * 0.2f;
 
                     if(hdsq < 0.1f) {
-                        jumpDir = new Vector3d(mainOffsetDir.getOffsetX(), mainOffsetDir.getOffsetY(), mainOffsetDir.getOffsetZ());
+                        jumpDir = new Vec3d(mainOffsetDir.getOffsetX(), mainOffsetDir.getOffsetY(), mainOffsetDir.getOffsetZ());
                     }
                 }
             }
@@ -238,11 +238,11 @@ public class ClimberMoveControl<T extends MobEntity & IClimberEntity> extends Mo
                 this.entity.bodyYaw = this.wrapDegrees(this.entity.bodyYaw, 270.0f - (float) Math.toDegrees(MathHelper.atan2(rx, ry)), 90.0f);
 
                 if(jumpDir == null && this.side != null && targetDist < 0.1D && groundDir == this.side.getOpposite()) {
-                    jumpDir = new Vector3d(this.side.getOffsetX(), this.side.getOffsetY(), this.side.getOffsetZ());
+                    jumpDir = new Vec3d(this.side.getOffsetX(), this.side.getOffsetY(), this.side.getOffsetZ());
                 }
 
                 if(jumpDir == null && this.side != null && Math.abs(((IClimberEntity) this.entity).getGroundDirection().getRight().y) > 0.5f && (!((IClimberEntity) this.entity).canAttachToSide(this.side) || !((IClimberEntity) this.entity).canAttachToSide(Direction.getFacing(dx, dy, dz))) && this.targetY > this.entity.getY() + 0.1f && verticalOffset > this.entity.stepHeight) {
-                    jumpDir = new Vector3d(0, 1, 0);
+                    jumpDir = new Vec3d(0, 1, 0);
                 }
 
                 if(jumpDir != null) {
