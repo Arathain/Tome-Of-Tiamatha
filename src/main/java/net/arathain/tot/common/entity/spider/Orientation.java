@@ -1,6 +1,7 @@
 package net.arathain.tot.common.entity.spider;
 
-import net.minecraft.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -42,6 +43,6 @@ public class Orientation {
         float yaw = (float) Math.toDegrees(MathHelper.atan2(local.x, local.z)) + 180.0f;
         float pitch = (float) -Math.toDegrees(MathHelper.atan2(local.y, MathHelper.sqrt((float) (local.x * local.x + local.z * local.z))));
 
-        return new Pair<>(yaw, pitch);
+        return Pair.of(yaw, pitch);
     }
 }

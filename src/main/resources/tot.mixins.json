@@ -4,12 +4,18 @@
   "package": "net.arathain.tot.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BetterSpiderEntityMixin",
+    "ClimberEntityMixin",
+    "EntityMixin",
+    "LivingEntityMixin",
     "MobEntityMixin",
     "PlayerEntityMixin",
     "SpiderEntityMixin"
   ],
   "client": [
     "InventoryScreenMixin",
+    "BetterSpiderEntityRendererMixin",
+    "LivingEntityClientMixin",
     "PlayerEntityRendererMixin"
   ],
   "injectors": {

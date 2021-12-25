@@ -1,7 +1,6 @@
 package net.arathain.tot.common.entity.movement;
 
 import net.arathain.tot.common.entity.spider.IClimberEntity;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.entity.ai.control.JumpControl;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.Vec3d;

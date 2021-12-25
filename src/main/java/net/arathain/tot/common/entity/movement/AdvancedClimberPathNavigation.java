@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import net.arathain.tot.common.entity.spider.IClimberEntity;
 import net.arathain.tot.common.entity.spider.Orientation;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.util.math.Vector3d;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -83,7 +83,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
                     dir = Direction.DOWN;
                 }
 
-                Vector3d targetPos = this.getExactPathingTarget(this.world, targetPoint.getBlockPos(), dir);
+                Vec3d targetPos = this.getExactPathingTarget(this.world, targetPoint.getBlockPos(), dir);
 
                 MoveControl moveControl = this.entity.getMoveControl();
 
@@ -96,7 +96,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
         }
     }
 
-    public Vector3d getExactPathingTarget(WorldAccess blockaccess, BlockPos pos, Direction dir) {
+    public Vec3d getExactPathingTarget(WorldAccess blockaccess, BlockPos pos, Direction dir) {
         BlockPos offsetPos = pos.offset(dir);
 
         VoxelShape shape = blockaccess.getBlockState(offsetPos).getCollisionShape(blockaccess, offsetPos);
@@ -119,11 +119,11 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
         switch(axis) {
             default:
             case X:
-                return new Vector3d(x + offset, y, z);
+                return new Vec3d(x + offset, y, z);
             case Y:
-                return new Vector3d(x, y + offset, z);
+                return new Vec3d(x, y + offset, z);
             case Z:
-                return new Vector3d(x, y, z + offset);
+                return new Vec3d(x, y, z + offset);
         }
     }
 
@@ -205,7 +205,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
             }
 
             for(int i = firstDifferentHeightPoint - 1; i >= this.currentPath.getCurrentNodeIndex(); --i) {
-                if(this.isDirectPathBetweenPoints(new Vector3d(pos.x, pos.y, pos.z), new Vector3d(this.currentPath.getNodePosition(this.entity, i).x, this.currentPath.getNodePosition(this.entity, i).y, this.currentPath.getNodePosition(this.entity, i).z), sizeX, sizeY, sizeZ)) {
+                if(this.isDirectPathBetweenPoints(new Vec3d(pos.x, pos.y, pos.z), new Vec3d(this.currentPath.getNodePosition(this.entity, i).x, this.currentPath.getNodePosition(this.entity, i).y, this.currentPath.getNodePosition(this.entity, i).z), sizeX, sizeY, sizeZ)) {
                     this.currentPath.setCurrentNodeIndex(i);
                     break;
                 }
@@ -219,7 +219,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
         if(this.currentPath.getCurrentNodeIndex() + offset >= this.currentPath.getLength()) {
             return false;
         } else {
-            Vector3d currentTarget = new Vector3d(this.currentPath.getCurrentNodePos().getX(), this.currentPath.getCurrentNodePos().getY(), this.currentPath.getCurrentNodePos().getZ());
+            Vec3d currentTarget = new Vec3d(this.currentPath.getCurrentNodePos().getX(), this.currentPath.getCurrentNodePos().getY(), this.currentPath.getCurrentNodePos().getZ());
 
             if(!pos.isInRange((Position) currentTarget, 2.0D)) {
                 return false;
@@ -264,7 +264,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
     }
 
 
-    protected boolean isDirectPathBetweenPoints(Vector3d start, Vector3d end, int sizeX, int sizeY, int sizeZ) {
+    protected boolean isDirectPathBetweenPoints(Vec3d start, Vec3d end, int sizeX, int sizeY, int sizeZ) {
         switch(this.verticalFacing.getAxis()) {
             case X:
                 return this.isDirectPathBetweenPoints(start, end, sizeX, sizeY, sizeZ, Direction.Axis.Z, Direction.Axis.X, Direction.Axis.Y, 0.0D, this.verticalFacing.getOffsetX() < 0);
@@ -276,7 +276,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
         return false;
     }
 
-    protected static double swizzle(Vector3d vec, Direction.Axis axis) {
+    protected static double swizzle(Vec3d vec, Direction.Axis axis) {
         switch(axis) {
             case X:
                 return vec.x;
@@ -312,7 +312,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
         return swizzle(x, y, z, unswizzle);
     }
 
-    protected boolean isDirectPathBetweenPoints(Vector3d start, Vector3d end, int sizeX, int sizeY, int sizeZ, Direction.Axis ax, Direction.Axis ay, Direction.Axis az, double minDotProduct, boolean invertY) {
+    protected boolean isDirectPathBetweenPoints(Vec3d start, Vec3d end, int sizeX, int sizeY, int sizeZ, Direction.Axis ax, Direction.Axis ay, Direction.Axis az, double minDotProduct, boolean invertY) {
         int bx = MathHelper.floor(swizzle(start, ax));
         int bz = MathHelper.floor(swizzle(start, az));
         double dx = swizzle(end, ax) - swizzle(start, ax);
@@ -388,7 +388,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
         }
     }
 
-    protected boolean isSafeToStandAt(int x, int y, int z, int sizeX, int sizeY, int sizeZ, Vector3d start, double dx, double dz, double minDotProduct, Direction.Axis ax, Direction.Axis ay, Direction.Axis az, boolean invertY) {
+    protected boolean isSafeToStandAt(int x, int y, int z, int sizeX, int sizeY, int sizeZ, Vec3d start, double dx, double dz, double minDotProduct, Direction.Axis ax, Direction.Axis ay, Direction.Axis az, boolean invertY) {
         int sizeX2 = swizzle(sizeX, sizeY, sizeZ, ax);
         int sizeZ2 = swizzle(sizeX, sizeY, sizeZ, az);
 
@@ -446,7 +446,7 @@ public class AdvancedClimberPathNavigation<T extends MobEntity & IClimberEntity>
         }
     }
 
-    protected boolean isPositionClear(int x, int y, int z, int sizeX, int sizeY, int sizeZ, Vector3d start, double dx, double dz, double minDotProduct, Direction.Axis ax, Direction.Axis ay, Direction.Axis az) {
+    protected boolean isPositionClear(int x, int y, int z, int sizeX, int sizeY, int sizeZ, Vec3d start, double dx, double dz, double minDotProduct, Direction.Axis ax, Direction.Axis ay, Direction.Axis az) {
         for(BlockPos pos : BlockPos.iterate(new BlockPos(x, y, z), new BlockPos(x + sizeX - 1, y + sizeY - 1, z + sizeZ - 1))) {
             double offsetX = swizzle(pos.getX(), pos.getY(), pos.getZ(), ax) + 0.5D - swizzle(start, ax);
             double pffsetZ = swizzle(pos.getX(), pos.getY(), pos.getZ(), az) + 0.5D - swizzle(start, az);

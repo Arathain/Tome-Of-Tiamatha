@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.arathain.tot.common.entity.CachedCollisionView;
 import net.arathain.tot.common.entity.CollisionSmoothingUtil;
 import net.arathain.tot.common.entity.movement.*;
-import net.arathain.tot.common.entity.spider.IClimberEntity;
-import net.arathain.tot.common.entity.spider.IEntityMovementHook;
-import net.arathain.tot.common.entity.spider.Orientation;
-import net.arathain.tot.common.entity.spider.PathingTarget;
+import net.arathain.tot.common.entity.spider.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
@@ -23,13 +20,13 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffects;
+import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -39,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.invoke.MethodHandles;
@@ -50,7 +48,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Mixin(SpiderEntity.class)
-public abstract class ClimberEntityMixin extends HostileEntity implements IClimberEntity, IEntityMovementHook {
+public abstract class ClimberEntityMixin extends HostileEntity implements IClimberEntity, IEntityMovementHook, IMobEntityHook, ILivingEntityHook {
     private static final UUID SLOW_FALLING_ID = UUID.fromString("A5B6CF2A-2F7C-31EF-9022-7C3E7D5E6ABA");
     private static final EntityAttributeModifier SLOW_FALLING = new EntityAttributeModifier(SLOW_FALLING_ID, "Slow falling acceleration reduction", -0.07, EntityAttributeModifier.Operation.ADDITION);
 
@@ -123,6 +121,10 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
 
     private ClimberEntityMixin(EntityType<? extends HostileEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    @Inject(method = "<init>*", at = @At("RETURN"))
+    private void onConstructed(EntityType entityType, World world, CallbackInfo ci) {
         this.stepHeight = 0.1f;
         this.orientation = this.calculateOrientation(1);
         this.groundDirection = this.getGroundDirection();
@@ -130,50 +132,47 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         this.lookControl = new ClimberLookControl<>(this);
         this.jumpControl = new ClimberJumpControl<>(this);
         this.prevAttachmentOffsetY = this.attachmentOffsetY = this.lastAttachmentOffsetY = this.getVerticalOffset(1);
-
     }
 
     //createNavigator overrides usually don't call super.createNavigator so this ensures that onCreateNavigator
     //still gets called in such cases
     @Inject(method = "createNavigation(Lnet/minecraft/world/World;)Lnet/minecraft/entity/ai/pathing/EntityNavigation;", at = @At("HEAD"), cancellable = true, require = 0, expect = 0)
     private void onCreateNavigator(World world, CallbackInfoReturnable<EntityNavigation> cir) {
-        EntityNavigation navigator = this.createNavigation(world);
+        EntityNavigation navigator = this.onCreateNavigation(world);
         if(navigator != null) {
             cir.setReturnValue(navigator);
         }
     }
 
     @Override
-    public EntityNavigation createNavigation(World world) {
-        AdvancedClimberPathNavigation<ClimberEntityMixin> navigation = new AdvancedClimberPathNavigation<>(this, world, false, true);
+    public EntityNavigation onCreateNavigation(World world) {
+        AdvancedClimberPathNavigation<ClimberEntityMixin> navigation = new AdvancedClimberPathNavigation<>(this, world, true, true);
         navigation.setCanSwim(true);
         return navigation;
     }
 
     @Override
-    public void initDataTracker() {
-        super.initDataTracker();
+    public void onInitDataTracker() {
         if(this.shouldTrackPathingTargets()) {
-            this.dataTracker.set(MOVEMENT_TARGET_X, 0.0f);
-            this.dataTracker.set(MOVEMENT_TARGET_Y, 0.0f);
-            this.dataTracker.set(MOVEMENT_TARGET_Z, 0.0f);
+            this.dataTracker.startTracking(MOVEMENT_TARGET_X, 0.0f);
+            this.dataTracker.startTracking(MOVEMENT_TARGET_Y, 0.0f);
+            this.dataTracker.startTracking(MOVEMENT_TARGET_Z, 0.0f);
 
             for(TrackedData<Optional<BlockPos>> pathingTarget : PATHING_TARGETS) {
-                this.dataTracker.set(pathingTarget, Optional.empty());
+                this.dataTracker.startTracking(pathingTarget, Optional.empty());
             }
 
             for(TrackedData<Direction> pathingSide : PATHING_SIDES) {
-                this.dataTracker.set(pathingSide, Direction.DOWN);
+                this.dataTracker.startTracking(pathingSide, Direction.DOWN);
             }
         }
-        this.dataTracker.set(ROTATION_BODY, new EulerAngle(0, 0, 0));
+        this.dataTracker.startTracking(ROTATION_BODY, new EulerAngle(0, 0, 0));
 
-        this.dataTracker.set(ROTATION_HEAD, new EulerAngle(0, 0, 0));
+        this.dataTracker.startTracking(ROTATION_HEAD, new EulerAngle(0, 0, 0));
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void onWrite(NbtCompound nbt) {
         nbt.putDouble("SpidersTPO.AttachmentNormalX", this.attachmentNormal.x);
         nbt.putDouble("SpidersTPO.AttachmentNormalY", this.attachmentNormal.y);
         nbt.putDouble("SpidersTPO.AttachmentNormalZ", this.attachmentNormal.z);
@@ -182,8 +181,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void onRead(NbtCompound nbt) {
         this.prevAttachmentNormal = this.attachmentNormal = new Vec3d(
                 nbt.getDouble("SpidersTPO.AttachmentNormalX"),
                 nbt.getDouble("SpidersTPO.AttachmentNormalY"),
@@ -371,9 +369,9 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         }
 
         if(closestFacing == null) {
-            this.groundDirection = new Pair<>(Direction.DOWN, new Vec3d(0, -1, 0));
+            this.groundDirection = Pair.of(Direction.DOWN, new Vec3d(0, -1, 0));
         } else {
-            this.groundDirection = new Pair<>(closestFacing, new Vec3d(weighting.normalize().add(0, -0.001f, 0).normalize().x, weighting.normalize().add(0, -0.001f, 0).normalize().y, weighting.normalize().add(0, -0.001f, 0).normalize().z));
+            this.groundDirection = Pair.of(closestFacing, new Vec3d(weighting.normalize().add(0, -0.001f, 0).normalize().x, weighting.normalize().add(0, -0.001f, 0).normalize().y, weighting.normalize().add(0, -0.001f, 0).normalize().z));
         }
     }
 
@@ -421,14 +419,14 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
     }
 
     @Override
-    public void lookAt(EntityAnchorArgumentType.EntityAnchor anchorPoint, Vec3d target) {
-        Vec3d dir = target.subtract(this.getPos());
+    public Vec3d onLookAt(EntityAnchorArgumentType.EntityAnchor anchor, Vec3d vec) {
+        Vec3d dir = vec.subtract(this.getPos());
         dir = this.getOrientation().getLocal(dir);
-        super.lookAt(anchorPoint, dir);
+        return dir;
     }
 
     @Override
-    public void tick() {
+    public void onTick() {
         if(!this.world.isClient() && this.world instanceof ServerWorld) {
                 Orientation orientation = this.getOrientation();
 
@@ -494,15 +492,10 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
                     }
                 }
             }
-        super.tick();
-    }
-
-    public void onTick() {
-
     }
 
     @Override
-    public void mobTick() {
+    public void onLivingTick() {
         this.updateWalkingSide();
     }
 
@@ -646,7 +639,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
 
         this.orientation = this.calculateOrientation(1);
 
-        net.minecraft.util.Pair<Float, Float> newEulerAngle = this.getOrientation().getLocalRotation(direction);
+        org.apache.commons.lang3.tuple.Pair<Float, Float> newEulerAngle = this.getOrientation().getLocalRotation(direction);
 
         float yawDelta = newEulerAngle.getLeft() - this.bodyYaw;
         float pitchDelta = newEulerAngle.getRight() - this.getPitch();
@@ -706,41 +699,29 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
 
         float pitch = (float) Math.toDegrees(MathHelper.atan2(MathHelper.sqrt(componentX * componentX + componentZ * componentZ), componentY));
 
-        Matrix4f m = new Matrix4f();
+        ToTMatrix4f m = new ToTMatrix4f();
+        m.multiply(new ToTMatrix4f((float) Math.toRadians(yaw), 0, 1, 0));
+        m.multiply(new ToTMatrix4f((float) Math.toRadians(pitch), 1, 0, 0));
+        m.multiply(new ToTMatrix4f((float) Math.toRadians((float) Math.signum(0.5f - componentY - componentZ - componentX) * yaw), 0, 1, 0));
 
-        m.multiply(new Matrix4f(new Quaternion((float) Math.toRadians(yaw), 0, 1, 0)));
-        m.multiply(new Matrix4f(new Quaternion((float) Math.toRadians(pitch), 1, 0, 0)));
-        m.multiply(new Matrix4f(new Quaternion((float) Math.toRadians((float) Math.signum(0.5f - componentY - componentZ - componentX) * yaw), 0, 1, 0)));
-        float a = 0;
-        float b = 0;
-        float c = -1;
-        float d = 0;
-        float e = 1;
-        float f = 0;
-        float g = 1;
-        float h = 0;
-        float i = 0;
-        m.multiplyByTranslation(a, b, c);
-        m.multiplyByTranslation(d, e, f);
-        m.multiplyByTranslation(g, h, i);
-        localZ= new Vec3d(a, b, c);
-        localY = new Vec3d(d, e, f);
-        localX = new Vec3d(g, h, i);
+        localZ = m.multiply(new Vec3d(0, 0, -1));
+        localY = m.multiply(new Vec3d(0, 1, 0));
+        localX = m.multiply(new Vec3d(1, 0, 0));
 
         return new Orientation(attachmentNormal, localZ, localY, localX, componentZ, componentY, componentX, yaw, pitch);
     }
 
-    //@Override
+    @Override
     public float getServerYaw(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
         return (float) this.serverYaw;
     }
 
-    //@Override
+    @Override
     public float getTargetPitch(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
         return (float) this.serverPitch;
     }
 
-    //@Override
+    @Override
     public float getTargetHeadYaw(float yaw, int rotationIncrements) {
         return (float) this.serverHeadYaw;
     }
@@ -752,7 +733,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
             EulerAngle rotation = this.dataTracker.get(ROTATION_BODY);
             Vec3d look = new Vec3d(rotation.getWrappedPitch(), rotation.getWrappedYaw(), rotation.getWrappedRoll());
 
-            net.minecraft.util.Pair<Float, Float> eulerAngle = this.getOrientation().getLocalRotation(look);
+            Pair<Float, Float> eulerAngle = this.getOrientation().getLocalRotation(look);
 
             this.serverYaw = eulerAngle.getLeft();
             this.serverPitch = eulerAngle.getRight();
@@ -783,12 +764,12 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         return walkingSide.getRight().multiply(stickingForce);
     }
 
-    //@Override
+    @Override
     public void setJumpDirection(Vec3d dir) {
         this.jumpDir = dir != null ? dir.normalize() : null;
     }
 
-    //@Override
+    @Override
     public boolean onJump() {
         if(this.jumpDir != null) {
             float jumpStrength = this.getJumpVelocity();
@@ -817,7 +798,7 @@ public abstract class ClimberEntityMixin extends HostileEntity implements IClimb
         return false;
     }
 
-    //@Override
+    @Override
     public boolean onTravel(Vec3d relative, boolean pre) {
         if(pre) {
             boolean canTravel = !this.getWorld().isClient || this.canBeControlledByRider();

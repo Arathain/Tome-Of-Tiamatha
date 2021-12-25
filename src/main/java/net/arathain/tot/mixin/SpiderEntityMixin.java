@@ -21,11 +21,6 @@ public class SpiderEntityMixin extends HostileEntity {
     protected SpiderEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 7), method = "initGoals")
-    private void redirectTargetGoal(GoalSelector goalSelector, int priority, Goal goal) {
-        Goal newGoal = new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player));
-        goalSelector.add(priority, newGoal);
-    }
 
     @Override
     public void slowMovement(BlockState state, Vec3d multiplier) {

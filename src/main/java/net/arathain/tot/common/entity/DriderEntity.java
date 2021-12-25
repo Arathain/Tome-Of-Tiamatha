@@ -103,7 +103,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
     }
 
     public void setDriderType(Type type) {
-        this.dataTracker.set(TYPE, type.toString());
+        this.dataTracker.startTracking(TYPE, type.toString());
     }
 
 
