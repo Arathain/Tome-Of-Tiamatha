@@ -24,7 +24,7 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
 
     @Override
     public Identifier getAnimationFileLocation(DriderEntity animatable) {
-        return new Identifier(TomeOfTiamatha.MODID, "animations/entity/drider.geo.json");
+        return new Identifier(TomeOfTiamatha.MODID, "animations/entity/drider.animation.json");
     }
 
     @Override

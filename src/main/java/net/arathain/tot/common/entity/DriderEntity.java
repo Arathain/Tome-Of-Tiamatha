@@ -14,6 +14,8 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.entity.passive.HorseEntity;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -23,6 +25,7 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -74,6 +77,14 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+        AnimationBuilder animationBuilder = new AnimationBuilder();
+        if(this.hasVehicle() && this.getVehicle() instanceof HorseEntity || this.getVehicle() instanceof PigEntity) {
+            animationBuilder.addAnimation("horse", true);
+        }
+        if(!animationBuilder.getRawAnimationList().isEmpty()) {
+            event.getController().setAnimation(animationBuilder);
+            return PlayState.CONTINUE;
+        }
         return PlayState.STOP;
     }
 
@@ -123,6 +134,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
 
     public enum Type {
         DARK,
-        ALBINO
+        ALBINO,
+        ARATHAIN
     }
 }
