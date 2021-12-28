@@ -8,12 +8,15 @@ import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.DriderEntity;
 import net.arathain.tot.common.entity.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.Objects;
@@ -62,6 +65,13 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
         setVariant(obj.getRandom().nextInt(10) == 1 ? DriderEntity.Type.ALBINO : DriderEntity.Type.DARK);
         if(Objects.equals(obj.getUuidAsString(), "1ece513b-8d36-4f04-9be2-f341aa8c9ee2")) setVariant(DriderEntity.Type.ARATHAIN);
         ToTComponents.DRIDER_COMPONENT.sync(obj);
+        if(!obj.getEquippedStack(EquipmentSlot.LEGS).isEmpty()) {
+            obj.damage(DamageSource.CRAMMING, 10);
+        }
+        obj.sendEquipmentBreakStatus(EquipmentSlot.LEGS);
+        obj.sendEquipmentBreakStatus(EquipmentSlot.FEET);
+//        obj.equipStack(EquipmentSlot.LEGS, ItemStack.EMPTY);
+//        obj.equipStack(EquipmentSlot.FEET, ItemStack.EMPTY);
         updateAttributes();
     }
 
