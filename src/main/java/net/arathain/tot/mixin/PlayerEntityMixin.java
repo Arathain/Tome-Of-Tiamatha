@@ -43,6 +43,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     public void slowMovement(BlockState state, Vec3d multiplier, CallbackInfo info) {
         if (ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && state.getBlock() instanceof CobwebBlock) {
             info.cancel();
+            this.movementMultiplier = new Vec3d(3, 3, 3);
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "handleFallDamage")
+    public void handleDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
+        if (ToTComponents.DRIDER_COMPONENT.get(this).isDrider()) {
+            info.setReturnValue(false);
         }
     }
 }

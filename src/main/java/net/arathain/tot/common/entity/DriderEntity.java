@@ -1,10 +1,9 @@
 package net.arathain.tot.common.entity;
 
+import net.arathain.tot.common.entity.goal.DriderAttackGoal;
 import net.arathain.tot.common.init.ToTObjects;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -12,10 +11,13 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.HorseEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -49,7 +51,15 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
 
     @Override
     protected void initGoals() {
-        super.initGoals();
+        this.goalSelector.add(1, new SwimGoal(this));
+        this.goalSelector.add(3, new PounceAtTargetGoal(this, 0.4f));
+        this.goalSelector.add(4, new DriderAttackGoal(this, 2.0, false));
+        this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
+        this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
+        this.goalSelector.add(6, new LookAroundGoal(this));
+        this.targetSelector.add(1, new RevengeGoal(this, new Class[0]));
+        this.targetSelector.add(2, new TargetGoal<PlayerEntity>(this, PlayerEntity.class));
+        this.targetSelector.add(3, new TargetGoal<IronGolemEntity>(this, IronGolemEntity.class));
     }
 
     @Override
@@ -130,6 +140,21 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
         }
 
         super.onDeath(source);
+    }
+    static class TargetGoal<T extends LivingEntity>
+            extends ActiveTargetGoal<T> {
+        public TargetGoal(SpiderEntity spider, Class<T> targetEntityClass) {
+            super((MobEntity)spider, targetEntityClass, true);
+        }
+
+        @Override
+        public boolean canStart() {
+            float f = this.mob.getBrightnessAtEyes();
+            if (f >= 0.5f) {
+                return false;
+            }
+            return super.canStart();
+        }
     }
 
     public enum Type {

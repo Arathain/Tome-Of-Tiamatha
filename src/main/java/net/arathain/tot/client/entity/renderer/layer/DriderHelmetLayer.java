@@ -23,7 +23,7 @@ public class DriderHelmetLayer extends GeoLayerRenderer<DriderEntity> {
     public void render(MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn, DriderEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if(!entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).isEmpty()) {
             Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/" + entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).getItem().toString() + ".png");
-            RenderLayer armor = RenderLayer.getArmorCutoutNoCull(location);
+            RenderLayer armor = RenderLayer.getEntityTranslucentCull(location);
             if (entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof DyeableArmorItem) {
                 int i = ((DyeableArmorItem)entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).getItem()).getColor((entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD)));
                 float f = (float)(i >> 16 & 0xFF) / 255.0F;

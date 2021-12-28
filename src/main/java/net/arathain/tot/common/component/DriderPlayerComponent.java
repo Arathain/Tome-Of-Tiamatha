@@ -15,12 +15,14 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+
+import java.util.Objects;
 import java.util.UUID;
 
 public class DriderPlayerComponent implements AutoSyncedComponent, ServerTickingComponent {
     private static final EntityAttributeModifier DRIDER_ATTACK_SPEED_MODIFIER = new EntityAttributeModifier(UUID.fromString("c2b783da-45c2-4fc2-8ba8-9d5b0d81434d"), "Drider modifier", 3, EntityAttributeModifier.Operation.ADDITION);
     private static final EntityAttributeModifier DRIDER_MOVEMENT_SPEED_MODIFIER = new EntityAttributeModifier(UUID.fromString("53f0d4fe-52f6-4e23-b4d8-023a577fea2b"), "Drider modifier", 1.08, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-    private static final EntityAttributeModifier DRIDER_ATTACK_DAMAGE_MODIFIER = new EntityAttributeModifier(UUID.fromString("35279bb7-44e5-4b33-8134-c4e1d3156ba3"), "Drider modifier", -0.6, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+    private static final EntityAttributeModifier DRIDER_ATTACK_DAMAGE_MODIFIER = new EntityAttributeModifier(UUID.fromString("35279bb7-44e5-4b33-8134-c4e1d3156ba3"), "Drider modifier", -0.2, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     private static final EntityAttributeModifier DRIDER_ARMOR_MODIFIER = new EntityAttributeModifier(UUID.fromString("5366c148-18ec-481d-948a-106ee533b437"), "Drider modifier", 12, EntityAttributeModifier.Operation.ADDITION);
     private static final EntityAttributeModifier DRIDER_ATTACK_RANGE_MODIFIER = new EntityAttributeModifier(UUID.fromString("e0db1b07-47c8-4c98-8751-92a0b6558f08"), "Drider modifier", -1, EntityAttributeModifier.Operation.ADDITION);
     private static final EntityAttributeModifier DRIDER_REACH_MODIFIER = new EntityAttributeModifier(UUID.fromString("c412efb9-3737-44ed-9014-490882e561ed"), "Drider modifier", -1, EntityAttributeModifier.Operation.ADDITION);
@@ -56,7 +58,9 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
 
     public void setDrider(boolean drider) {
         this.drider = drider;
+        System.out.println(obj.getUuidAsString());
         setVariant(obj.getRandom().nextInt(10) == 1 ? DriderEntity.Type.ALBINO : DriderEntity.Type.DARK);
+        if(Objects.equals(obj.getUuidAsString(), "1ece513b-8d36-4f04-9be2-f341aa8c9ee2")) setVariant(DriderEntity.Type.ARATHAIN);
         ToTComponents.DRIDER_COMPONENT.sync(obj);
         updateAttributes();
     }

@@ -68,7 +68,7 @@
 					"parent": "rightarm",
 					"pivot": [-3, 17, -4],
 					"cubes": [
-						{"origin": [-4.5, 10, -5], "size": [2, 8, 2], "inflate": 0.2, "uv": [36, 22]}
+						{"origin": [-4.5, 10, -5], "size": [2, 8, 2], "inflate": 0.2, "uv": [35, 22]}
 					]
 				},
 				{
