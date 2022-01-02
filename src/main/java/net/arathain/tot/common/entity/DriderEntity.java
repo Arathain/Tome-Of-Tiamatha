@@ -88,8 +88,18 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
+        boolean isMoving = isInsideWaterOrBubbleColumn() ? !(handSwingProgress > -0.02) || !(handSwingProgress < 0.02) : !(handSwingProgress > -0.10F) || !(handSwingProgress < 0.10F);
+
         if(this.hasVehicle() && this.getVehicle() instanceof HorseEntity || this.getVehicle() instanceof PigEntity) {
-            animationBuilder.addAnimation("horse", true);
+            animationBuilder.addAnimation("horse", false);
+        }
+        if(!this.hasVehicle() && this.forwardSpeed > 0) {
+            if(isSprinting()) {
+                animationBuilder.addAnimation("runForward", true);
+            }
+            else {
+                animationBuilder.addAnimation("walkForward", true);
+            }
         }
         if(!animationBuilder.getRawAnimationList().isEmpty()) {
             event.getController().setAnimation(animationBuilder);

@@ -70,8 +70,6 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
         }
         obj.sendEquipmentBreakStatus(EquipmentSlot.LEGS);
         obj.sendEquipmentBreakStatus(EquipmentSlot.FEET);
-//        obj.equipStack(EquipmentSlot.LEGS, ItemStack.EMPTY);
-//        obj.equipStack(EquipmentSlot.FEET, ItemStack.EMPTY);
         updateAttributes();
     }
 

@@ -66,6 +66,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             entity.handSwingTicks = player.handSwingTicks;
             entity.handSwingProgress = player.handSwingProgress;
             entity.lastHandSwingProgress = player.lastHandSwingProgress;
+            entity.forwardSpeed = player.forwardSpeed;
+            entity.setSprinting(player.isSprinting());
             entity.setPitch(player.getPitch());
             entity.prevPitch = player.prevPitch;
             entity.preferredHand = player.preferredHand;
