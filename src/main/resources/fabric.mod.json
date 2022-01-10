@@ -46,7 +46,8 @@
   },
   "custom": {
     "cardinal-components": [
-      "tot:drider"
+      "tot:drider",
+      "tot:vi_alignment"
     ]
   }
 }

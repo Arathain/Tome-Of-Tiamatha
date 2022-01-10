@@ -2,6 +2,7 @@ package net.arathain.tot.common.entity;
 
 import net.arathain.tot.common.entity.goal.DriderAttackGoal;
 import net.arathain.tot.common.init.ToTObjects;
+import net.minecraft.client.render.entity.model.SpiderEntityModel;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -13,7 +14,6 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SpiderEntity;
-import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PigEntity;
@@ -85,32 +85,32 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
             this.dataTracker.startTracking(TYPE, Type.DARK.toString());
         }
     }
+    @Override
+    public void registerControllers(AnimationData animationData) {
+        animationData.addAnimationController(new AnimationController<>(this, "controller", 2, this::predicate));
+    }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
-        boolean isMoving = isInsideWaterOrBubbleColumn() ? !(handSwingProgress > -0.02) || !(handSwingProgress < 0.02) : !(handSwingProgress > -0.10F) || !(handSwingProgress < 0.10F);
+        boolean isMoving = event.isMoving() || this.forwardSpeed != 0;
 
         if(this.hasVehicle() && this.getVehicle() instanceof HorseEntity || this.getVehicle() instanceof PigEntity) {
             animationBuilder.addAnimation("horse", false);
         }
-        if(!this.hasVehicle() && this.forwardSpeed > 0) {
+        if(!this.hasVehicle() && event.isMoving() || isMoving) {
             if(isSprinting()) {
                 animationBuilder.addAnimation("runForward", true);
             }
             else {
                 animationBuilder.addAnimation("walkForward", true);
             }
+        } else if(!this.hasVehicle()) {
+            animationBuilder.addAnimation("idle", true);
         }
         if(!animationBuilder.getRawAnimationList().isEmpty()) {
             event.getController().setAnimation(animationBuilder);
-            return PlayState.CONTINUE;
         }
-        return PlayState.STOP;
-    }
-
-    @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
+        return PlayState.CONTINUE;
     }
 
     @Override
