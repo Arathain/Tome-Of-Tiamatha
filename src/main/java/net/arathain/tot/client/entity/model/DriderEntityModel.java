@@ -32,6 +32,7 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
     public void codeAnimations(DriderEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.codeAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
+        IBone torso = this.getAnimationProcessor().getBone("torso");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         IBone leftgUs = this.getAnimationProcessor().getBone("leftArm");
         IBone sendHelp = this.getAnimationProcessor().getBone("rightArm");
@@ -39,8 +40,11 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
         leftGlove.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
 
         if (head != null) {
-            head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
-            head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+            head.setRotationX(extraData.headPitch * (float) Math.PI / 180F);
+            head.setRotationY(MathHelper.clamp(extraData.netHeadYaw * ((float) Math.PI / 180F) * 0.4f, -0.4f, 0.4f));
+        }
+        if (torso != null) {
+            torso.setRotationY((float) MathHelper.clamp(extraData.netHeadYaw * ((float) Math.PI / 180F), -0.4, 0.4));
         }
         if (leftgUs != null) {
             leftgUs.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F) * 2.0F * entity.limbDistance * 0.5F)).getX());

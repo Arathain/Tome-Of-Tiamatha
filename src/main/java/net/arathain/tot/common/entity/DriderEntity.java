@@ -77,6 +77,11 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
     }
 
+    @Override
+    protected float turnHead(float bodyRotation, float headRotation) {
+        return super.turnHead(bodyRotation, headRotation);
+    }
+
     protected void initDataTracker() {
         super.initDataTracker();
 

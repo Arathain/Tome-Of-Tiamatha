@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +26,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Override
     public boolean isClimbing() {
-        if(!super.isClimbing() && ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && horizontalCollision || this.getBlockStateAtPos().getBlock() instanceof CobwebBlock) {
+        if(!super.isClimbing() && !(this.isOnGround() || this.isSprinting())&& ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && horizontalCollision || this.getBlockStateAtPos().getBlock() instanceof CobwebBlock) {
             return true;
         } else {
             return super.isClimbing();

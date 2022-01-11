@@ -1,6 +1,5 @@
 package net.arathain.tot.mixin;
 
-import net.arathain.tot.client.entity.renderer.DriderEntityRenderer;
 import net.arathain.tot.common.entity.DriderEntity;
 import net.arathain.tot.common.entity.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
@@ -8,11 +7,8 @@ import net.arathain.tot.common.init.ToTEntities;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -23,20 +19,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import software.bernie.example.client.renderer.entity.ReplacedCreeperRenderer;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntityRenderer.class)
