@@ -1,5 +1,6 @@
 package net.arathain.tot.mixin;
 
+import net.arathain.tot.client.entity.renderer.DriderEntityRenderer;
 import net.arathain.tot.common.entity.DriderEntity;
 import net.arathain.tot.common.entity.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
@@ -33,14 +34,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import software.bernie.example.client.renderer.entity.ReplacedCreeperRenderer;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
-
-
+    private static DriderEntity entity;
     @Shadow
     protected abstract void setModelPose(AbstractClientPlayerEntity player);
 
@@ -50,7 +51,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Inject(method = "render(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("HEAD"), cancellable = true)
     private void render(AbstractClientPlayerEntity player, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, CallbackInfo callbackInfo) {
-        LivingEntity entity = getDrider(player);
+        DriderEntity entity = getDrider(player);
         if (entity != null) {
             entity.age = player.age;
             entity.hurtTime = player.hurtTime;
@@ -74,13 +75,15 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             entity.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
             entity.setStackInHand(Hand.OFF_HAND, player.getOffHandStack());
             entity.setCurrentHand(player.getActiveHand() == null ? Hand.MAIN_HAND : player.getActiveHand());
+            entity.preferredHand = player.preferredHand;
             //blursed
             entity.equipStack(EquipmentSlot.HEAD, player.getEquippedStack(EquipmentSlot.HEAD));
             entity.equipStack(EquipmentSlot.CHEST, player.getEquippedStack(EquipmentSlot.CHEST));
             entity.equipStack(EquipmentSlot.LEGS, player.getEquippedStack(EquipmentSlot.LEGS));
             entity.equipStack(EquipmentSlot.FEET, player.getEquippedStack(EquipmentSlot.FEET));
-            entity.setSneaking(player.isSneaking());
+            entity.setAttacking(player.isUsingItem());
             entity.setPose(player.getPose());
+            entity.setSneaking(player.isSneaking());
             if (player.hasVehicle()) {
                 entity.startRiding(player.getVehicle(), true);
             }
@@ -100,9 +103,11 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     private static DriderEntity getDrider(PlayerEntity player) {
         if (ToTUtil.isDrider(player)) {
-            DriderEntity entity = ToTEntities.DRIDER.create(player.world);
-            assert entity != null;
-            entity.getDataTracker().set(DriderEntity.TYPE, ToTComponents.DRIDER_COMPONENT.get(player).getVariant().toString());
+            if(entity == null) {
+                entity = ToTEntities.DRIDER.create(player.world);
+                assert entity != null;
+                entity.getDataTracker().set(DriderEntity.TYPE, ToTComponents.DRIDER_COMPONENT.get(player).getVariant().toString());
+            }
             return entity;
         }
         return null;

@@ -9,9 +9,10 @@ import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
+public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
     @Override
     public Identifier getModelLocation(DriderEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/drider.geo.json");
@@ -28,8 +29,8 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
     }
 
     @Override
-    public void setLivingAnimations(DriderEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    public void codeAnimations(DriderEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
+        super.codeAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         IBone leftgUs = this.getAnimationProcessor().getBone("leftArm");

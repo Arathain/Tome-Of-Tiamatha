@@ -10,7 +10,7 @@ import net.arathain.tot.common.network.packet.DriderComponentPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.world.ClientWorld;
@@ -20,7 +20,7 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB);
-        EntityRendererRegistry.INSTANCE.register(ToTEntities.DRIDER, DriderEntityRenderer::new);
+        EntityRendererRegistry.register(ToTEntities.DRIDER, DriderEntityRenderer::new);
         ClientTickEvents.END_WORLD_TICK.register(new ClientTickEvents.EndWorldTick() {
 
             @Override

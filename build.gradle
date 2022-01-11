@@ -55,6 +55,7 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${cca_version}"
 	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.22'
 	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {
 		exclude(group: "net.fabricmc.fabric-api")

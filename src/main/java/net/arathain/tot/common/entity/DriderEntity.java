@@ -26,6 +26,7 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.IAnimationTickable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -35,7 +36,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class DriderEntity extends SpiderEntity implements IAnimatable {
+public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimationTickable {
     private final AnimationFactory factory = new AnimationFactory(this);
     public static final TrackedData<String> TYPE = DataTracker.registerData(DriderEntity.class, TrackedDataHandlerRegistry.STRING);
 
@@ -85,10 +86,6 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
             this.dataTracker.startTracking(TYPE, Type.DARK.toString());
         }
     }
-    @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "controller", 2, this::predicate));
-    }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
@@ -111,6 +108,11 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
             event.getController().setAnimation(animationBuilder);
         }
         return PlayState.CONTINUE;
+    }
+
+    @Override
+    public void registerControllers(AnimationData animationData) {
+        animationData.addAnimationController(new AnimationController<>(this, "controller", 3, this::predicate));
     }
 
     @Override
@@ -140,7 +142,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
 
     @Override
     public AnimationFactory getFactory() {
-        return factory;
+        return this.factory;
     }
 
     @Override
@@ -151,6 +153,12 @@ public class DriderEntity extends SpiderEntity implements IAnimatable {
 
         super.onDeath(source);
     }
+
+    @Override
+    public int tickTimer() {
+        return age;
+    }
+
     static class TargetGoal<T extends LivingEntity>
             extends ActiveTargetGoal<T> {
         public TargetGoal(SpiderEntity spider, Class<T> targetEntityClass) {

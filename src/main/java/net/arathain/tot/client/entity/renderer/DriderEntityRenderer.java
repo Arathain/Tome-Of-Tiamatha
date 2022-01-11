@@ -14,6 +14,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
@@ -23,6 +24,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
     private ItemStack mainStack;
     private ItemStack offStack;
     private VertexConsumerProvider vertexConsumerProvider;
+    private boolean mainHandStack;
     public DriderEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new DriderEntityModel());
         this.addLayer(new DriderHelmetLayer(this));
@@ -34,6 +36,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
     public void renderEarly(DriderEntity driderEntity, MatrixStack stackIn, float ticks, VertexConsumerProvider vertexConsumerProvider, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.mainStack = driderEntity.getEquippedStack(EquipmentSlot.MAINHAND);
         this.offStack = driderEntity.getEquippedStack(EquipmentSlot.OFFHAND);
+        this.mainHandStack = driderEntity.preferredHand == Hand.MAIN_HAND;
         this.vertexConsumerProvider = vertexConsumerProvider;
 
         super.renderEarly(driderEntity, stackIn, ticks, vertexConsumerProvider, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
@@ -46,7 +49,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
             stack.scale(0.6f, 0.6f, 0.6f);
             stack.translate(0.35,0.6,1.1f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(mainStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(mainHandStack ? mainStack : offStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
         }
@@ -55,7 +58,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
             stack.scale(0.6f, 0.6f, 0.6f);
             stack.translate(-0.35,0.6,1.1f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(offStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(mainHandStack ? offStack : mainStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
         }
