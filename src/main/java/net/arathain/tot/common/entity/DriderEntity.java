@@ -39,6 +39,7 @@ import javax.annotation.Nullable;
 public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimationTickable {
     private final AnimationFactory factory = new AnimationFactory(this);
     public static final TrackedData<String> TYPE = DataTracker.registerData(DriderEntity.class, TrackedDataHandlerRegistry.STRING);
+    public boolean isInv;
 
 
     public static DefaultAttributeContainer.Builder createDriderAttributes() {
@@ -47,6 +48,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     public DriderEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
         this.ignoreCameraFrustum = false;
+        this.isInv = false;
         this.stepHeight = 2f;
     }
 
