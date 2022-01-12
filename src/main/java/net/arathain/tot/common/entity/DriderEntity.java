@@ -100,14 +100,20 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
             animationBuilder.addAnimation("horse", false);
         }
         if(!this.hasVehicle() && event.isMoving() || isMoving) {
-            if(isSprinting()) {
-                animationBuilder.addAnimation("runForward", true);
-            }
-            else {
+            if(this.isSneaking()) {
+                animationBuilder.addAnimation("sneakForward", true);
+            } else {
                 animationBuilder.addAnimation("walkForward", true);
             }
         } else if(!this.hasVehicle()) {
-            animationBuilder.addAnimation("idle", true);
+            if(this.isSneaking()) {
+                animationBuilder.addAnimation("idleSneak", true);
+            } else {
+                animationBuilder.addAnimation("idle", true);
+            }
+        }
+        if(this.isAttacking()) {
+            animationBuilder.addAnimation("punch", true);
         }
         if(!animationBuilder.getRawAnimationList().isEmpty()) {
             event.getController().setAnimation(animationBuilder);
