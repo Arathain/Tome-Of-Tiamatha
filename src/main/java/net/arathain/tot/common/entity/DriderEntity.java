@@ -1,11 +1,15 @@
 package net.arathain.tot.common.entity;
 
 import net.arathain.tot.common.entity.goal.DriderAttackGoal;
+import net.arathain.tot.common.entity.goal.DriderShieldGoal;
 import net.arathain.tot.common.init.ToTObjects;
 import net.minecraft.client.render.entity.model.SpiderEntityModel;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -18,10 +22,14 @@ import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -35,40 +43,43 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimationTickable {
+    private static final UUID SHIELD_UUID = UUID.fromString("b57b8070-1020-47f1-9429-e742793892df");
+    private static final EntityAttributeModifier SHIELD_SPEED_PENALTY = new EntityAttributeModifier(SHIELD_UUID, "Use item speed penalty", -0.25D, EntityAttributeModifier.Operation.ADDITION);
     private final AnimationFactory factory = new AnimationFactory(this);
     public static final TrackedData<String> TYPE = DataTracker.registerData(DriderEntity.class, TrackedDataHandlerRegistry.STRING);
-    public boolean isInv;
 
 
     public static DefaultAttributeContainer.Builder createDriderAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0).add(EntityAttributes.GENERIC_ARMOR, 6.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0).add(EntityAttributes.GENERIC_ARMOR, 6.0);
     }
+    public int shieldCooldown;
     public DriderEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
         this.ignoreCameraFrustum = false;
-        this.isInv = false;
         this.stepHeight = 2f;
+        this.setPersistent();
     }
 
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(3, new PounceAtTargetGoal(this, 0.4f));
-        this.goalSelector.add(4, new DriderAttackGoal(this, 2.0, false));
+        this.goalSelector.add(2, new DriderAttackGoal(this, 2.0, false));
+        this.goalSelector.add(0, new DriderShieldGoal(this));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.targetSelector.add(1, new RevengeGoal(this, new Class[0]));
-        this.targetSelector.add(2, new TargetGoal<PlayerEntity>(this, PlayerEntity.class));
-        this.targetSelector.add(3, new TargetGoal<IronGolemEntity>(this, IronGolemEntity.class));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
+        this.targetSelector.add(3, new TargetGoal<>(this, IronGolemEntity.class));
     }
 
     @Override
     protected void initEquipment(LocalDifficulty difficulty) {
         this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD));
-        this.setStackInHand(Hand.OFF_HAND, new ItemStack(Items.DIAMOND_SWORD));
+        this.setStackInHand(Hand.OFF_HAND, new ItemStack(Items.SHIELD));
         this.equipStack(EquipmentSlot.HEAD, ToTObjects.SILKSTEEL_HELMET.getDefaultStack());
         this.equipStack(EquipmentSlot.CHEST, ToTObjects.SILKSTEEL_CHESTPLATE.getDefaultStack());
     }
@@ -79,10 +90,6 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
     }
 
-    @Override
-    protected float turnHead(float bodyRotation, float headRotation) {
-        return super.turnHead(bodyRotation, headRotation);
-    }
 
     protected void initDataTracker() {
         super.initDataTracker();
@@ -135,6 +142,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         if (tag.contains("Type")) {
             this.setDriderType(Type.valueOf(tag.getString("Type")));
         }
+        this.shieldCooldown = tag.getInt("shieldCooldown");
     }
 
     @Override
@@ -142,6 +150,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         super.writeCustomDataToNbt(tag);
 
         tag.putString("Type", this.getDriderType().toString());
+        tag.putInt("shieldCooldown", this.shieldCooldown);
     }
 
     public Type getDriderType() {
@@ -152,6 +161,67 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.dataTracker.startTracking(TYPE, type.toString());
     }
 
+    @Override
+    public void tickMovement() {
+        if (this.shieldCooldown > 0) {
+            --this.shieldCooldown;
+        }
+        super.tickMovement();
+    }
+
+    @Override
+    protected void takeShieldHit(LivingEntity attacker) {
+        super.takeShieldHit(attacker);
+        System.out.println(this.isBlocking());
+        if (attacker.getMainHandStack().getItem() instanceof AxeItem)
+            this.disableShield(true);
+    }
+    @Override
+    protected void damageShield(float damage) {
+        if (this.activeItemStack.getItem() instanceof ShieldItem) {
+            if (damage >= 3.0F) {
+                int i = 1 + MathHelper.floor(damage);
+                Hand hand = this.getActiveHand();
+                this.activeItemStack.damage(i, this, (entity) -> entity.sendToolBreakStatus(hand));
+                if (this.activeItemStack.isEmpty()) {
+                    if (hand == Hand.MAIN_HAND) {
+                        this.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                    } else {
+                        this.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+                    }
+                    this.activeItemStack = ItemStack.EMPTY;
+                    this.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + this.world.random.nextFloat() * 0.4F);
+                }
+            }
+        }
+    }
+    @Override
+    public void stopUsingItem() {
+        if (this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).hasModifier(SHIELD_SPEED_PENALTY))
+            this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).removeModifier(SHIELD_SPEED_PENALTY);
+        super.stopUsingItem();
+    }
+    @Override
+    public void setCurrentHand(Hand hand) {
+        ItemStack itemstack = this.getStackInHand(hand);
+        if (itemstack.getItem() instanceof ShieldItem) {
+            EntityAttributeInstance modifiableattributeinstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+            modifiableattributeinstance.removeModifier(SHIELD_SPEED_PENALTY);
+            modifiableattributeinstance.addTemporaryModifier(SHIELD_SPEED_PENALTY);
+        }
+        super.setCurrentHand(hand);
+    }
+
+    public void disableShield(boolean increase) {
+        float chance = 0.25F + (float) EnchantmentHelper.getEfficiency(this) * 0.05F;
+        if (increase)
+            chance += 0.75;
+        if (this.random.nextFloat() < chance) {
+            this.shieldCooldown = 100;
+            this.stopUsingItem();
+            this.world.sendEntityStatus(this, (byte) 30);
+        }
+    }
 
     @Override
     public AnimationFactory getFactory() {
@@ -166,6 +236,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
 
         super.onDeath(source);
     }
+
 
     @Override
     public int tickTimer() {
