@@ -7,29 +7,40 @@ import net.minecraft.nbt.NbtCompound;
 
 public class VIAlignmentComponent implements AutoSyncedComponent {
     private final PlayerEntity obj;
-    private int alignment = 0;
+    private int villagerAlignment = 0;
+    private int illagerAlignment = -50;
 
     public VIAlignmentComponent(PlayerEntity obj) {
         this.obj = obj;
     }
 
-    public void setAlignment(int alignment) {
-        this.alignment = alignment;
+    public void setVAlignment(int alignment) {
+        this.villagerAlignment = alignment;
     }
 
-    public int getAlignment() {
-        return alignment;
+    public int getVAlignment() {
+        return villagerAlignment;
+    }
+
+    public void setIAlignment(int alignment) {
+        this.illagerAlignment = alignment;
+    }
+
+    public int getIAlignment() {
+        return illagerAlignment;
     }
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        setAlignment(tag.getInt("alignment"));
+        setVAlignment(tag.getInt("valignment"));
+        setIAlignment(tag.getInt("ialignment"));
 
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        tag.putInt("alignment", this.getAlignment());
+        tag.putInt("valignment", this.getVAlignment());
+        tag.putInt("ialignment", this.getIAlignment());
 
     }
 }

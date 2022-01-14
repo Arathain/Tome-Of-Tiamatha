@@ -41,10 +41,12 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
 
         if (head != null) {
             head.setRotationX(extraData.headPitch * (float) Math.PI / 180F);
-            head.setRotationY(MathHelper.clamp(extraData.netHeadYaw * ((float) Math.PI / 180F) * 0.4f, -0.4f, 0.4f));
+            head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if (torso != null) {
             torso.setRotationY((float) MathHelper.clamp(extraData.netHeadYaw * ((float) Math.PI / 180F), -0.4, 0.4));
+            if(head != null)
+            head.setRotationY(head.getRotationY() - torso.getRotationY());
         }
         if (leftgUs != null) {
             leftgUs.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F) * 2.0F * entity.limbDistance * 0.5F)).getX());

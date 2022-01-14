@@ -24,7 +24,7 @@ import java.util.UUID;
 
 public class DriderPlayerComponent implements AutoSyncedComponent, ServerTickingComponent {
     private static final EntityAttributeModifier DRIDER_ATTACK_SPEED_MODIFIER = new EntityAttributeModifier(UUID.fromString("c2b783da-45c2-4fc2-8ba8-9d5b0d81434d"), "Drider modifier", 3, EntityAttributeModifier.Operation.ADDITION);
-    private static final EntityAttributeModifier DRIDER_MOVEMENT_SPEED_MODIFIER = new EntityAttributeModifier(UUID.fromString("53f0d4fe-52f6-4e23-b4d8-023a577fea2b"), "Drider modifier", 1.08, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+   // private static final EntityAttributeModifier DRIDER_MOVEMENT_SPEED_MODIFIER = new EntityAttributeModifier(UUID.fromString("53f0d4fe-52f6-4e23-b4d8-023a577fea2b"), "Drider modifier", 1.08, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     private static final EntityAttributeModifier DRIDER_ATTACK_DAMAGE_MODIFIER = new EntityAttributeModifier(UUID.fromString("35279bb7-44e5-4b33-8134-c4e1d3156ba3"), "Drider modifier", -0.2, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     private static final EntityAttributeModifier DRIDER_ARMOR_MODIFIER = new EntityAttributeModifier(UUID.fromString("5366c148-18ec-481d-948a-106ee533b437"), "Drider modifier", 12, EntityAttributeModifier.Operation.ADDITION);
     private static final EntityAttributeModifier DRIDER_ATTACK_RANGE_MODIFIER = new EntityAttributeModifier(UUID.fromString("e0db1b07-47c8-4c98-8751-92a0b6558f08"), "Drider modifier", -1, EntityAttributeModifier.Operation.ADDITION);
@@ -86,14 +86,14 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
         boolean dreeder = ToTUtil.isDrider(obj);
         EntityAttributeInstance attackSpeedAttribute = obj.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED);
         EntityAttributeInstance armorAttribute = obj.getAttributeInstance(EntityAttributes.GENERIC_ARMOR);
-        EntityAttributeInstance movementSpeedAttribute = obj.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        //EntityAttributeInstance movementSpeedAttribute = obj.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
         EntityAttributeInstance attackDamageAttribute = obj.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
         EntityAttributeInstance attackRange = obj.getAttributeInstance(ReachEntityAttributes.ATTACK_RANGE);
         EntityAttributeInstance reach = obj.getAttributeInstance(ReachEntityAttributes.REACH);
         if (dreeder && !attackSpeedAttribute.hasModifier(DRIDER_ATTACK_SPEED_MODIFIER)) {
             attackSpeedAttribute.addPersistentModifier(DRIDER_ATTACK_SPEED_MODIFIER);
             attackDamageAttribute.addPersistentModifier(DRIDER_ATTACK_DAMAGE_MODIFIER);
-            movementSpeedAttribute.addPersistentModifier(DRIDER_MOVEMENT_SPEED_MODIFIER);
+            //movementSpeedAttribute.addPersistentModifier(DRIDER_MOVEMENT_SPEED_MODIFIER);
             armorAttribute.addPersistentModifier(DRIDER_ARMOR_MODIFIER);
             attackRange.addPersistentModifier(DRIDER_ATTACK_RANGE_MODIFIER);
             reach.addPersistentModifier(DRIDER_REACH_MODIFIER);
@@ -104,7 +104,7 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
         }
         else if (!dreeder && attackSpeedAttribute.hasModifier(DRIDER_ATTACK_SPEED_MODIFIER)) {
             attackSpeedAttribute.removeModifier(DRIDER_ATTACK_SPEED_MODIFIER);
-            movementSpeedAttribute.removeModifier(DRIDER_MOVEMENT_SPEED_MODIFIER);
+            //movementSpeedAttribute.removeModifier(DRIDER_MOVEMENT_SPEED_MODIFIER);
             attackDamageAttribute.removeModifier(DRIDER_ATTACK_DAMAGE_MODIFIER);
             armorAttribute.removeModifier(DRIDER_ARMOR_MODIFIER);
             attackRange.removeModifier(DRIDER_ATTACK_RANGE_MODIFIER);
