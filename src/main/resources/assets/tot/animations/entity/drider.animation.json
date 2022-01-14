@@ -999,6 +999,22 @@
 				}
 			}
 		},
+		"shield": {
+			"loop": true,
+			"animation_length": 0.04167,
+			"bones": {
+				"leftarm": {
+					"rotation": {
+						"vector": [-90, 30, 0]
+					}
+				},
+				"leftItem": {
+					"rotation": {
+						"vector": [0, 0, 90]
+					}
+				}
+			}
+		},
 		"punch": {
 			"loop": true,
 			"animation_length": 0.41667,

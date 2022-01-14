@@ -114,7 +114,11 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         }
         if(this.isAttacking()) {
             animationBuilder.addAnimation("punch", true);
+        } else {
+            if(this.isBlocking())
+                animationBuilder.addAnimation("shield", true);
         }
+
         if(!animationBuilder.getRawAnimationList().isEmpty()) {
             event.getController().setAnimation(animationBuilder);
         }
