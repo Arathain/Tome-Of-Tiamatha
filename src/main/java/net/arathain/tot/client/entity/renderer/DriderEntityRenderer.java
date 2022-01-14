@@ -14,8 +14,10 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
@@ -36,7 +38,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
     public void renderEarly(DriderEntity driderEntity, MatrixStack stackIn, float ticks, VertexConsumerProvider vertexConsumerProvider, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.mainStack = driderEntity.getEquippedStack(EquipmentSlot.MAINHAND);
         this.offStack = driderEntity.getEquippedStack(EquipmentSlot.OFFHAND);
-        this.mainHandStack = driderEntity.preferredHand == Hand.MAIN_HAND;
+        this.mainHandStack = driderEntity.getMainArm() == Arm.RIGHT;
         this.vertexConsumerProvider = vertexConsumerProvider;
 
         super.renderEarly(driderEntity, stackIn, ticks, vertexConsumerProvider, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
@@ -45,22 +47,45 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
     @Override
     public void renderRecursively(GeoBone bone, MatrixStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         if (bone.getName().equals("rightItem")) {
-            stack.push();
-            stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
-            stack.scale(0.6f, 0.6f, 0.6f);
-            stack.translate(0.35,0.6,1.1f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(mainHandStack ? mainStack : offStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
-            stack.pop();
-            bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
+            if((mainStack).getUseAction() == UseAction.BLOCK) {
+                stack.push();
+                stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
+                stack.scale(0.68f, 0.68f, 0.68f);
+                stack.translate(0.35,0.5,1.0f);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(mainStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+                stack.pop();
+                bufferIn = rtb.getBuffer(RenderLayer.getItemEntityTranslucentCull(whTexture));
+            } else {
+                stack.push();
+                stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
+                stack.scale(0.68f, 0.68f, 0.68f);
+                stack.translate(0.35,0.5,0.9f);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(mainStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+                stack.pop();
+                bufferIn = rtb.getBuffer(RenderLayer.getItemEntityTranslucentCull(whTexture));
+            }
+
         }
         if (bone.getName().equals("leftItem")) {
-            stack.push();
-            stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
-            stack.scale(0.6f, 0.6f, 0.6f);
-            stack.translate(-0.35,0.6,1.1f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(mainHandStack ? offStack : mainStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
-            stack.pop();
-            bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
+            if((offStack).getUseAction() == UseAction.BLOCK) {
+                stack.push();
+                stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
+                stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
+                stack.scale(0.68f, 0.68f, 0.68f);
+                stack.translate(0.35, 0.5, -2.5f);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(offStack, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+                stack.pop();
+                bufferIn = rtb.getBuffer(RenderLayer.getItemEntityTranslucentCull(whTexture));
+            } else {
+                stack.push();
+                stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(160));
+                stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
+                stack.scale(0.68f, 0.68f, 0.68f);
+                stack.translate(0.32, -1.4, -0.4f);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(offStack, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+                stack.pop();
+                bufferIn = rtb.getBuffer(RenderLayer.getItemEntityTranslucentCull(whTexture));
+            }
         }
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }

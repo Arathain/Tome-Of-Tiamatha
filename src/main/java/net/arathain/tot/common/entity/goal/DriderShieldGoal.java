@@ -6,8 +6,8 @@ import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.RavagerEntity;
-import net.minecraft.item.ShieldItem;
 import net.minecraft.util.Hand;
+import net.minecraft.util.UseAction;
 
 public class DriderShieldGoal extends Goal {
     public final DriderEntity drider;
@@ -16,7 +16,7 @@ public class DriderShieldGoal extends Goal {
     }
     @Override
     public boolean canStart() {
-        return (drider.getOffHandStack().getItem() instanceof ShieldItem && raiseShield() && drider.shieldCooldown == 0);
+        return (drider.getOffHandStack().getUseAction() == UseAction.BLOCK && raiseShield() && drider.shieldCooldown == 0);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class DriderShieldGoal extends Goal {
     }
     @Override
     public void start() {
-        if (drider.getOffHandStack().getItem() instanceof ShieldItem)
+        if (drider.getOffHandStack().getUseAction() == UseAction.BLOCK)
             drider.setCurrentHand(Hand.OFF_HAND);
     }
 

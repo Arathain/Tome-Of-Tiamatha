@@ -4,6 +4,7 @@ import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.DriderEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -34,8 +35,9 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
         IBone head = this.getAnimationProcessor().getBone("head");
         IBone torso = this.getAnimationProcessor().getBone("torso");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        IBone leftgUs = this.getAnimationProcessor().getBone("leftArm");
-        IBone sendHelp = this.getAnimationProcessor().getBone("rightArm");
+        IBone leftArm = this.getAnimationProcessor().getBone("leftarm");
+        IBone leftItem = this.getAnimationProcessor().getBone("leftItem");
+        IBone sendHelp = this.getAnimationProcessor().getBone("rightarm");
         IBone leftGlove = this.getAnimationProcessor().getBone("glove2");
         leftGlove.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
 
@@ -48,12 +50,23 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
             if(head != null)
             head.setRotationY(head.getRotationY() - torso.getRotationY());
         }
-        if (leftgUs != null) {
-            leftgUs.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F) * 2.0F * entity.limbDistance * 0.5F)).getX());
+        if(leftArm != null) {
+            leftArm.setRotationX(leftArm.getRotationX());
+            leftArm.setRotationY(leftArm.getRotationY());
+            if(entity.isBlocking() && entity.getItemUseTimeLeft() > 0 && entity.getOffHandStack().getUseAction() == UseAction.BLOCK && !(entity.getMainHandStack().getUseAction() == UseAction.BLOCK)){
+                leftArm.setRotationX(leftArm.getRotationX() + 1.3f);
+                leftArm.setRotationY(leftArm.getRotationY() - 1);
+            }
         }
+
         if (sendHelp != null) {
-            sendHelp.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * 2.0F * entity.limbDistance * 0.5F + (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)))).getX());
-            sendHelp.setRotationZ((sendHelp.getRotationZ() + (entity.handSwingProgress * 0.5f)));
+            if(entity.isBlocking() && entity.getItemUseTimeLeft() > 0 && entity.getMainHandStack().getUseAction() == UseAction.BLOCK){
+                sendHelp.setRotationX(sendHelp.getRotationX() + 1.3f);
+                sendHelp.setRotationY(sendHelp.getRotationY() + 1);
+            } else {
+                sendHelp.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * 2.0F * entity.limbDistance * 0.5F + (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)))).getX());
+                sendHelp.setRotationZ((sendHelp.getRotationZ() + (entity.handSwingProgress * 0.5f)));
+            }
         }
     }
 

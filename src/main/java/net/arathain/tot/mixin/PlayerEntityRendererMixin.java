@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -56,10 +57,13 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             entity.handSwingProgress = player.handSwingProgress;
             entity.lastHandSwingProgress = player.lastHandSwingProgress;
             entity.forwardSpeed = player.forwardSpeed;
+            entity.setGlowing(player.isGlowing());
             entity.setSprinting(player.isSprinting());
             entity.setPitch(player.getPitch());
             entity.prevPitch = player.prevPitch;
+            entity.setLeftHanded(player.getMainArm() == Arm.RIGHT);
             entity.preferredHand = player.preferredHand;
+            entity.setActiveItemStack(player.getActiveItem());
             entity.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
             entity.setStackInHand(Hand.OFF_HAND, player.getOffHandStack());
             entity.setCurrentHand(player.getActiveHand() == null ? Hand.MAIN_HAND : player.getActiveHand());
@@ -72,6 +76,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             entity.setAttacking(player.isUsingItem());
             entity.setPose(player.getPose());
             entity.setSneaking(player.isSneaking());
+            entity.setPlayer(true);
+            entity.setUseTimeLeft(player.getItemUseTimeLeft());
             if (player.hasVehicle()) {
                 entity.startRiding(player.getVehicle(), true);
             }

@@ -3,7 +3,6 @@ package net.arathain.tot.common.entity;
 import net.arathain.tot.common.entity.goal.DriderAttackGoal;
 import net.arathain.tot.common.entity.goal.DriderShieldGoal;
 import net.arathain.tot.common.init.ToTObjects;
-import net.minecraft.client.render.entity.model.SpiderEntityModel;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -22,13 +21,13 @@ import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.AxeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -56,11 +55,16 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0).add(EntityAttributes.GENERIC_ARMOR, 6.0);
     }
     public int shieldCooldown;
+    private boolean player;
     public DriderEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
         this.ignoreCameraFrustum = false;
         this.stepHeight = 2f;
         this.setPersistent();
+    }
+
+    public void setPlayer(boolean player) {
+        this.player = player;
     }
 
     @Override
@@ -73,6 +77,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.targetSelector.add(1, new RevengeGoal(this, new Class[0]));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, true));
         this.targetSelector.add(3, new TargetGoal<>(this, IronGolemEntity.class));
     }
 
@@ -89,7 +94,24 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
 
         return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
     }
+    public void setUseTimeLeft(int timeLeft) {
+        itemUseTimeLeft = timeLeft;
+    }
 
+    @Override
+    public boolean isBlocking() {
+        if(player) {
+             if (this.activeItemStack.isEmpty()) {
+                 return false;
+             }
+             Item item = this.activeItemStack.getItem();
+             if (item.getUseAction(this.activeItemStack) != UseAction.BLOCK) {
+                 return false;
+             }
+            return item.getMaxUseTime(this.activeItemStack) - this.itemUseTimeLeft >= 5;
+        }
+        return super.isBlocking();
+    }
 
     protected void initDataTracker() {
         super.initDataTracker();
@@ -99,6 +121,9 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         } else {
             this.dataTracker.startTracking(TYPE, Type.DARK.toString());
         }
+    }
+    public void setActiveItemStack(ItemStack stack) {
+        activeItemStack = stack;
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -122,10 +147,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
             }
         }
         if(this.isAttacking()) {
-            animationBuilder.addAnimation("punch", true);
-        } else {
-            if(this.isBlocking())
-                animationBuilder.addAnimation("shield", true);
+            animationBuilder.addAnimation("punch", false);
         }
 
         if(!animationBuilder.getRawAnimationList().isEmpty()) {
@@ -177,12 +199,12 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     protected void takeShieldHit(LivingEntity attacker) {
         super.takeShieldHit(attacker);
         System.out.println(this.isBlocking());
-        if (attacker.getMainHandStack().getItem() instanceof AxeItem)
+        if (attacker.getMainHandStack().getUseAction() == UseAction.BLOCK)
             this.disableShield(true);
     }
     @Override
     protected void damageShield(float damage) {
-        if (this.activeItemStack.getItem() instanceof ShieldItem) {
+        if (this.activeItemStack.getUseAction() == UseAction.BLOCK) {
             if (damage >= 3.0F) {
                 int i = 1 + MathHelper.floor(damage);
                 Hand hand = this.getActiveHand();
@@ -208,7 +230,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     @Override
     public void setCurrentHand(Hand hand) {
         ItemStack itemstack = this.getStackInHand(hand);
-        if (itemstack.getItem() instanceof ShieldItem) {
+        if (itemstack.getUseAction() == UseAction.BLOCK) {
             EntityAttributeInstance modifiableattributeinstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             modifiableattributeinstance.removeModifier(SHIELD_SPEED_PENALTY);
             modifiableattributeinstance.addTemporaryModifier(SHIELD_SPEED_PENALTY);
