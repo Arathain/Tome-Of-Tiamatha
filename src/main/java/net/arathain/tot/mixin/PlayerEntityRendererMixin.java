@@ -66,7 +66,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             entity.setActiveItemStack(player.getActiveItem());
             entity.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
             entity.setStackInHand(Hand.OFF_HAND, player.getOffHandStack());
-            entity.setCurrentHand(player.getActiveHand() == null ? Hand.MAIN_HAND : player.getActiveHand());
+            entity.setCurrentHand(player.getActiveHand() == null ? Hand.OFF_HAND : player.getActiveHand());
             entity.preferredHand = player.preferredHand;
             //blursed
             entity.equipStack(EquipmentSlot.HEAD, player.getEquippedStack(EquipmentSlot.HEAD));

@@ -3,6 +3,7 @@ package net.arathain.tot.client.entity.model;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.DriderEntity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
@@ -56,6 +57,9 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
             if(entity.isBlocking() && entity.getItemUseTimeLeft() > 0 && entity.getOffHandStack().getUseAction() == UseAction.BLOCK && !(entity.getMainHandStack().getUseAction() == UseAction.BLOCK)){
                 leftArm.setRotationX(leftArm.getRotationX() + 1.3f);
                 leftArm.setRotationY(leftArm.getRotationY() - 1);
+            } else {
+                leftArm.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * 2.0F * entity.limbDistance * 0.5F + ((entity.getActiveHand() == Hand.OFF_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)) : 0))).getX());
+                leftArm.setRotationZ((leftArm.getRotationZ() - ((entity.getActiveHand() == Hand.OFF_HAND) ? (entity.handSwingProgress * 0.5f) : 0)));
             }
         }
 
@@ -64,8 +68,8 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
                 sendHelp.setRotationX(sendHelp.getRotationX() + 1.3f);
                 sendHelp.setRotationY(sendHelp.getRotationY() + 1);
             } else {
-                sendHelp.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * 2.0F * entity.limbDistance * 0.5F + (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)))).getX());
-                sendHelp.setRotationZ((sendHelp.getRotationZ() + (entity.handSwingProgress * 0.5f)));
+                sendHelp.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * -2.0F * entity.limbDistance * 0.5F + ((entity.getActiveHand() == Hand.MAIN_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)) : 0))).getX());
+                sendHelp.setRotationZ((sendHelp.getRotationZ() + ((entity.getActiveHand() == Hand.MAIN_HAND) ? (entity.handSwingProgress * 0.5f) : 0)));
             }
         }
     }

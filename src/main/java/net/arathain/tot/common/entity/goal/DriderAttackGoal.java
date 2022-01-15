@@ -4,6 +4,7 @@ import net.arathain.tot.common.entity.DriderEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.util.Hand;
+import net.minecraft.util.UseAction;
 
 public class DriderAttackGoal extends MeleeAttackGoal {
     private final DriderEntity drider;
@@ -51,11 +52,11 @@ public class DriderAttackGoal extends MeleeAttackGoal {
     @Override
     protected void attack(LivingEntity target, double squaredDistance) {
         double d0 = this.getSquaredMaxAttackDistance(target);
-        if (squaredDistance <= d0 && this.getCooldown() <= 0) {
+        if (squaredDistance <= d0 && this.getCooldown() <= 0 && (this.drider.attackedCooldown > 0 || drider.getOffHandStack().getUseAction() != UseAction.BLOCK || drider.hurtTime > 100 || (drider.getAttacker() == null))) {
             this.resetCooldown();
             this.drider.stopUsingItem();
             if (drider.shieldCooldown == 0)
-                this.drider.shieldCooldown = 8;
+                this.drider.shieldCooldown = 6;
             this.drider.swingHand(Hand.MAIN_HAND);
             this.drider.tryAttack(target);
         }

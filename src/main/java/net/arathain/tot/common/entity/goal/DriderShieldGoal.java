@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.RavagerEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
 
@@ -37,7 +38,7 @@ public class DriderShieldGoal extends Goal {
     protected boolean raiseShield() {
         LivingEntity target = drider.getTarget();
         if (target != null && drider.shieldCooldown == 0) {
-            return drider.distanceTo(target) <= 4.0D || target instanceof CreeperEntity || target instanceof RangedAttackMob && target.distanceTo(drider) >= 5.0D && target instanceof RavagerEntity;
+            return drider.distanceTo(target) <= 3.0D || target instanceof CreeperEntity || target instanceof RangedAttackMob && target.distanceTo(drider) >= 5.0D || target instanceof RavagerEntity || ( target instanceof IronGolemEntity && drider.distanceTo(target) <= 10.0D);
         }
         return false;
     }

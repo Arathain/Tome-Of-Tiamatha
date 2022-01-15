@@ -21,6 +21,7 @@ import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -55,6 +56,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0).add(EntityAttributes.GENERIC_ARMOR, 6.0);
     }
     public int shieldCooldown;
+    public int attackedCooldown;
     private boolean player;
     public DriderEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
@@ -88,6 +90,12 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.equipStack(EquipmentSlot.HEAD, ToTObjects.SILKSTEEL_HELMET.getDefaultStack());
         this.equipStack(EquipmentSlot.CHEST, ToTObjects.SILKSTEEL_CHESTPLATE.getDefaultStack());
     }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 1.1f;
+    }
+
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityTag) {
         this.initEquipment(difficulty);
@@ -133,14 +141,22 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         if(this.hasVehicle() && this.getVehicle() instanceof HorseEntity || this.getVehicle() instanceof PigEntity) {
             animationBuilder.addAnimation("horse", false);
         }
-        if(!this.hasVehicle() && event.isMoving() || isMoving) {
-            if(this.isSneaking()) {
-                animationBuilder.addAnimation("sneakForward", true);
+        if(!this.hasVehicle() && isMoving) {
+            if(forwardSpeed < 0) {
+                if (this.isSneaking() || this.getPose() == EntityPose.CROUCHING) {
+                    animationBuilder.addAnimation("sneakBackward", true);
+                } else {
+                    animationBuilder.addAnimation("walkBackward", true);
+                }
             } else {
-                animationBuilder.addAnimation("walkForward", true);
+                if (this.isSneaking() || this.getPose() == EntityPose.CROUCHING) {
+                    animationBuilder.addAnimation("sneakForward", true);
+                } else {
+                    animationBuilder.addAnimation("walkForward", true);
+                }
             }
         } else if(!this.hasVehicle()) {
-            if(this.isSneaking()) {
+            if(this.isSneaking() || this.getPose() == EntityPose.CROUCHING) {
                 animationBuilder.addAnimation("idleSneak", true);
             } else {
                 animationBuilder.addAnimation("idle", true);
@@ -169,6 +185,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
             this.setDriderType(Type.valueOf(tag.getString("Type")));
         }
         this.shieldCooldown = tag.getInt("shieldCooldown");
+        this.attackedCooldown = tag.getInt("attackedCooldown");
     }
 
     @Override
@@ -177,6 +194,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
 
         tag.putString("Type", this.getDriderType().toString());
         tag.putInt("shieldCooldown", this.shieldCooldown);
+        tag.putInt("attackedCooldown", this.attackedCooldown);
     }
 
     public Type getDriderType() {
@@ -192,14 +210,17 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         if (this.shieldCooldown > 0) {
             --this.shieldCooldown;
         }
+        if (this.attackedCooldown > 0) {
+            --this.attackedCooldown;
+        }
         super.tickMovement();
     }
 
     @Override
     protected void takeShieldHit(LivingEntity attacker) {
         super.takeShieldHit(attacker);
-        System.out.println(this.isBlocking());
-        if (attacker.getMainHandStack().getUseAction() == UseAction.BLOCK)
+        this.attackedCooldown = 10;
+        if (attacker.getMainHandStack().getItem() instanceof AxeItem)
             this.disableShield(true);
     }
     @Override
@@ -243,7 +264,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         if (increase)
             chance += 0.75;
         if (this.random.nextFloat() < chance) {
-            this.shieldCooldown = 100;
+            this.shieldCooldown = 80;
             this.stopUsingItem();
             this.world.sendEntityStatus(this, (byte) 30);
         }
