@@ -5,6 +5,7 @@ import net.arathain.tot.common.entity.goal.DriderShieldGoal;
 import net.arathain.tot.common.init.ToTObjects;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -14,6 +15,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.CaveSpiderEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SpiderEntity;
@@ -50,6 +52,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     private static final EntityAttributeModifier SHIELD_SPEED_PENALTY = new EntityAttributeModifier(SHIELD_UUID, "Use item speed penalty", -0.25D, EntityAttributeModifier.Operation.ADDITION);
     private final AnimationFactory factory = new AnimationFactory(this);
     public static final TrackedData<String> TYPE = DataTracker.registerData(DriderEntity.class, TrackedDataHandlerRegistry.STRING);
+    public static final EntityDimensions crouchingDimensions = EntityDimensions.changing(0.9f, 1.0f);
 
 
     public static DefaultAttributeContainer.Builder createDriderAttributes() {
@@ -72,7 +75,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(2, new DriderAttackGoal(this, 2.0, false));
+        this.goalSelector.add(2, new DriderAttackGoal(this, 1.0, false));
         this.goalSelector.add(0, new DriderShieldGoal(this));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
@@ -204,6 +207,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     public void setDriderType(Type type) {
         this.dataTracker.startTracking(TYPE, type.toString());
     }
+
 
     @Override
     public void tickMovement() {

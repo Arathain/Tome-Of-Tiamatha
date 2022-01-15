@@ -43,7 +43,7 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
         leftGlove.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
 
         if (head != null) {
-            head.setRotationX(extraData.headPitch * (float) Math.PI / 180F);
+            head.setRotationX(head.getRotationX() + (extraData.headPitch * (float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if (torso != null) {

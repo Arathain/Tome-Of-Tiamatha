@@ -41,7 +41,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
     @Inject(method = "drawEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;scale(FFF)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void drawDrider(int x, int y, int size, float mouseX, float mouseY, LivingEntity entity, CallbackInfo ci, float f, float g, MatrixStack matrixStack, MatrixStack matrixstack2) {
         if(entity instanceof DriderEntity || (entity instanceof PlayerEntity player && ToTUtil.isDrider(player))) {
-            matrixstack2.scale(1.4f, 1.0f / (ToTEntities.DRIDER.getHeight() * 1.3f), 1.4f);
+            matrixstack2.scale(1.4f, 1.0f / (ToTEntities.DRIDER.getHeight()), 1.4f);
         }
     }
 }
