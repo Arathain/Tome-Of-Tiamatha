@@ -2,8 +2,10 @@ package net.arathain.tot.common.component;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.MathHelper;
 
 public class VIAlignmentComponent implements AutoSyncedComponent {
     private final PlayerEntity obj;
@@ -15,7 +17,7 @@ public class VIAlignmentComponent implements AutoSyncedComponent {
     }
 
     public void setVAlignment(int alignment) {
-        this.villagerAlignment = alignment;
+        this.villagerAlignment = MathHelper.clamp(alignment, -200, 200);
     }
 
     public int getVAlignment() {
@@ -23,11 +25,18 @@ public class VIAlignmentComponent implements AutoSyncedComponent {
     }
 
     public void setIAlignment(int alignment) {
-        this.illagerAlignment = alignment;
+        this.illagerAlignment = MathHelper.clamp(alignment, -200, 200);
     }
 
     public int getIAlignment() {
         return illagerAlignment;
+    }
+
+    public void incrementVAlignment(int increment) {
+        setVAlignment(this.villagerAlignment + increment);
+    }
+    public void incrementIAlignment(int increment) {
+        setIAlignment(this.illagerAlignment + increment);
     }
 
     @Override
