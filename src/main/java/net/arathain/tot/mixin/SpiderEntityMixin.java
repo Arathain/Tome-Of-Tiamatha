@@ -1,6 +1,6 @@
 package net.arathain.tot.mixin;
 
-import net.arathain.tot.common.entity.ToTUtil;
+import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
 import net.minecraft.entity.EntityType;

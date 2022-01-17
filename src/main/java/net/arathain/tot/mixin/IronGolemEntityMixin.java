@@ -1,6 +1,6 @@
 package net.arathain.tot.mixin;
 
-import net.arathain.tot.common.entity.ToTUtil;
+import net.arathain.tot.common.util.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;

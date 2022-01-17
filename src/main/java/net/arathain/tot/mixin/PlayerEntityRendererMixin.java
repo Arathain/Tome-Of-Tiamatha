@@ -1,7 +1,7 @@
 package net.arathain.tot.mixin;
 
 import net.arathain.tot.common.entity.DriderEntity;
-import net.arathain.tot.common.entity.ToTUtil;
+import net.arathain.tot.common.util.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.init.ToTEntities;
 import net.fabricmc.api.EnvType;

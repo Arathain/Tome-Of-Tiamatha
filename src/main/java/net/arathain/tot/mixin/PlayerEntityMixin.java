@@ -1,16 +1,17 @@
 package net.arathain.tot.mixin;
 
+import net.arathain.tot.common.component.DriderPlayerComponent;
 import net.arathain.tot.common.entity.DriderEntity;
 import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -63,6 +64,19 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         if (ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && state.getBlock() instanceof CobwebBlock) {
             info.cancel();
             this.movementMultiplier = new Vec3d(3, 3, 3);
+        }
+    }
+    @Inject(method = "tickMovement", at = @At("HEAD"))
+    private void adjustDriderSneaking(CallbackInfo info) {
+        if (ToTComponents.DRIDER_COMPONENT.get(this).isDrider()) {
+            if(isInSneakingPose()) {
+                EntityAttributeInstance modifiableattributeinstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+                modifiableattributeinstance.removeModifier(DriderPlayerComponent.DRIDER_MOVEMENT_SPEED_MODIFIER);
+                modifiableattributeinstance.addTemporaryModifier(DriderPlayerComponent.DRIDER_MOVEMENT_SPEED_MODIFIER);
+            } else {
+                if (this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).hasModifier(DriderPlayerComponent.DRIDER_MOVEMENT_SPEED_MODIFIER))
+                    this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).removeModifier(DriderPlayerComponent.DRIDER_MOVEMENT_SPEED_MODIFIER);
+            }
         }
     }
 

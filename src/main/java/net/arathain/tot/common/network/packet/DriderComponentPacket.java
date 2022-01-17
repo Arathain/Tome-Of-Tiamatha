@@ -42,7 +42,6 @@ public class DriderComponentPacket {
                 if(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() < 3) {
                     player.addStatusEffect( new StatusEffectInstance(ToTEffects.BROODS_CURSE, 1200, player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() + 1, player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() > 3, true));
                     driderComponent.setStage(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() + 1);
-                    System.out.println("activated");
                 } else if(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() >= 3) {
                     ScaleData width = ToTScaleTypes.MODIFY_WIDTH_TYPE.getScaleData(player);
                     ScaleData height = ToTScaleTypes.MODIFY_HEIGHT_TYPE.getScaleData(player);
