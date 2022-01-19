@@ -1,7 +1,7 @@
-package net.arathain.tot.common.entity;
+package net.arathain.tot.common.entity.living;
 
-import net.arathain.tot.common.entity.goal.DriderAttackGoal;
-import net.arathain.tot.common.entity.goal.DriderShieldGoal;
+import net.arathain.tot.common.entity.living.goal.DriderAttackGoal;
+import net.arathain.tot.common.entity.living.goal.DriderShieldGoal;
 import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -158,14 +158,15 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
                 }
             }
         } else if(!this.hasVehicle()) {
+            if(getPose() == EntityPose.SLEEPING) {
+                animationBuilder.addAnimation("sleep", true);
+            } else
             if(this.isSneaking() || this.getPose() == EntityPose.CROUCHING) {
                 animationBuilder.addAnimation("idleSneak", true);
             } else {
                 animationBuilder.addAnimation("idle", true);
             }
-        }
-        if(this.isAttacking()) {
-            animationBuilder.addAnimation("punch", false);
+
         }
 
         if(!animationBuilder.getRawAnimationList().isEmpty()) {
@@ -281,12 +282,23 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     @Override
     public void onDeath(DamageSource source) {
         if (this.getRandom().nextInt(20) == 3) {
+
             this.dropStack(this.getMainHandStack());
         }
 
         super.onDeath(source);
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.getPose() == EntityPose.SLEEPING) {
+            this.setBodyYaw(-this.getYaw());
+            this.setHeadYaw(-this.getYaw());
+            this.setPitch(-this.getPitch());
+            this.setRotation(this.getYaw(), this.getPitch());
+        }
+    }
 
     @Override
     public int tickTimer() {

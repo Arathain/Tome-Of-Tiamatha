@@ -1,6 +1,6 @@
-package net.arathain.tot.common.entity.goal;
+package net.arathain.tot.common.entity.living.goal;
 
-import net.arathain.tot.common.entity.DriderEntity;
+import net.arathain.tot.common.entity.living.DriderEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;

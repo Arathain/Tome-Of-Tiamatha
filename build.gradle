@@ -35,6 +35,10 @@ repositories {
 		}
 	}
 	maven {
+		name = "Shedaniel's Maven"
+		url = "https://maven.shedaniel.me/"
+	}
+	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/releases"
 		content {
@@ -60,6 +64,10 @@ dependencies {
 	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+	include("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
+	modImplementation("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
+	include("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")
+	modImplementation("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")
 	modCompileOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
 	modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
 	modImplementation "io.github.ladysnake:locki:${project.locki_version}"
@@ -95,6 +103,10 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/tot.accesswidener")
 }
 
 // configure the maven publication

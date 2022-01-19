@@ -1038,6 +1038,202 @@
 				}
 			}
 		},
+		"sleep": {
+			"loop": true,
+			"animation_length": 4,
+			"bones": {
+				"body": {
+					"rotation": {
+						"vector": [-90, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, -8]
+					}
+				},
+				"torso": {
+					"rotation": {
+						"0.0": {
+							"vector": [100, 0, 0]
+						},
+						"1.0": {
+							"vector": [102, 0, 0],
+							"easing": "easeOutQuad"
+						},
+						"3.0": {
+							"vector": [98, 0, 0],
+							"easing": "easeInOutSine"
+						},
+						"4.0": {
+							"vector": [100, 0, 0],
+							"easing": "easeInSine"
+						}
+					},
+					"position": {
+						"vector": [0, -2, -1]
+					}
+				},
+				"mandibles": {
+					"position": {
+						"vector": [0, -1, 0]
+					}
+				},
+				"mandible1": {
+					"rotation": {
+						"0.0": {
+							"vector": [40, 0, 0]
+						},
+						"2.0": {
+							"vector": [60, 0, 0],
+							"easing": "easeInSine"
+						},
+						"4.0": {
+							"vector": [40, 0, 0],
+							"easing": "easeInSine"
+						}
+					}
+				},
+				"part": {
+					"rotation": {
+						"0.0": {
+							"vector": [20, 10, 0]
+						},
+						"2.0": {
+							"vector": [10, -5, 0],
+							"easing": "easeInSine"
+						},
+						"4.0": {
+							"vector": [20, 10, 0],
+							"easing": "easeInSine"
+						}
+					}
+				},
+				"mandible2": {
+					"rotation": {
+						"0.0": {
+							"vector": [50, 0, 0]
+						},
+						"2.0": {
+							"vector": [60, 0, 0]
+						},
+						"4.0": {
+							"vector": [50, 0, 0]
+						}
+					}
+				},
+				"part2": {
+					"rotation": {
+						"0.0": {
+							"vector": [20, -20, 0]
+						},
+						"2.0": {
+							"vector": [-10, -10, 0]
+						},
+						"4.0": {
+							"vector": [20, -20, 0]
+						}
+					}
+				},
+				"abdomen": {
+					"rotation": {
+						"0.0": {
+							"vector": [-37.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [-45, 0, 0],
+							"easing": "easeInSine"
+						},
+						"3.0": {
+							"vector": [-35, 0, 0],
+							"easing": "easeInSine"
+						},
+						"4.0": {
+							"vector": [-37.5, 0, 0]
+						}
+					}
+				},
+				"leftlegs": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 60]
+						},
+						"2.0": {
+							"vector": [0, 0, 62],
+							"easing": "easeInOutSine"
+						},
+						"4.0": {
+							"vector": [0, 0, 60],
+							"easing": "easeInOutSine"
+						}
+					},
+					"position": {
+						"vector": [-2, 4, 0]
+					}
+				},
+				"rightlegs": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -60]
+						},
+						"2.0": {
+							"vector": [0, 0, -62],
+							"easing": "easeInOutSine"
+						},
+						"4.0": {
+							"vector": [0, 0, -60],
+							"easing": "easeInOutSine"
+						}
+					},
+					"position": {
+						"vector": [2, 4, 0]
+					}
+				},
+				"rightleg1": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"joint": {
+					"rotation": {
+						"vector": [0, 0, -30]
+					}
+				},
+				"joint2": {
+					"rotation": {
+						"vector": [0, 0, -40]
+					}
+				},
+				"joint3": {
+					"rotation": {
+						"vector": [-5, 0, -30]
+					}
+				},
+				"joint4": {
+					"rotation": {
+						"vector": [0, 0, -20]
+					}
+				},
+				"joint5": {
+					"rotation": {
+						"vector": [5, 0, -20]
+					}
+				},
+				"joint7": {
+					"rotation": {
+						"vector": [0, 0, -40]
+					}
+				},
+				"joint8": {
+					"rotation": {
+						"vector": [0, 0, -20]
+					}
+				},
+				"joint6": {
+					"rotation": {
+						"vector": [0, 0, -40]
+					}
+				}
+			}
+		},
 		"punch": {
 			"loop": true,
 			"animation_length": 0.41667,

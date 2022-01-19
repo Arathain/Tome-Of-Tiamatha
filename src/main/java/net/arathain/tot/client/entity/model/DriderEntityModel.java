@@ -1,7 +1,7 @@
 package net.arathain.tot.client.entity.model;
 
 import net.arathain.tot.TomeOfTiamatha;
-import net.arathain.tot.common.entity.DriderEntity;
+import net.arathain.tot.common.entity.living.DriderEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -10,7 +10,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
@@ -33,6 +32,7 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
     @Override
     public void codeAnimations(DriderEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.codeAnimations(entity, uniqueID, customPredicate);
+        IBone body = this.getAnimationProcessor().getBone("body");
         IBone head = this.getAnimationProcessor().getBone("head");
         IBone torso = this.getAnimationProcessor().getBone("torso");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);

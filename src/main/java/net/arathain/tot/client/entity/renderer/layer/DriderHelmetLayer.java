@@ -1,11 +1,10 @@
 package net.arathain.tot.client.entity.renderer.layer;
 
 import net.arathain.tot.TomeOfTiamatha;
-import net.arathain.tot.common.entity.DriderEntity;
+import net.arathain.tot.common.entity.living.DriderEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.DyeableArmorItem;

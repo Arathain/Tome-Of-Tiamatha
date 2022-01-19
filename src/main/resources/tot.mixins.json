@@ -5,11 +5,14 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ArmorItemMixin",
+    "EntityTrackerEntryMixin",
     "IronGolemEntityMixin",
+    "LivingEntityMixin",
     "NoiseChunkGeneratorMixin",
     "PlayerEntityMixin",
     "RaiderEntityMixin",
     "SpiderEntityMixin",
+    "ThreadedAnvilChunkStorageMixin",
     "VillagerEntityMixin"
   ],
   "client": [

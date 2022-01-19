@@ -1,8 +1,11 @@
 package net.arathain.tot.common.item;
 
+import net.arathain.tot.common.entity.string.StringKnotEntity;
+import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.util.ToTUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
@@ -35,9 +38,6 @@ public class SynthesisScepterItem extends MiningToolItem {
     private static final String FOCUS_KEY = "Focus";
     private static final String PRIM_KEY = "Primary";
     private static final String SEC_KEY = "Secondary";
-//    private ItemStack focusStack;
-//    private ItemStack primaryEffectStack;
-//    private ItemStack secondaryEffectStack;
     public SynthesisScepterItem(ToolMaterial material, Settings settings) {
         super(-3, -1, material, BlockTags.PICKAXE_MINEABLE, settings);
     }
@@ -111,23 +111,22 @@ public class SynthesisScepterItem extends MiningToolItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-//        ItemStack offHandStack = user.getStackInHand(hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
-//        if (addToScepter(itemStack, offHandStack)) {
-//            offHandStack.decrement(1);
-//            user.incrementStat(Stats.USED.getOrCreateStat(this));
-//            return TypedActionResult.success(itemStack, world.isClient());
-//        }
-        boolean hitscanRequired = hasFocus(itemStack) && getFocusStack(itemStack).getItem().equals(Items.TOTEM_OF_UNDYING);
+        boolean hitscanRequired = hasFocus(itemStack) && getFocusStack(itemStack).getItem().equals(Items.TOTEM_OF_UNDYING) || getFocusStack(itemStack).getItem().equals(ToTObjects.GAZING_LILY);
         if (!getUsing(itemStack) && hitscanRequired) {
-            BlockHitResult blockHit = ToTUtil.hitscanBlock(world, user, 60, RaycastContext.FluidHandling.NONE, (target) -> !target.equals(Blocks.AIR));
-            EntityHitResult entityHit = ToTUtil.hitscanEntity(world, user, 60, (target) -> target instanceof LivingEntity && !target.isSpectator() && user.canSee(target));
+            BlockHitResult blockHit = ToTUtil.hitscanBlock(world, user, 64, RaycastContext.FluidHandling.NONE, (target) -> !target.equals(Blocks.AIR));
+            EntityHitResult entityHit = ToTUtil.hitscanEntity(world, user, 64, (target) -> target instanceof LivingEntity && !target.isSpectator() && user.canSee(target));
             if (entityHit !=null) {
 
                 setTargetPos(itemStack, (float)entityHit.getPos().x, (float)entityHit.getPos().y, (float)entityHit.getPos().z);
                 setUsing(itemStack, true);
             }
             if (entityHit == null) {
-                setTargetPos(itemStack, (float)blockHit.getPos().x, (float)blockHit.getPos().y, (float)blockHit.getPos().z);
+                Vec3d pos = blockHit.getPos();
+                if(getFocusStack(itemStack).getItem().equals(ToTObjects.GAZING_LILY)) {
+                    pos = new Vec3d(blockHit.getBlockPos().getX(), blockHit.getBlockPos().getY(), blockHit.getBlockPos().getZ());
+                }
+
+                setTargetPos(itemStack, (float)pos.x, (float)pos.y, (float)pos.z);
                 setUsing(itemStack, true);
             }
         }
@@ -136,8 +135,35 @@ public class SynthesisScepterItem extends MiningToolItem {
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        System.out.println("balls");
-        System.out.println(getFocusStack(stack).getItem().equals(Items.TOTEM_OF_UNDYING));
+        if(!world.isClient() && hasFocus(stack) && getFocusStack(stack).getItem().equals(ToTObjects.GAZING_LILY)) {
+            NbtCompound targetPos = (NbtCompound) stack.getNbt().get("targetPos");
+            assert targetPos != null;
+            BlockPos blockPos = new BlockPos(targetPos.getFloat("X"), targetPos.getFloat("Y"), targetPos.getFloat("Z"));
+            Block block = world.getBlockState(blockPos).getBlock();
+                if (StringKnotEntity.canConnectTo(block)) {
+                    if (!world.isClient) {
+                        StringKnotEntity knot = StringKnotEntity.getOrCreate(world, blockPos, false);
+                        if (!StringKnotEntity.tryAttachHeldStringsToBlock((PlayerEntity) user, world, blockPos, knot)) {
+                            // If this didn't work connect the player to the new chain instead.
+                            assert knot != null; // This can never happen as long as getOrCreate has false as parameter.
+                            if (knot.getHoldingEntities().contains(user)) {
+                                knot.detachString(user, true, false);
+                                knot.onBreak(null);
+                            } else if (knot.attachString(user, true, 0)) {
+                                knot.onPlace();
+                            }
+                        }
+                    }
+                }
+
+            if (StringKnotEntity.canConnectTo(block)) {
+                if (world.isClient) {
+
+                } else {
+                    StringKnotEntity.tryAttachHeldStringsToBlock((PlayerEntity) user, world, blockPos, StringKnotEntity.getOrCreate(world, blockPos, true));
+                }
+            }
+        }
         if(!world.isClient() && hasFocus(stack) && getFocusStack(stack).getItem().equals(Items.TOTEM_OF_UNDYING)) {
             NbtCompound targetPos = (NbtCompound) stack.getNbt().get("targetPos");
             assert targetPos != null;
@@ -145,22 +171,25 @@ public class SynthesisScepterItem extends MiningToolItem {
             double d = Math.min(pos.getY(), user.getY());
             double e = Math.max(pos.getY(), user.getY()) + 1.0;
             float f = (float) MathHelper.atan2(pos.getZ() - user.getZ(), pos.getX() - user.getX());
-
-            if (user.isSneaking()) {
-                float g;
-                int i;
-                for (i = 0; i < 5; ++i) {
-                    g = f + (float)i * (float)Math.PI * 0.4f;
-                    this.conjureFangs(user.getX() + (double)MathHelper.cos(g) * 1.5, user.getZ() + (double)MathHelper.sin(g) * 1.5, d, e, g, 0, user);
-                }
-                for (i = 0; i < 8; ++i) {
-                    g = f + (float)i * (float)Math.PI * 2.0f / 8.0f + 1.2566371f;
-                    this.conjureFangs(user.getX() + (double)MathHelper.cos(g) * 2.5, user.getZ() + (double)MathHelper.sin(g) * 2.5, d, e, g, 3, user);
-                }
+            if (hasPrim(stack) && getPrimaryEffectStack(stack).getItem().equals(ToTObjects.GAZING_LILY)) {
+                GazingLilyItem.summonLilyFangs(pos, user);
             } else {
-                for (int i = 0; i < 16; ++i) {
-                    double g = 1.25 * (double)(i + 1);
-                    this.conjureFangs(user.getX() + (double)MathHelper.cos(f) * g, user.getZ() + (double)MathHelper.sin(f) * g, d, e, f, i, user);
+                if (user.isSneaking()) {
+                    float g;
+                    int i;
+                    for (i = 0; i < 5; ++i) {
+                        g = f + (float) i * (float) Math.PI * 0.4f;
+                        conjureFangs(user.getX() + (double) MathHelper.cos(g) * 1.5, user.getZ() + (double) MathHelper.sin(g) * 1.5, d, e, g, 0, user);
+                    }
+                    for (i = 0; i < 8; ++i) {
+                        g = f + (float) i * (float) Math.PI * 2.0f / 8.0f + 1.2566371f;
+                        conjureFangs(user.getX() + (double) MathHelper.cos(g) * 2.5, user.getZ() + (double) MathHelper.sin(g) * 2.5, d, e, g, 3, user);
+                    }
+                } else {
+                    for (int i = 0; i < 16; ++i) {
+                        double g = 1.25 * (double) (i + 1);
+                        conjureFangs(user.getX() + (double) MathHelper.cos(f) * g, user.getZ() + (double) MathHelper.sin(f) * g, d, e, f, i, user);
+                    }
                 }
             }
         }
@@ -257,7 +286,7 @@ public class SynthesisScepterItem extends MiningToolItem {
     }
 
     //hardcoded dumb specific stuff go here
-    private void conjureFangs(double x, double z, double maxY, double y, float yaw, int warmup, LivingEntity user) {
+    public static void conjureFangs(double x, double z, double maxY, double y, float yaw, int warmup, LivingEntity user) {
         BlockPos blockPos = new BlockPos(x, y, z);
         boolean bl = false;
         double d = 0.0;

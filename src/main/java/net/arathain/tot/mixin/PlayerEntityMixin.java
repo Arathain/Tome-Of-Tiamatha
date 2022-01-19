@@ -1,7 +1,7 @@
 package net.arathain.tot.mixin;
 
 import net.arathain.tot.common.component.DriderPlayerComponent;
-import net.arathain.tot.common.entity.DriderEntity;
+import net.arathain.tot.common.entity.living.DriderEntity;
 import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
@@ -11,12 +11,9 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

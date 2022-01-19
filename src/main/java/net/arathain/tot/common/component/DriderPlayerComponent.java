@@ -5,7 +5,7 @@ import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import io.github.ladysnake.locki.DefaultInventoryNodes;
 import net.arathain.tot.TomeOfTiamatha;
-import net.arathain.tot.common.entity.DriderEntity;
+import net.arathain.tot.common.entity.living.DriderEntity;
 import net.arathain.tot.common.util.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.entity.EquipmentSlot;

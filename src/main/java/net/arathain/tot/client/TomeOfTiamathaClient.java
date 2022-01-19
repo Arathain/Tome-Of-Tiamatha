@@ -1,7 +1,9 @@
 package net.arathain.tot.client;
 
+import draylar.omegaconfiggui.OmegaConfigGui;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.client.entity.renderer.DriderEntityRenderer;
+import net.arathain.tot.client.entity.string.StringClient;
 import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.init.ToTEffects;
 import net.arathain.tot.common.init.ToTEntities;
@@ -21,6 +23,8 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
     public void onInitializeClient() {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB);
         EntityRendererRegistry.register(ToTEntities.DRIDER, DriderEntityRenderer::new);
+        OmegaConfigGui.registerConfigScreen(TomeOfTiamatha.CONFIG);
+        StringClient.init();
         ClientTickEvents.END_WORLD_TICK.register(new ClientTickEvents.EndWorldTick() {
 
             @Override

@@ -1,5 +1,6 @@
 package net.arathain.tot;
 
+import draylar.omegaconfig.OmegaConfig;
 import io.github.ladysnake.locki.InventoryLock;
 import io.github.ladysnake.locki.Locki;
 import net.arathain.tot.common.init.ToTEffects;
@@ -7,8 +8,12 @@ import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.init.ToTScaleTypes;
 import net.arathain.tot.common.network.packet.DriderComponentPacket;
+import net.arathain.tot.common.util.ToTCallbacks;
+import net.arathain.tot.common.util.ToTUtil;
+import net.arathain.tot.common.util.config.ToTConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
@@ -20,6 +25,7 @@ public class TomeOfTiamatha implements ModInitializer {
 	public static String MODID = "tot";
 	public static final ItemGroup GROUP = FabricItemGroupBuilder.build(new Identifier(MODID, MODID), () -> new ItemStack(Blocks.MAGENTA_BED));
 	public static final InventoryLock DRIDER_LOCK = Locki.registerLock(new Identifier(MODID, "drider"), true);
+	public static final ToTConfig CONFIG = OmegaConfig.register(ToTConfig.class);
 
 	@Override
 	public void onInitialize() {
@@ -29,5 +35,6 @@ public class TomeOfTiamatha implements ModInitializer {
 		ToTEffects.init();
 		ToTScaleTypes.init();
 		ServerPlayNetworking.registerGlobalReceiver(DriderComponentPacket.ID, DriderComponentPacket::handle);
+		UseBlockCallback.EVENT.register(ToTCallbacks::stringUseEvent);
 	}
 }
