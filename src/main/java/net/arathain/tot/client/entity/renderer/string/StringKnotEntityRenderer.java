@@ -36,12 +36,10 @@ import java.util.ArrayList;
 public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
     private static final Identifier KNOT_TEXTURE = StringUtils.identifier("textures/entity/drider/string/string_knot.png");
     private static final Identifier CHAIN_TEXTURE = StringUtils.identifier("textures/entity/drider/string/string.png");;
-    private final StringKnotEntityModel<StringKnotEntity> model;
     private final StringRenderer stringRenderer = new StringRenderer();
 
     public StringKnotEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
-        this.model = new StringKnotEntityModel<>(context.getPart(StringClient.CHAIN_KNOT));
     }
 
     @Override
@@ -75,13 +73,10 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         Vec3d leashOffset = StringKnotEntity.getLeashPos(tickDelta).subtract(StringKnotEntity.getLerpedPos(tickDelta));
         matrices.translate(leashOffset.x, leashOffset.y + 6.5/16f, leashOffset.z);
         matrices.scale(5/6f, 1, 5/6f);
-        this.model.setAngles(StringKnotEntity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(this.model.getLayer(KNOT_TEXTURE));
-        this.model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
         matrices.pop();
         ArrayList<Entity> entities = StringKnotEntity.getHoldingEntities();
         for (Entity entity : entities) {
-            this.createChainLine(StringKnotEntity, tickDelta, matrices, vertexConsumers, entity);
+            this.createStringLine(StringKnotEntity, tickDelta, matrices, vertexConsumers, entity);
         }
         super.render(StringKnotEntity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
@@ -97,7 +92,7 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
      * @param vertexConsumerProvider The VertexConsumerProvider, whatever it does.
      * @param toEntity               The entity that we connect the chain to, this can be a {@link PlayerEntity} or a {@link StringKnotEntity}.
      */
-    private void createChainLine(StringKnotEntity fromEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, Entity toEntity) {
+    private void createStringLine(StringKnotEntity fromEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, Entity toEntity) {
         if (toEntity == null) return; // toEntity can be null, this will return the function if it is null.
         matrices.push();
 
@@ -131,8 +126,8 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         // Now we gather light information for the chain. Since the chain is lighter if there is more light.
         BlockPos blockPosOfStart = new BlockPos(fromEntity.getCameraPosVec(tickDelta));
         BlockPos blockPosOfEnd = new BlockPos(toEntity.getCameraPosVec(tickDelta));
-        blockPosOfStart = new BlockPos((blockPosOfStart.getX() + blockPosOfEnd.getX())/2, (blockPosOfStart.getY() + blockPosOfEnd.getY())/2, (blockPosOfStart.getZ() + blockPosOfEnd.getZ())/2);
-        blockPosOfEnd = blockPosOfStart;
+        blockPosOfStart = new BlockPos(MathHelper.lerp(0.3, blockPosOfStart.getX(), blockPosOfEnd.getX()), MathHelper.lerp(0.3, blockPosOfStart.getY(), blockPosOfEnd.getY()), MathHelper.lerp(0.3, blockPosOfStart.getZ(), blockPosOfEnd.getZ()));
+        blockPosOfEnd = new BlockPos(MathHelper.lerp(0.7, blockPosOfStart.getX(), blockPosOfEnd.getX()), MathHelper.lerp(0.7, blockPosOfStart.getY(), blockPosOfEnd.getY()), MathHelper.lerp(0.7, blockPosOfStart.getZ(), blockPosOfEnd.getZ()));
         int blockLightLevelOfStart = fromEntity.world.getLightLevel(LightType.BLOCK, blockPosOfStart);
         int blockLightLevelOfEnd = toEntity.world.getLightLevel(LightType.BLOCK, blockPosOfEnd);
         int skylightLevelOfStart = fromEntity.world.getLightLevel(LightType.SKY, blockPosOfStart);

@@ -3,6 +3,7 @@ package net.arathain.tot.common.entity.string;
 import io.netty.buffer.Unpooled;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.init.ToTEntities;
+import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.network.NetworkingPackages;
 import net.arathain.tot.common.network.packet.StringSpawnPacketCreator;
 import net.arathain.tot.common.util.StringUtils;
@@ -236,7 +237,7 @@ public class StringKnotEntity extends AbstractDecorationEntity {
             if (sourceEntity instanceof PlayerEntity player) {
                 boolean isCreative = ((PlayerEntity) sourceEntity).isCreative();
                 if (!player.getMainHandStack().isEmpty()
-                        && FabricToolTags.SHEARS.contains(player.getMainHandStack().getItem()) || player.getMainHandStack().getItem() instanceof ToolItem && ((ToolItem)((PlayerEntity) sourceEntity).getMainHandStack().getItem()).getMaterial().getAttackDamage() > ((PlayerEntity) sourceEntity).getRandom().nextInt(30)) {
+                        && FabricToolTags.SHEARS.contains(player.getMainHandStack().getItem()) || player.getMainHandStack().getItem() instanceof ToolItem && ((ToolItem)((PlayerEntity) sourceEntity).getMainHandStack().getItem()).getMaterial().getAttackDamage() > ((PlayerEntity) sourceEntity).getRandom().nextInt(30) || ToTUtil.isDrider(sourceEntity)) {
                     ArrayList<Entity> list = this.getHoldingEntities();
                     for (Entity entity : list) {
                         if (entity instanceof StringKnotEntity) {

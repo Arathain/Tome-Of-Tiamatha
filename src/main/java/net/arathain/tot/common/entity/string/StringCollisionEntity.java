@@ -1,8 +1,10 @@
 package net.arathain.tot.common.entity.string;
 
 import net.arathain.tot.common.init.ToTEntities;
+import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.network.NetworkingPackages;
 import net.arathain.tot.common.network.packet.StringSpawnPacketCreator;
+import net.arathain.tot.common.util.ToTUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
@@ -10,7 +12,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ToolItem;
@@ -18,6 +22,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.function.Function;
@@ -76,7 +82,7 @@ public class StringCollisionEntity extends Entity {
             } else if (sourceEntity instanceof PlayerEntity
                     && startOwner instanceof StringKnotEntity && endOwner instanceof StringKnotEntity) {
                 boolean isCreative = ((PlayerEntity) sourceEntity).isCreative();
-                if (!((PlayerEntity) sourceEntity).getMainHandStack().isEmpty() && FabricToolTags.SHEARS.contains(((PlayerEntity) sourceEntity).getMainHandStack().getItem()) || ((PlayerEntity) sourceEntity).getMainHandStack().getItem() instanceof ToolItem && ((ToolItem)((PlayerEntity) sourceEntity).getMainHandStack().getItem()).getMaterial().getAttackDamage() > ((PlayerEntity) sourceEntity).getRandom().nextInt(30)) {
+                if (!((PlayerEntity) sourceEntity).getMainHandStack().isEmpty() && FabricToolTags.SHEARS.contains(((PlayerEntity) sourceEntity).getMainHandStack().getItem()) || ((PlayerEntity) sourceEntity).getMainHandStack().getItem() instanceof ToolItem && ((ToolItem)((PlayerEntity) sourceEntity).getMainHandStack().getItem()).getMaterial().getAttackDamage() > ((PlayerEntity) sourceEntity).getRandom().nextInt(30) || ToTUtil.isDrider(sourceEntity)) {
                     ((StringKnotEntity) startOwner).damageLink(isCreative, (StringKnotEntity) endOwner);
                 }
             }
@@ -116,7 +122,7 @@ public class StringCollisionEntity extends Entity {
     @Override
     public boolean shouldRender(double distance) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (player != null && player.isHolding(item -> item.isIn(FabricToolTags.SHEARS) || item.getItem() instanceof ToolItem)) {
+        if (player != null && player.isHolding(item -> item.isIn(FabricToolTags.SHEARS) || item.getItem() instanceof ToolItem) || ToTUtil.isDrider(player)) {
             return super.shouldRender(distance);
         } else {
             return false;
@@ -138,6 +144,9 @@ public class StringCollisionEntity extends Entity {
      */
     @Override
     public boolean isCollidable() {
+        for (Entity entity : this.world.getEntitiesByClass(LivingEntity.class, new Box(this.getPos().add(-0.3, -0.3, -0.3), this.getPos().add(0.3, 0.3, 0.3)), entity -> (!ToTUtil.isDrider(entity)) && !(entity instanceof SpiderEntity))) {
+            entity.slowMovement(ToTObjects.HANGING_WEB.getDefaultState(), new Vec3d(entity.isOnGround() ? 0.02f : 0.00000001f, 0.01f, entity.isOnGround() ? 0.02f : 0.00000001f));
+        }
         return true;
     }
 
