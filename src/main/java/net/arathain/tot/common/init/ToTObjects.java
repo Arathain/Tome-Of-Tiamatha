@@ -1,9 +1,12 @@
 package net.arathain.tot.common.init;
 
+import com.github.crimsondawn45.fabricshieldlib.lib.object.FabricShieldItem;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.block.HangingWebBlock;
 import net.arathain.tot.common.item.GazingLilyItem;
+import net.arathain.tot.common.item.SilksteelArmorItem;
 import net.arathain.tot.common.item.SynthesisScepterItem;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -25,10 +28,11 @@ public class ToTObjects {
 
     //registry starts here
     public static final Block HANGING_WEB = createBlock("hanging_web", new HangingWebBlock(FabricBlockSettings.of(Material.COBWEB).noCollision().requiresTool().strength(4.0F).nonOpaque()), true);
-    public static final Item SILKSTEEL_HELMET = createItem("silksteel_helmet", new ArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.HEAD, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
-    public static final Item SILKSTEEL_CHESTPLATE = createItem("silksteel_chestplate", new ArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.CHEST, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
+    public static final Item SILKSTEEL_HELMET = createItem("silksteel_helmet", new SilksteelArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.HEAD, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
+    public static final Item SILKSTEEL_CHESTPLATE = createItem("silksteel_chestplate", new SilksteelArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.CHEST, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
     public static final Item SYNTHESIS_SCEPTRE = createItem("synthesis_sceptre", new SynthesisScepterItem(ToolMaterials.NETHERITE, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.RARE)));
     public static final Item GAZING_LILY = createItem("gazing_lily", new GazingLilyItem(new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
+    public static final Item SILKSTEEL_SHIELD = createItem("silksteel_shield", new FabricShieldItem(new FabricItemSettings().group(TomeOfTiamatha.GROUP).maxDamage(2600), 6, 8));
     //registry end here
 
     //funky bits (do not touch)

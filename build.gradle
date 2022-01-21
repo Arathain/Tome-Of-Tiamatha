@@ -61,6 +61,8 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${cca_version}"
 	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.24'
+	modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
+	include "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
@@ -70,6 +72,8 @@ dependencies {
 	modImplementation("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")
 	modCompileOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
 	modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
+	modApi "io.github.ladysnake:satin:${project.satin_version}"
+	include "io.github.ladysnake:satin:${project.satin_version}"
 	modImplementation "io.github.ladysnake:locki:${project.locki_version}"
 	include "io.github.ladysnake:locki:${project.locki_version}"
 
