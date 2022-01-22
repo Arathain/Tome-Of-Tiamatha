@@ -60,7 +60,7 @@ dependencies {
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${cca_version}"
-	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.24'
+	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.27'
 	modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 	include "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {

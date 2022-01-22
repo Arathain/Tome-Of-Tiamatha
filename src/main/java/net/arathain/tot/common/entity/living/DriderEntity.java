@@ -88,7 +88,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     @Override
     protected void initEquipment(LocalDifficulty difficulty) {
         this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD));
-        this.setStackInHand(Hand.OFF_HAND, new ItemStack(Items.SHIELD));
+        this.setStackInHand(Hand.OFF_HAND, new ItemStack(ToTObjects.SILKSTEEL_SHIELD));
         this.equipStack(EquipmentSlot.HEAD, ToTObjects.SILKSTEEL_HELMET.getDefaultStack());
         this.equipStack(EquipmentSlot.CHEST, ToTObjects.SILKSTEEL_CHESTPLATE.getDefaultStack());
     }
