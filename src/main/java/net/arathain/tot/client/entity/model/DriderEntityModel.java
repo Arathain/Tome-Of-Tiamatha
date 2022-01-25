@@ -1,7 +1,7 @@
 package net.arathain.tot.client.entity.model;
 
 import net.arathain.tot.TomeOfTiamatha;
-import net.arathain.tot.common.entity.living.DriderEntity;
+import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;

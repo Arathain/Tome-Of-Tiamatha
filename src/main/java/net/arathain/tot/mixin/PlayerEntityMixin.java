@@ -1,7 +1,7 @@
 package net.arathain.tot.mixin;
 
 import net.arathain.tot.common.component.DriderPlayerComponent;
-import net.arathain.tot.common.entity.living.DriderEntity;
+import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;

@@ -1,4 +1,4 @@
-package net.arathain.tot.common.entity.living;
+package net.arathain.tot.common.entity.living.drider;
 
 import net.arathain.tot.common.entity.living.goal.DriderAttackGoal;
 import net.arathain.tot.common.entity.living.goal.DriderShieldGoal;

@@ -1,7 +1,7 @@
 package net.arathain.tot.common.util;
 
 import net.arathain.tot.common.component.DriderPlayerComponent;
-import net.arathain.tot.common.entity.living.DriderEntity;
+import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;

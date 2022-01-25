@@ -4,7 +4,7 @@ import net.arathain.tot.client.entity.model.DriderEntityModel;
 import net.arathain.tot.client.entity.renderer.layer.DriderChestplateLayer;
 import net.arathain.tot.client.entity.renderer.layer.DriderHelmetLayer;
 import net.arathain.tot.client.entity.renderer.layer.ScuffedFixLayer;
-import net.arathain.tot.common.entity.living.DriderEntity;
+import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
