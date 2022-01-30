@@ -1,5 +1,8 @@
 package net.arathain.tot.common.entity.living.drider.weavekin;
 
+import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.arathain.tot.common.entity.living.goal.ObedientRevengeGoal;
+import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -8,11 +11,11 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.SpiderEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -29,6 +32,7 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
     public WeavechildEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
     }
+    private int maturingAge;
 
     @Override
     protected void initGoals() {
@@ -38,24 +42,51 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
-        this.targetSelector.add(1, new RevengeGoal(this).setGroupRevenge());
-        this.targetSelector.add(2, new TargetGoal<PlayerEntity>(this, PlayerEntity.class));
-        this.targetSelector.add(3, new TargetGoal<IronGolemEntity>(this, IronGolemEntity.class));
-        this.goalSelector.add(3, new SmartFleeGoal<>(this, IronGolemEntity.class));
-        this.goalSelector.add(3, new SmartFleeGoal<>(this, PlayerEntity.class));
+        this.targetSelector.add(1, new ObedientRevengeGoal(this, DriderEntity.class).setGroupRevenge());
+        this.targetSelector.add(1, new ActiveTargetGoal<>(this, AnimalEntity.class, true));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, 10, true, false, golem -> true));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.maturingAge >= 1200) {
+            this.growUp();
+        }
+    }
+    public void growUp() {
+        WeavethrallEntity grown = new WeavethrallEntity(ToTEntities.WEAVETHRALL, this.getEntityWorld());
+        grown.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
+        world.spawnEntity(grown);
+        this.remove(RemovalReason.DISCARDED);
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        nbt.putInt("age", this.maturingAge);
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        this.maturingAge = nbt.getInt("age");
     }
 
     public static DefaultAttributeContainer.Builder createWeavechildAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0).add(EntityAttributes.GENERIC_ARMOR, 4.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0).add(EntityAttributes.GENERIC_ARMOR, 4.0);
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "controller", 5, this::predicate));
+        animationData.addAnimationController(new AnimationController<>(this, "controller", 3, this::predicate));
     }
+
     @Override
     public boolean tryAttack(Entity target) {
         if (super.tryAttack(target)) {
+            target.timeUntilRegen = 0;
             if (target instanceof LivingEntity) {
                 int i = 0;
                 if (this.world.getDifficulty() == Difficulty.NORMAL) {
@@ -66,6 +97,9 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
                 if (i > 0) {
                     ((LivingEntity)target).addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, i * 20, 0), this);
                 }
+                if(target instanceof AnimalEntity) {
+                    this.maturingAge = maturingAge + 150;
+                }
             }
             return true;
         }
@@ -75,6 +109,7 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
         return 0.45f;
     }
+
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
@@ -100,50 +135,6 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
         return age;
     }
 
-    static class TargetGoal<T extends LivingEntity>
-            extends ActiveTargetGoal<T> {
-        public TargetGoal(SpiderEntity spider, Class<T> targetEntityClass) {
-            super((MobEntity)spider, targetEntityClass, true);
-        }
-
-        @Override
-        public boolean canStart() {
-            int f = 0;
-            f += this.mob.getWorld().getEntitiesByClass(SpiderEntity.class, this.mob.getBoundingBox().expand(10), mob -> true).size();
-            f += this.mob.getWorld().getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(10), ToTUtil::isDrider).size();
-            if (targetEntity != null && f >= targetEntity.getHealth()/3 && !ToTUtil.isDrider(targetEntity)) {
-                return super.canStart();
-            }
-            return false;
-        }
-    }
-    static class SmartFleeGoal<T extends LivingEntity> extends FleeEntityGoal<T> {
-        public SmartFleeGoal(PathAwareEntity mob, Class<T> fleeFromType) {
-            super(mob, fleeFromType, 10, 0.4f, 1.0f);
-        }
-
-        @Override
-        public boolean canStart() {
-            int f = 0;
-            f += this.mob.getWorld().getEntitiesByClass(SpiderEntity.class, this.mob.getBoundingBox().expand(10), mob -> true).size();
-            f += this.mob.getWorld().getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(10), ToTUtil::isDrider).size();
-            if (targetEntity != null && f < targetEntity.getHealth()/3 && !ToTUtil.isDrider(targetEntity)) {
-                return false;
-            }
-            return super.canStart();
-        }
-
-        @Override
-        public boolean shouldContinue() {
-            int f = 0;
-            f += this.mob.getWorld().getEntitiesByClass(SpiderEntity.class, this.mob.getBoundingBox().expand(10), mob -> true).size();
-            f += this.mob.getWorld().getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(10), ToTUtil::isDrider).size();
-            if (targetEntity != null && f < targetEntity.getHealth()/3 && !ToTUtil.isDrider(targetEntity)) {
-                return false;
-            }
-            return super.shouldContinue();
-        }
-    }
 
 
 }

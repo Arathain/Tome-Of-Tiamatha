@@ -55,7 +55,7 @@ public class StringKnotEntity extends AbstractDecorationEntity {
     /**
      * The distance when it is visible.
      */
-    private static final double VISIBLE_RANGE = 2048.0D;
+    private static final double VISIBLE_RANGE = 8192.0D;
 
     /**
      * The x/z distance between {@link StringCollisionEntity StringCollisionEntities}.
@@ -517,6 +517,8 @@ public class StringKnotEntity extends AbstractDecorationEntity {
 
         this.COLLISION_STORAGE.put(entity.getId(), entityIdList);
     }
+
+
 
     /**
      * Spawns a collider at v percent between entity1 and entity2

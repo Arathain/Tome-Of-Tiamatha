@@ -65,7 +65,7 @@ public class StringCollisionEntity extends Entity {
     }
 
     /**
-     * When this entity is attacked by a player with a item that has Tag: {@link FabricToolTags#SHEARS},
+     * When this entity is attacked by a player with the right tool or being a drider,
      * it calls the {@link StringKnotEntity#damageLink(boolean, StringKnotEntity)} method
      * to destroy the link between the {@link #startOwnerId} and {@link #endOwnerId}
      */

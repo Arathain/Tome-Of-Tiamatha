@@ -5,19 +5,24 @@ import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
+import net.minecraft.block.SlimeBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Optional;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -28,11 +33,20 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Override
     public boolean isClimbing() {
-        if(!super.isClimbing() && !(this.isOnGround() || this.isSprinting())&& ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && horizontalCollision || this.getBlockStateAtPos().getBlock() instanceof CobwebBlock) {
+        if(!super.isClimbing() && !(this.isOnGround() || this.isSprinting()) && ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && horizontalCollision || this.getBlockStateAtPos().getBlock() instanceof CobwebBlock) {
+            this.climbingPos = Optional.of(this.getBlockPos());
             return true;
         } else {
             return super.isClimbing();
         }
+    }
+
+    @Override
+    public boolean canHaveStatusEffect(StatusEffectInstance effect) {
+        if(ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && effect.getEffectType() == StatusEffects.SATURATION || effect.getEffectType() == StatusEffects.HUNGER || effect.getEffectType() == StatusEffects.POISON) {
+            return false;
+        }
+        return super.canHaveStatusEffect(effect);
     }
 
     @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
