@@ -34,7 +34,7 @@ public class ToTCallbacks {
                 if (!world.isClient) {
                     StringKnotEntity knot = StringKnotEntity.getOrCreate(world, blockPos, false);
                     if (!StringKnotEntity.tryAttachHeldStringsToBlock(player, world, blockPos, knot)) {
-                        // If this didn't work connect the player to the new chain instead.
+                        // If this didn't work connect the player to the new string instead.
                         assert knot != null; // This can never happen as long as getOrCreate has false as parameter.
                         if (knot.getHoldingEntities().contains(player)) {
                             knot.detachString(player, true, false);

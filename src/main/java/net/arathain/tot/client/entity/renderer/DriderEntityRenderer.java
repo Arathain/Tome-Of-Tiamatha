@@ -2,6 +2,7 @@ package net.arathain.tot.client.entity.renderer;
 
 import net.arathain.tot.client.entity.model.DriderEntityModel;
 import net.arathain.tot.client.entity.renderer.layer.DriderChestplateLayer;
+import net.arathain.tot.client.entity.renderer.layer.DriderEyeLayer;
 import net.arathain.tot.client.entity.renderer.layer.DriderHelmetLayer;
 import net.arathain.tot.client.entity.renderer.layer.ScuffedFixLayer;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
@@ -10,6 +11,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
@@ -32,6 +34,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
         this.addLayer(new DriderHelmetLayer(this));
         this.addLayer(new DriderChestplateLayer(this));
         this.addLayer(new ScuffedFixLayer(this));
+        this.addLayer(new DriderEyeLayer(this));
     }
 
     @Override

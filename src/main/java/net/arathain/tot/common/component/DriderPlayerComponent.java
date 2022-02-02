@@ -75,7 +75,7 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
     public void serverTick() {
         boolean dreeder = ToTUtil.isDrider(obj);
         if (dreeder) {
-            obj.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, Integer.MAX_VALUE, 0, true, false));
+           // obj.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, Integer.MAX_VALUE, 0, true, false));
         }
     }
 

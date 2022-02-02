@@ -6,6 +6,7 @@ import net.arathain.tot.client.entity.renderer.DriderEntityRenderer;
 import net.arathain.tot.client.entity.renderer.WeavechildEntityRenderer;
 import net.arathain.tot.client.entity.renderer.WeaverkinEggRenderer;
 import net.arathain.tot.client.entity.renderer.WeavethrallEntityRenderer;
+import net.arathain.tot.client.entity.shader.ToTShaderHandler;
 import net.arathain.tot.client.entity.string.StringClient;
 import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.init.ToTEffects;
@@ -33,6 +34,7 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(ToTEntities.WEAVERKIN_EGG, (BlockEntityRendererFactory.Context rendererDispatcherIn) -> new WeaverkinEggRenderer());
         OmegaConfigGui.registerConfigScreen(TomeOfTiamatha.CONFIG);
         StringClient.init();
+        ToTShaderHandler.init();
         ClientTickEvents.END_WORLD_TICK.register(world -> {
             PlayerEntity player = MinecraftClient.getInstance().player;
             if (player != null && player.hasStatusEffect(ToTEffects.BROODS_CURSE) && player.getStatusEffect(ToTEffects.BROODS_CURSE).getDuration() < 80 && !ToTComponents.DRIDER_COMPONENT.get(player).isDrider()) {
