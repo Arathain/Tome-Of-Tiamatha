@@ -203,7 +203,8 @@
 					"parent": "spider",
 					"pivot": [0, 8, -4],
 					"cubes": [
-						{"origin": [-3, 5, -10], "size": [6, 6, 6], "inflate": 0.5, "uv": [0, 0]}
+						{"origin": [-3, 5, -10], "size": [6, 6, 6], "inflate": 0.5, "uv": [0, 0]},
+						{"origin": [-3, 5, -10], "size": [6, 6, 6], "inflate": 0.51, "uv": [24, 0]}
 					]
 				},
 				{

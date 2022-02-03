@@ -22,7 +22,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.List;
 
 public class WeaverkinEggBlockEntity extends BlockEntity implements IAnimatable {
-    private AnimationFactory factory = new AnimationFactory(this);
+    private final AnimationFactory factory = new AnimationFactory(this);
     public static final AnimationBuilder IDLE = new AnimationBuilder().addAnimation("idle");
     public static final AnimationBuilder HATCH = new AnimationBuilder().addAnimation("hatch");
     private static int breakTicker = 0;
