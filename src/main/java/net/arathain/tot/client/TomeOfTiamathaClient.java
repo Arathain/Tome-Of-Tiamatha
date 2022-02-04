@@ -2,10 +2,7 @@ package net.arathain.tot.client;
 
 import draylar.omegaconfiggui.OmegaConfigGui;
 import net.arathain.tot.TomeOfTiamatha;
-import net.arathain.tot.client.entity.renderer.DriderEntityRenderer;
-import net.arathain.tot.client.entity.renderer.WeavechildEntityRenderer;
-import net.arathain.tot.client.entity.renderer.WeaverkinEggRenderer;
-import net.arathain.tot.client.entity.renderer.WeavethrallEntityRenderer;
+import net.arathain.tot.client.entity.renderer.*;
 import net.arathain.tot.client.entity.shader.ToTShaderHandler;
 import net.arathain.tot.client.entity.string.StringClient;
 import net.arathain.tot.common.init.ToTComponents;
@@ -29,6 +26,7 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
     public void onInitializeClient() {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB);
         EntityRendererRegistry.register(ToTEntities.DRIDER, DriderEntityRenderer::new);
+        EntityRendererRegistry.register(ToTEntities.ARACHNE, ArachneEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVECHILD, WeavechildEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVETHRALL, WeavethrallEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(ToTEntities.WEAVERKIN_EGG, (BlockEntityRendererFactory.Context rendererDispatcherIn) -> new WeaverkinEggRenderer());
