@@ -9,13 +9,19 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.boss.BossBar;
+import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -24,6 +30,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class ArachneEntity extends DriderEntity {
+    private final ServerBossBar bossBar = (new ServerBossBar(this.getDisplayName(), BossBar.Color.PINK, BossBar.Style.PROGRESS));
     public ArachneEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -49,6 +56,33 @@ public class ArachneEntity extends DriderEntity {
         }
         return PlayState.CONTINUE;
     }
+
+    @Override
+    protected void mobTick() {
+        this.bossBar.setPercent(this.getHealth()/this.getMaxHealth());
+        super.mobTick();
+    }
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (age % 60 == 0 && getHealth() < getMaxHealth()) {
+            heal(4);
+        }
+    }
+
+    @Override
+    public void onStartedTrackingBy(ServerPlayerEntity player) {
+        super.onStartedTrackingBy(player);
+        this.bossBar.addPlayer(player);
+    }
+
+    @Override
+    public void onStoppedTrackingBy(ServerPlayerEntity player) {
+        super.onStoppedTrackingBy(player);
+        this.bossBar.removePlayer(player);
+    }
+
     private <E extends IAnimatable> PlayState torsoPredicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
 
@@ -58,6 +92,16 @@ public class ArachneEntity extends DriderEntity {
             event.getController().setAnimation(animationBuilder);
         }
         return PlayState.CONTINUE;
+    }
+    public void setCustomName(@Nullable Text name) {
+        super.setCustomName(name);
+        this.bossBar.setName(this.getDisplayName());
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.bossBar.setName(this.getDisplayName());
     }
 
 }

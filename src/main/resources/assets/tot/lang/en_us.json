@@ -7,5 +7,10 @@
   "item.tot.gazing_lily": "Gazing Lily",
   "item.tot.silksteel_shield": "Silksteel Shield",
   "effect.tot.broods_curse": "Brood's Curse",
-  "tot.text.drider_not_meat": "Your body cannot digest this."
+  "tot.text.drider_not_meat": "Your body cannot digest this.",
+
+  "entity.tot.drider": "Drider",
+  "entity.tot.weavechild": "Weavechild",
+  "entity.tot.weavethrall": "Weavethrall",
+  "entity.tot.arachne": "Drider Broodmother"
 }
