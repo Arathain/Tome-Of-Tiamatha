@@ -79,10 +79,15 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
-        this.targetSelector.add(1, new RevengeGoal(this, new Class[0]));
+        this.targetSelector.add(1, new RevengeGoal(this, SpiderEntity.class).setGroupRevenge());
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, true));
         this.targetSelector.add(3, new TargetGoal<>(this, IronGolemEntity.class));
+    }
+
+    @Override
+    public boolean isTeammate(Entity other) {
+        return other instanceof DriderEntity || super.isTeammate(other);
     }
 
     @Override
