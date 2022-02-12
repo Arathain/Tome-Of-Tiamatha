@@ -16,7 +16,7 @@ public class ArachneRestGoal extends Goal {
     }
     @Override
     public boolean canStart() {
-        return !arachne.getRestingPos().isWithinDistance(arachne.getBlockPos(), 50) && !(arachne.getTarget() == null);
+        return !arachne.getRestingPos().isWithinDistance(arachne.getBlockPos(), 20) && !(arachne.getTarget() == null);
     }
     @Override
     public void stop()
@@ -40,7 +40,7 @@ public class ArachneRestGoal extends Goal {
         else
         {
             Vec3d movePos;
-            if (arachne.getNavigation().isIdle() && (movePos = FuzzyTargeting.findTo(arachne, 16, 10, restingPos)) != null)
+            if (arachne.getNavigation().isIdle() && (movePos = FuzzyTargeting.findTo(arachne, 8, 2, restingPos)) != null)
                 arachne.getNavigation().startMovingTo(movePos.x, movePos.y, movePos.y, 1.1);
         }
     }

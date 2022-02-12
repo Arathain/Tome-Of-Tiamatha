@@ -21,9 +21,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.PillagerEntity;
 import net.minecraft.entity.mob.SpiderEntity;
-import net.minecraft.entity.passive.HorseEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -44,13 +42,14 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class ArachneEntity extends DriderEntity {
-    public static final TrackedData<Boolean> RESTING = DataTracker.registerData(DriderEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    protected static final TrackedData<Byte> ARACHNE_FLAGS = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     public static final TrackedData<BlockPos> RESTING_POS = DataTracker.registerData(DriderEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
 
     private final ServerBossBar bossBar = (new ServerBossBar(this.getDisplayName(), BossBar.Color.PINK, BossBar.Style.PROGRESS));
     public ArachneEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
     }
+    private boolean sitting;
     public static DefaultAttributeContainer.Builder createArachneAttributes() {
         return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 200.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0).add(EntityAttributes.GENERIC_ARMOR, 12.0);
     }
@@ -58,11 +57,11 @@ public class ArachneEntity extends DriderEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(2, new DriderAttackGoal(this, 1.0, false));
+        //this.goalSelector.add(2, new DriderAttackGoal(this, 1.0, false));
         //this.goalSelector.add(0, new DriderShieldGoal(this));
         this.goalSelector.add(5, new WanderAroundGoal(this, 0.7));
         this.goalSelector.add(1, new ArachneRestGoal(this));
-        this.goalSelector.add(2, new ArachneSitGoal(this));
+        this.goalSelector.add(0, new ArachneSitGoal(this));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 10.0f));
         this.goalSelector.add(6, new LookAtEntityGoal(this, DriderEntity.class, 6.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
@@ -71,7 +70,39 @@ public class ArachneEntity extends DriderEntity {
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, true));
     }
 
+    @Override
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
+        tag.putBoolean("Sitting", this.sitting);
+    }
 
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.bossBar.setName(this.getDisplayName());
+        this.sitting = nbt.getBoolean("Sitting");
+        this.setInSittingPose(this.sitting);
+    }
+    public boolean isInSittingPose() {
+        return (this.dataTracker.get(ARACHNE_FLAGS) & 1) != 0;
+    }
+
+    public void setInSittingPose(boolean inSittingPose) {
+        byte b = this.dataTracker.get(ARACHNE_FLAGS);
+        if (inSittingPose) {
+            this.dataTracker.set(ARACHNE_FLAGS, (byte)(b | 1));
+        } else {
+            this.dataTracker.set(ARACHNE_FLAGS, (byte)(b & -2));
+        }
+
+    }
+    public boolean isSitting() {
+        return this.sitting;
+    }
+
+    public void setSitting(boolean sitting) {
+        this.sitting = sitting;
+    }
 
     @Override
     public void registerControllers(AnimationData animationData) {
@@ -82,8 +113,8 @@ public class ArachneEntity extends DriderEntity {
         AnimationBuilder animationBuilder = new AnimationBuilder();
         if(!this.hasVehicle() && event.isMoving()) {
             animationBuilder.addAnimation("walk", true);
-        } else if(dataTracker.get(RESTING)) {
-            animationBuilder.addAnimation("idleSit", true);
+        } else if(isInSittingPose()) {
+            animationBuilder.addAnimation("sitIdle", true);
         } else if(!this.hasVehicle()) {
             animationBuilder.addAnimation("idle", true);
         }
@@ -96,24 +127,30 @@ public class ArachneEntity extends DriderEntity {
 
     protected void initDataTracker() {
         super.initDataTracker();
-
-        this.dataTracker.startTracking(RESTING, false);
+        this.dataTracker.startTracking(ARACHNE_FLAGS, (byte)0);
         this.dataTracker.startTracking(RESTING_POS, BlockPos.ORIGIN);
     }
 
     @Override
     protected void mobTick() {
         this.bossBar.setPercent(this.getHealth()/this.getMaxHealth());
-//        if((this.getRestingPos() == null || (this.getRestingPos() != null && !this.getRestingPos().isWithinDistance(this.getBlockPos(), 500))) && this.isOnGround()) {
-//            this.setRestingPos(this.getBlockPos());
-//        }
+        if(!isSitting()) {
+            this.setRestingPos(this.getBlockPos());
+            this.setSitting(true);
+        }
+        System.out.println("the soop");
+        System.out.println(this.getRestingPos().getX());
+        System.out.println(this.getRestingPos().getY());
+        System.out.println(this.getRestingPos().getZ());
+        System.out.println("-----");
+
         super.mobTick();
     }
     @Override
     public void tick() {
         super.tick();
 
-        if (age % 60 == 0 && getHealth() < getMaxHealth()) {
+        if (age % 120 == 0 && getHealth() < getMaxHealth()) {
             heal(4);
         }
     }
@@ -135,6 +172,7 @@ public class ArachneEntity extends DriderEntity {
         this.bossBar.removePlayer(player);
     }
 
+
     private <E extends IAnimatable> PlayState torsoPredicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
 
@@ -155,12 +193,6 @@ public class ArachneEntity extends DriderEntity {
     }
     public void setCustomName(@Nullable Text name) {
         super.setCustomName(name);
-        this.bossBar.setName(this.getDisplayName());
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
         this.bossBar.setName(this.getDisplayName());
     }
 

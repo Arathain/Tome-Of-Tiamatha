@@ -1,35 +1,38 @@
 package net.arathain.tot.common.entity.living.goal;
 
 import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.passive.TameableEntity;
 
 import java.util.EnumSet;
 
 public class ArachneSitGoal extends Goal {
     private final ArachneEntity arachne;
-    public ArachneSitGoal(ArachneEntity arachneEntity) {
-        arachne = arachneEntity;
-        setControls(EnumSet.of(Control.MOVE));
-    }
-    @Override
-    public boolean canStart() {
-        return !(arachne.getTarget() == null) && arachne.getBlockPos().isWithinDistance(arachne.getRestingPos(), 2);
+
+    public ArachneSitGoal(ArachneEntity tameable) {
+        this.arachne = tameable;
+        this.setControls(EnumSet.of(Control.JUMP, Control.MOVE));
     }
 
-    @Override
-    public void start() {
-        arachne.getDataTracker().set(ArachneEntity.RESTING, true);
-        super.start();
-    }
-
-    @Override
     public boolean shouldContinue() {
-        return canStart();
+        return this.arachne.isSitting();
     }
 
-    @Override
+    public boolean canStart() {
+        if (this.arachne.getTarget() != null) {
+            return false;
+        } else if (this.arachne.isInsideWaterOrBubbleColumn()) {
+            return false;
+        } else return this.arachne.isOnGround();
+    }
+
+    public void start() {
+        this.arachne.getNavigation().stop();
+        this.arachne.setInSittingPose(true);
+    }
+
     public void stop() {
-        arachne.getDataTracker().set(ArachneEntity.RESTING, false);
-        super.stop();
+        this.arachne.setInSittingPose(false);
     }
 }

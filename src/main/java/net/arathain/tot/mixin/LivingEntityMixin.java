@@ -34,11 +34,11 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "getGroup", at = @At("HEAD"), cancellable = true)
-    private void getGroup(CallbackInfoReturnable<EntityGroup> callbackInfo) {
-        if ((Object) this instanceof PlayerEntity) {
-            if (ToTUtil.isDrider(this)) {
-                callbackInfo.setReturnValue(EntityGroup.ARTHROPOD);
-            }
+    private void getGroup(CallbackInfoReturnable<EntityGroup> callbackInfo) {if ((Object) this instanceof PlayerEntity) {
+        if (ToTUtil.isDrider(this)) {
+            callbackInfo.setReturnValue(EntityGroup.ARTHROPOD);
         }
+    }
+
     }
 }
