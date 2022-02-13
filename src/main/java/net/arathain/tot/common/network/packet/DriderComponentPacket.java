@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -41,8 +42,13 @@ public class DriderComponentPacket {
             if(player.hasStatusEffect(ToTEffects.BROODS_CURSE)) {
                 if(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() < 3) {
                     player.addStatusEffect( new StatusEffectInstance(ToTEffects.BROODS_CURSE, 1200, player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() + 1, player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() > 3, true));
+                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0));
                     driderComponent.setStage(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() + 1);
+                    if(driderComponent.getStage() == 0) {
+                        driderComponent.updateVariant();
+                    }
                 } else if(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() >= 3) {
+                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 60, 0));
                     ScaleData width = ToTScaleTypes.MODIFY_WIDTH_TYPE.getScaleData(player);
                     ScaleData height = ToTScaleTypes.MODIFY_HEIGHT_TYPE.getScaleData(player);
                     width.setScale(width.getBaseScale() * DRIDER_WIDTH);

@@ -12,6 +12,10 @@ group = project.maven_group
 
 repositories {
 	maven {
+		name = "Curse"
+		url = "https://www.cursemaven.com"
+	}
+	maven {
 		name = "Ladysnake Mods"
 		url = "https://ladysnake.jfrog.io/artifactory/mods"
 		content {
@@ -49,7 +53,6 @@ repositories {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -80,6 +83,11 @@ dependencies {
 	include "me.lucko:fabric-permissions-api:${project.fpa_version}"
 	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+
+	//cursed shit:tm: (run modImplementation to have them ingame)
+	modCompileOnly "com.github.apace100:origins-fabric:${project.origins_version}"
+	modCompileOnly "curse.maven:female-gender-fabric-456319:${project.gender_version}"
+
 
 }
 

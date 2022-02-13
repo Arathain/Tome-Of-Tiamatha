@@ -2,6 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.arathain.tot.mixin",
+  "plugin": "net.arathain.tot.compat.ToTMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ArmorItemMixin",
@@ -17,8 +18,12 @@
     "VillagerEntityMixin"
   ],
   "client": [
+    "AbstractClientPlayerEntityMixin",
     "InventoryScreenMixin",
-    "PlayerEntityRendererMixin"
+    "PlayerEntityRendererMixin",
+    "compat.gender.WildfirePlayerListMixin",
+    "compat.genderorigins.WardrobeBrowserScreenMixin",
+    "compat.gender.PlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

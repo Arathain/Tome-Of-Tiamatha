@@ -32,12 +32,10 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
     @Override
     public void codeAnimations(DriderEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.codeAnimations(entity, uniqueID, customPredicate);
-        IBone body = this.getAnimationProcessor().getBone("body");
         IBone head = this.getAnimationProcessor().getBone("head");
         IBone torso = this.getAnimationProcessor().getBone("torso");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         IBone leftArm = this.getAnimationProcessor().getBone("leftarm");
-        IBone leftItem = this.getAnimationProcessor().getBone("leftItem");
         IBone sendHelp = this.getAnimationProcessor().getBone("rightarm");
         IBone leftGlove = this.getAnimationProcessor().getBone("glove2");
         leftGlove.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
@@ -47,7 +45,8 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if (torso != null) {
-            torso.setRotationY((float) MathHelper.clamp(extraData.netHeadYaw * ((float) Math.PI / 180F), -0.4, 0.4));
+//            torso.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+//            torso.setRotationY(torso.getRotationY() * 0.5F);
             if(head != null)
             head.setRotationY(head.getRotationY() - torso.getRotationY());
         }

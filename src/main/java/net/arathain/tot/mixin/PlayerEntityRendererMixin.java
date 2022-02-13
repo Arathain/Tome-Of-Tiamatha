@@ -1,9 +1,9 @@
 package net.arathain.tot.mixin;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
-import net.arathain.tot.common.util.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.init.ToTEntities;
+import net.arathain.tot.common.util.ToTUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -17,7 +17,6 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -37,7 +36,6 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
         super(ctx, model, shadowRadius);
     }
-
     @Inject(method = "render(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("HEAD"), cancellable = true)
     private void render(AbstractClientPlayerEntity player, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, CallbackInfo callbackInfo) {
         DriderEntity entity = getDrider(player);
@@ -83,15 +81,10 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             }
             float width = 1 / (entity.getType().getWidth() / EntityType.PLAYER.getWidth());
             matrixStack.scale(width, 1 / (entity.getType().getHeight() / EntityType.PLAYER.getHeight()), width);
-            MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(entity).render(entity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
-            callbackInfo.cancel();
-        }
-    }
-    @Inject(method = "renderArm", at = @At("HEAD"), cancellable = true)
-    private void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
-        LivingEntity entity = getDrider(player);
-        if(entity != null) {
-            ci.cancel();
+            if(!player.isSpectator()) {
+                MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(entity).render(entity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
+                callbackInfo.cancel();
+            }
         }
     }
 

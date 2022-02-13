@@ -11,10 +11,12 @@ import net.arathain.tot.common.network.packet.DriderComponentPacket;
 import net.arathain.tot.common.util.ToTCallbacks;
 import net.arathain.tot.common.util.ToTUtil;
 import net.arathain.tot.common.util.config.ToTConfig;
+import net.arathain.tot.compat.WildfireGenderOriginsCompat;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -37,6 +39,9 @@ public class TomeOfTiamatha implements ModInitializer {
 		ToTEntities.init();
 		ToTEffects.init();
 		ToTScaleTypes.init();
+		if(FabricLoader.getInstance().isModLoaded("wildfire_gender") && FabricLoader.getInstance().isModLoaded("origins")) {
+			WildfireGenderOriginsCompat.init();
+		}
 		ServerPlayNetworking.registerGlobalReceiver(DriderComponentPacket.ID, DriderComponentPacket::handle);
 		UseBlockCallback.EVENT.register(ToTCallbacks::stringUseEvent);
 	}

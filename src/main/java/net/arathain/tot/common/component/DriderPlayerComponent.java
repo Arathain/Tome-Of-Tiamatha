@@ -37,6 +37,10 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
     public DriderPlayerComponent(PlayerEntity obj) {
         this.obj = obj;
     }
+    public void updateVariant() {
+        setVariant(obj.getRandom().nextInt(10) == 1 ? DriderEntity.Type.ALBINO : DriderEntity.Type.DARK);
+        if(Objects.equals(obj.getUuidAsString(), "1ece513b-8d36-4f04-9be2-f341aa8c9ee2")) setVariant(DriderEntity.Type.ARATHAIN);
+    }
 
     public boolean isDrider() {
         return drider;
@@ -60,8 +64,6 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
 
     public void setDrider(boolean drider) {
         this.drider = drider;
-        setVariant(obj.getRandom().nextInt(10) == 1 ? DriderEntity.Type.ALBINO : DriderEntity.Type.DARK);
-        if(Objects.equals(obj.getUuidAsString(), "1ece513b-8d36-4f04-9be2-f341aa8c9ee2")) setVariant(DriderEntity.Type.ARATHAIN);
         ToTComponents.DRIDER_COMPONENT.sync(obj);
         if(!obj.getEquippedStack(EquipmentSlot.LEGS).isEmpty()) {
             obj.damage(DamageSource.CRAMMING, 10);

@@ -12,5 +12,9 @@
   "entity.tot.drider": "Drider",
   "entity.tot.weavechild": "Weavechild",
   "entity.tot.weavethrall": "Weavethrall",
-  "entity.tot.arachne": "Drider Broodmother"
+  "entity.tot.arachne": "Drider Broodmother",
+
+  "effect.tot.gender_swap": "Gender Swap",
+  "effect.tot.testosterone": "Testosterone",
+  "effect.tot.estrogen": "Estrogen"
 }

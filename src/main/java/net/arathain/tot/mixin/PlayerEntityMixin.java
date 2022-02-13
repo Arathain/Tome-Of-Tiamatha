@@ -1,8 +1,12 @@
 package net.arathain.tot.mixin;
 
+import com.wildfire.main.GenderPlayer;
+import com.wildfire.main.WildfireGender;
+import com.wildfire.main.WildfireGenderServer;
 import net.arathain.tot.common.component.DriderPlayerComponent;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.init.ToTComponents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
 import net.minecraft.block.SlimeBlock;
