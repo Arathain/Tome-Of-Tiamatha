@@ -51,7 +51,7 @@ public class ArachneEntity extends DriderEntity {
         super(entityType, world);
     }
     public static DefaultAttributeContainer.Builder createArachneAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 200.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0).add(EntityAttributes.GENERIC_ARMOR, 12.0).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.9);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 200.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0).add(EntityAttributes.GENERIC_ARMOR, 20.0).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0);
     }
     @Override
     protected void updateDespawnCounter() {}
@@ -60,7 +60,7 @@ public class ArachneEntity extends DriderEntity {
         this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(2, new ArachneAttackLogicGoal(this));
         this.goalSelector.add(1, new ArachneEmitShockwaveGoal(this));
-        this.goalSelector.add(1, new ArachneSummonWeavechildrenGoal(this));
+        //this.goalSelector.add(1, new ArachneSummonWeavechildrenGoal(this));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 10.0f));
         this.goalSelector.add(6, new LookAtEntityGoal(this, DriderEntity.class, 6.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
@@ -112,7 +112,7 @@ public class ArachneEntity extends DriderEntity {
     }
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
-        if(slamTicks > 0) {
+        if(this.slamTicks > 0 || this.canSlam) {
             animationBuilder.addAnimation("slam", false);
         } else if(!this.hasVehicle() && event.isMoving()) {
             animationBuilder.addAnimation("walk", true);
@@ -175,17 +175,17 @@ public class ArachneEntity extends DriderEntity {
     public void tick() {
         super.tick();
 
-        if (age % 120 == 0 && getHealth() < getMaxHealth()) {
-            heal(isResting() ? 16 : 4);
+        if (age % 60 == 0 && getHealth() < getMaxHealth()) {
+            heal(isResting() ? 16 : 2);
         }
-        if (getTarget() != null && (!getTarget().isAlive() || getTarget().getHealth() <= 0)) setTarget(null);
+        //if (getTarget() != null && (!getTarget().isAlive() || getTarget().getHealth() <= 0)) setTarget(null);
         if(!world.isClient) {
             if(!isResting()) {
                 if(this.getTarget() == null && forwardSpeed == 0 && isAtRestingPos()) {
                     setResting(true);
                 }
 
-            } else if(getTarget() != null && squaredDistanceTo(getTarget()) < 20) {
+            } else if(getTarget() != null && squaredDistanceTo(getTarget()) < 30) {
                 setResting(false);
             }
         }

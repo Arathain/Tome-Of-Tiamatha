@@ -39,10 +39,6 @@ public class ArachneAttackLogicGoal extends Goal {
         LivingEntity target = this.arachne.getTarget();
         if(target == null) return;
         double distance = this.arachne.squaredDistanceTo(this.targetX, this.targetY, this.targetZ);
-        System.out.println("planck bazinga");
-        System.out.println(--this.scrunkly <= 0);
-        System.out.println((this.targetX == 0.0D && this.targetY == 0.0D && this.targetZ == 0.0D || target.squaredDistanceTo(this.targetX, this.targetY, this.targetZ) >= 1.0D));
-        System.out.println(this.arachne.getNavigation().isIdle());
         if (--this.scrunkly <= 0 && (this.targetX == 0.0D && this.targetY == 0.0D && this.targetZ == 0.0D || target.squaredDistanceTo(this.targetX, this.targetY, this.targetZ) >= 1.0D) || this.arachne.getNavigation().isIdle()) {
             this.targetX = target.getX();
             this.targetY = target.getY();
@@ -53,16 +49,13 @@ public class ArachneAttackLogicGoal extends Goal {
             } else if (distance > 16.0D * 16.0D) {
                 this.scrunkly += 5;
             }
-            if (!this.arachne.getNavigation().startMovingTo(target, 1.6D)) {
+            if (!this.arachne.getNavigation().startMovingTo(target, 0.5D)) {
                 this.scrunkly += 15;
             }
         }
         distance = this.arachne.squaredDistanceTo(this.targetX, this.targetY, this.targetZ);
-        System.out.println("bazinga uno");
-        System.out.println(target.getY() - this.arachne.getY() >= -1);
-        System.out.println(target.getY() - this.arachne.getY() <= 3);
         if (target.getY() - this.arachne.getY() >= -1 && target.getY() - this.arachne.getY() <= 3) {
-            boolean canEmitShockwave = distance < 6.0D * 6.0D && this.timeSinceShockwave > 200;
+            boolean canEmitShockwave = distance < 6.0D * 6.0D && this.timeSinceShockwave > 100;
             System.out.println("bazinga");
             System.out.println(distance < 6.0D * 6.0D);
             System.out.println(this.timeSinceShockwave > 200);
