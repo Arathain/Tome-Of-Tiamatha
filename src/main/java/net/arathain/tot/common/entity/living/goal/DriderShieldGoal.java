@@ -38,7 +38,7 @@ public class DriderShieldGoal extends Goal {
     protected boolean raiseShield() {
         LivingEntity target = drider.getTarget();
         if (target != null && drider.shieldCooldown == 0) {
-            return drider.distanceTo(target) <= 3.0D || target instanceof CreeperEntity || target instanceof RangedAttackMob && target.distanceTo(drider) >= 5.0D || target instanceof RavagerEntity || ( target instanceof IronGolemEntity && drider.distanceTo(target) <= 10.0D);
+            return drider.distanceTo(target) <= 2.0D || target instanceof CreeperEntity || target instanceof RangedAttackMob && target.distanceTo(drider) >= 5.0D || target instanceof RavagerEntity || (target instanceof IronGolemEntity && drider.distanceTo(target) <= 2.0D);
         }
         return false;
     }

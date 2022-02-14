@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
@@ -30,7 +31,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void addUnusableTooltip(@Nullable PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir, List<Text> list) {
         if(player != null) {
-            if(ToTUtil.isDrider(player) && ((ItemStack)(Object)this).isFood() && (!((ItemStack)(Object)this).isIn(ToTObjects.MEAT) && !((ItemStack)(Object)this).getItem().getFoodComponent().isMeat())) {
+            if(ToTUtil.isDrider(player) && ((ItemStack)(Object)this).isFood() && (!((ItemStack)(Object)this).isIn(ToTObjects.MEAT) && !Objects.requireNonNull(((ItemStack) (Object) this).getItem().getFoodComponent()).isMeat())) {
                 MutableText preventText = new TranslatableText("tot.text.drider_not_meat").formatted(Formatting.DARK_RED);
                 list.add(preventText);
             }
@@ -41,7 +42,7 @@ public abstract class ItemStackMixin {
     public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> info) {
         if(user != null) {
             ItemStack stackInHand = user.getStackInHand(hand);
-            if(ToTUtil.isDrider(user) && stackInHand.isFood() && (!stackInHand.isIn(ToTObjects.MEAT) && !stackInHand.getItem().getFoodComponent().isMeat())) {
+            if(ToTUtil.isDrider(user) && stackInHand.isFood() && (!stackInHand.isIn(ToTObjects.MEAT) && !Objects.requireNonNull(stackInHand.getItem().getFoodComponent()).isMeat())) {
                 info.setReturnValue(TypedActionResult.fail(stackInHand));
             }
         }

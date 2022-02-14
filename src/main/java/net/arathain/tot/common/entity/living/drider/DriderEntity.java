@@ -137,6 +137,9 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
             this.dataTracker.startTracking(TYPE, Type.DARK.toString());
         }
     }
+    public void skipInitDataTracker() {
+        super.initDataTracker();
+    }
     public void setActiveItemStack(ItemStack stack) {
         activeItemStack = stack;
     }
@@ -194,6 +197,12 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         }
         this.shieldCooldown = tag.getInt("shieldCooldown");
         this.attackedCooldown = tag.getInt("attackedCooldown");
+    }
+    public void skipReadNbtData(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
+    }
+    public void skipWriteNbtData(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
     }
 
     @Override

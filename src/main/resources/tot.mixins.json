@@ -5,6 +5,7 @@
   "plugin": "net.arathain.tot.compat.ToTMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ActiveTargetGoalMixin",
     "ArmorItemMixin",
     "EntityTrackerEntryMixin",
     "IronGolemEntityMixin",
@@ -21,9 +22,9 @@
     "AbstractClientPlayerEntityMixin",
     "InventoryScreenMixin",
     "PlayerEntityRendererMixin",
+    "compat.gender.PlayerEntityMixin",
     "compat.gender.WildfirePlayerListMixin",
-    "compat.genderorigins.WardrobeBrowserScreenMixin",
-    "compat.gender.PlayerEntityMixin"
+    "compat.genderorigins.WardrobeBrowserScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

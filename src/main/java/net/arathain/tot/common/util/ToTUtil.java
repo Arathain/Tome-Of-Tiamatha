@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -17,6 +18,28 @@ import net.minecraft.world.World;
 import java.util.function.Predicate;
 
 public class ToTUtil {
+    public static boolean isLookingAt(LivingEntity entity, LivingEntity target) {
+        Vec3d vec3 = entity.getRotationVec(1.0F).normalize();
+        Vec3d vec31 = new Vec3d(target.getX() - entity.getX(), target.getEyeY() - entity.getEyeY(), target.getZ() - entity.getZ());
+        double lenkth = vec31.length();
+        vec31 = vec31.normalize();
+        double dotProduct = vec3.dotProduct(vec31);
+
+        double range = 6.5D;
+
+        return dotProduct > 1.0D - range / lenkth && canSee(entity, target);
+
+    }
+    public static boolean canSee(LivingEntity entity, Entity target) {
+        if (target.world != entity.world) {
+            return false;
+        } else {
+            Vec3d vec3 = new Vec3d(entity.getX(), entity.getEyeY(), entity.getZ());
+            Vec3d vec31 = new Vec3d(target.getX(), target.getEyeY(), target.getZ());
+
+            return entity.world.raycast(new RaycastContext(vec3, vec31, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity)).getType() == HitResult.Type.MISS;
+        }
+    }
     public static boolean isDrider(Entity entity) {
         if (entity instanceof PlayerEntity player) {
             DriderPlayerComponent transformationComponent = ToTComponents.DRIDER_COMPONENT.get(player);
