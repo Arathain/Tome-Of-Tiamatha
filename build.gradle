@@ -85,8 +85,8 @@ dependencies {
 	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 
 	//cursed shit:tm: (run modImplementation to have them ingame)
-	modCompileOnly "com.github.apace100:origins-fabric:${project.origins_version}"
-	modCompileOnly "curse.maven:female-gender-fabric-456319:${project.gender_version}"
+	modImplementation "com.github.apace100:origins-fabric:${project.origins_version}"
+	modImplementation "curse.maven:female-gender-fabric-456319:${project.gender_version}"
 
 
 }

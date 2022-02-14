@@ -16,5 +16,14 @@
 
   "effect.tot.gender_swap": "Gender Swap",
   "effect.tot.testosterone": "Testosterone",
-  "effect.tot.estrogen": "Estrogen"
+  "effect.tot.estrogen": "Estrogen",
+  "block.tot.magedew": "Magedew",
+  "item.minecraft.potion.effect.estrogen": "Potion of Estrogen",
+  "item.minecraft.splash_potion.effect.estrogen": "Splash Potion of Estrogen",
+  "item.minecraft.lingering_potion.effect.estrogen": "Lingering Potion of Estrogen",
+  "item.minecraft.tipped_arrow.effect.estrogen": "Arrow of Estrogen",
+  "item.minecraft.potion.effect.testosterone": "Potion of Testosterone",
+  "item.minecraft.splash_potion.effect.testosterone": "Splash Potion of Testosterone",
+  "item.minecraft.lingering_potion.effect.testosterone": "Lingering Potion of Testosterone",
+  "item.minecraft.tipped_arrow.effect.testosterone": "Arrow of Testosterone"
 }
