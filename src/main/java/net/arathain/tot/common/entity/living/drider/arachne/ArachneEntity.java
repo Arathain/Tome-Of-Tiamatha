@@ -2,7 +2,9 @@ package net.arathain.tot.common.entity.living.drider.arachne;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.goal.ArachneAttackLogicGoal;
+import net.arathain.tot.common.entity.living.goal.ArachneEmitShockwaveGoal;
 import net.arathain.tot.common.entity.living.goal.ArachneSummonWeavechildrenGoal;
+import net.arathain.tot.common.entity.living.goal.DriderAttackGoal;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -24,6 +26,7 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -42,22 +45,21 @@ public class ArachneEntity extends DriderEntity {
     public static final TrackedData<Optional<BlockPos>> RESTING_POS = DataTracker.registerData(ArachneEntity.class, TrackedDataHandlerRegistry.OPTIONAL_BLOCK_POS);
 
     private final ServerBossBar bossBar = (new ServerBossBar(this.getDisplayName(), BossBar.Color.PINK, BossBar.Style.PROGRESS));
+    public int slamTicks = 0;
+    public boolean canSlam = false;
     public ArachneEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
     }
     public static DefaultAttributeContainer.Builder createArachneAttributes() {
         return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 200.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0).add(EntityAttributes.GENERIC_ARMOR, 12.0).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.9);
     }
-
     @Override
-    protected void updateDespawnCounter() {
-
-    }
-
+    protected void updateDespawnCounter() {}
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(2, new ArachneAttackLogicGoal(this));
+        this.goalSelector.add(1, new ArachneEmitShockwaveGoal(this));
         this.goalSelector.add(1, new ArachneSummonWeavechildrenGoal(this));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 10.0f));
         this.goalSelector.add(6, new LookAtEntityGoal(this, DriderEntity.class, 6.0f));
@@ -72,6 +74,8 @@ public class ArachneEntity extends DriderEntity {
         if(getRestingPos().isPresent()) {
             tag.put("RestingPos", NbtHelper.fromBlockPos(getRestingPos().get()));
         }
+        tag.putBoolean("canSlam", canSlam);
+        tag.putInt("slamTicks", slamTicks);
         tag.putBoolean("Resting", this.isResting());
     }
 
@@ -96,17 +100,21 @@ public class ArachneEntity extends DriderEntity {
         if(nbt.contains("RestingPos")) {
             setRestingPos(NbtHelper.toBlockPos(nbt.getCompound("RestingPos")));
         }
+        slamTicks = nbt.getInt("slamTicks");
+        canSlam = nbt.getBoolean("canSlam");
         this.setResting(nbt.getBoolean("Resting"));
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "controller", 4, this::predicate));
-        animationData.addAnimationController(new AnimationController<>(this, "torsoController", 3, this::torsoPredicate));
+        //animationData.addAnimationController(new AnimationController<>(this, "torsoController", 3, this::torsoPredicate));
     }
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
-        if(!this.hasVehicle() && event.isMoving()) {
+        if(slamTicks > 0) {
+            animationBuilder.addAnimation("slam", false);
+        } else if(!this.hasVehicle() && event.isMoving()) {
             animationBuilder.addAnimation("walk", true);
         } else if(isResting()) {
             animationBuilder.addAnimation("sitIdle", true);
@@ -183,7 +191,8 @@ public class ArachneEntity extends DriderEntity {
         }
         if(isResting()) {
             setVelocity(0, getVelocity().y, 0);
-            bodyYaw = prevBodyYaw;
+            setYaw(prevYaw);
+            setBodyYaw(prevBodyYaw);
         }
         if (getTarget() == null && getNavigation().isIdle() && !isAtRestingPos() && !isResting()) updateRestPos();
     }

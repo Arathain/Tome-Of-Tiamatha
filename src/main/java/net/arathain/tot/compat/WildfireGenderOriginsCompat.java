@@ -46,8 +46,8 @@ public class WildfireGenderOriginsCompat {
     public static final StatusEffect GENDER_SWAP = createEffect("gender_swap", new GenderSwapEffect(StatusEffectCategory.BENEFICIAL, 0xf50056));
     public static final StatusEffect TESTOSTERONE = createEffect("testosterone", new GenderChangeStatusEffect(StatusEffectCategory.BENEFICIAL, 0xf50056, 1));
     public static final StatusEffect ESTROGEN = createEffect("estrogen", new GenderChangeStatusEffect(StatusEffectCategory.BENEFICIAL, 0xf50056, 0));
-    public static final Potion ESTR_POT = new Potion("estrogen", new StatusEffectInstance(ESTROGEN, 1, 0));
-    public static final Potion TESTO_POT = new Potion("testosterone", new StatusEffectInstance(TESTOSTERONE, 1, 0));
+    public static final Potion ESTR_POT = new Potion("estrogen", new StatusEffectInstance(ESTROGEN, 10, 0));
+    public static final Potion TESTO_POT = new Potion("testosterone", new StatusEffectInstance(TESTOSTERONE, 10, 0));
     public static final Block MAGEDEW = createBlock("magedew", new FlowerBlock(GENDER_SWAP, 10, FabricBlockSettings.of(Material.PLANT).noCollision().nonOpaque()), true);
     public static final ConfiguredFeature<SimpleBlockFeatureConfig, ?> MAGEDEW_FEATURE = register("magedew", Feature.SIMPLE_BLOCK.configure(new SimpleBlockFeatureConfig(BlockStateProvider.of(MAGEDEW))));
     public static final PlacedFeature MAGEDEW_PATCHES = register("magedew_patches", MAGEDEW_FEATURE.withPlacement(modifiersWithChance(3, null)));
