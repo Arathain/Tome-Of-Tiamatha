@@ -45,8 +45,6 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if (torso != null) {
-//            torso.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
-//            torso.setRotationY(torso.getRotationY() * 0.5F);
             if(head != null)
             head.setRotationY(head.getRotationY() - torso.getRotationY());
         }

@@ -34,9 +34,8 @@ public class ArachneEmitShockwaveGoal extends Goal {
     }
     @Override
     public void tick() {
-        System.out.println("bepzinky");
         arachne.setVelocity(0, arachne.getVelocity().y, 0);
-        arachne.lookAtEntity(arachne.getTarget(), 45, 45);
+        if(arachne.getTarget() != null) arachne.lookAtEntity(arachne.getTarget(), 45, 45);
         double perpFacing = arachne.bodyYaw * (Math.PI / 180);
         int hitY = MathHelper.floor(arachne.getBoundingBox().minY - 0.5);
         double facingAngle = perpFacing + Math.PI / 2;
@@ -78,7 +77,7 @@ public class ArachneEmitShockwaveGoal extends Goal {
                             }
                         }
                     }
-                    if (world.random.nextBoolean()) {
+                    if (world.random.nextInt(5) < 4) {
                         int hitX = MathHelper.floor(px);
                         int hitZ = MathHelper.floor(pz);
                         BlockPos pos = new BlockPos(hitX, hitY, hitZ);
@@ -93,8 +92,9 @@ public class ArachneEmitShockwaveGoal extends Goal {
                         }
                     }
                 }
-                if (arachne.slamTicks >= 30) {
+                if (arachne.slamTicks > 32) {
                     this.arachne.slamTicks = 0;
+                    this.arachne.getDataTracker().set(ArachneEntity.ATTACK_STATE, 0);
                     this.arachne.canSlam = false;
                 }
             }
