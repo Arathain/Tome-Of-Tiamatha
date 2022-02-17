@@ -1,4 +1,5 @@
 {
+  "itemGroup.tot.tot": "Tome Of T'matha",
   "block.tot.hanging_web": "Hanging Web",
   "block.tot.weavekin_egg": "Weavechild Egg",
   "item.tot.silksteel_helmet": "Silksteel Helmet",
@@ -13,6 +14,8 @@
   "entity.tot.weavechild": "Weavechild",
   "entity.tot.weavethrall": "Weavethrall",
   "entity.tot.arachne": "Drider Broodmother",
+
+
 
   "effect.tot.gender_swap": "Gender Swap",
   "effect.tot.testosterone": "Testosterone",

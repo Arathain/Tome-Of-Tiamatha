@@ -39,7 +39,7 @@ public class TomeOfTiamatha implements ModInitializer {
 		ToTEntities.init();
 		ToTEffects.init();
 		ToTScaleTypes.init();
-		if(FabricLoader.getInstance().isModLoaded("wildfire_gender") && FabricLoader.getInstance().isModLoaded("origins")) {
+		if(FabricLoader.getInstance().isModLoaded("wildfire_gender")) {
 			WildfireGenderOriginsCompat.init();
 		}
 		ServerPlayNetworking.registerGlobalReceiver(DriderComponentPacket.ID, DriderComponentPacket::handle);

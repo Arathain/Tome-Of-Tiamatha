@@ -26,14 +26,11 @@ import net.minecraft.entity.player.PlayerEntity;
 public class TomeOfTiamathaClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB, ToTObjects.MAGEDEW);
         EntityRendererRegistry.register(ToTEntities.DRIDER, DriderEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.ARACHNE, ArachneEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVECHILD, WeavechildEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVETHRALL, WeavethrallEntityRenderer::new);
-        if(FabricLoader.getInstance().isModLoaded("wildfire_gender") && FabricLoader.getInstance().isModLoaded("origins")) {
-            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), WildfireGenderOriginsCompat.MAGEDEW);
-        }
         BlockEntityRendererRegistry.INSTANCE.register(ToTEntities.WEAVERKIN_EGG, (BlockEntityRendererFactory.Context rendererDispatcherIn) -> new WeaverkinEggRenderer());
         OmegaConfigGui.registerConfigScreen(TomeOfTiamatha.CONFIG);
         StringClient.init();
