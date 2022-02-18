@@ -46,7 +46,7 @@ public class DriderAttackGoal extends MeleeAttackGoal {
     }
     @Override
     protected double getSquaredMaxAttackDistance(LivingEntity attackTarget) {
-        return super.getSquaredMaxAttackDistance(attackTarget) * 3.55D;
+        return super.getSquaredMaxAttackDistance(attackTarget) * 3D;
     }
 
     @Override

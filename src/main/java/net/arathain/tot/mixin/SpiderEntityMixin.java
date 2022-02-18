@@ -1,5 +1,6 @@
 package net.arathain.tot.mixin;
 
+import net.arathain.tot.common.entity.living.entityinterface.Broodchild;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
@@ -17,14 +18,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(SpiderEntity.class)
-public class SpiderEntityMixin extends HostileEntity {
+public class SpiderEntityMixin extends HostileEntity implements Broodchild {
     protected SpiderEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 7), method = "initGoals")
     private void redirectTargetGoal(GoalSelector goalSelector, int priority, Goal goal) {
-        Goal newGoal = new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player));
+        Goal newGoal = new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)).setMaxTimeWithoutVisibility(200);
         goalSelector.add(priority, newGoal);
     }
 

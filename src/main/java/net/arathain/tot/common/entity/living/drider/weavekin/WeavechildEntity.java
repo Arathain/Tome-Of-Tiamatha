@@ -1,6 +1,7 @@
 package net.arathain.tot.common.entity.living.drider.weavekin;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.arathain.tot.common.entity.living.entityinterface.Broodchild;
 import net.arathain.tot.common.entity.living.goal.ObedientRevengeGoal;
 import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.util.ToTUtil;
@@ -10,6 +11,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.CaveSpiderEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -27,7 +29,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnimationTickable {
+public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnimationTickable, Broodchild {
     private final AnimationFactory factory = new AnimationFactory(this);
     public WeavechildEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
@@ -75,7 +77,7 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
     }
 
     public static DefaultAttributeContainer.Builder createWeavechildAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0).add(EntityAttributes.GENERIC_ARMOR, 4.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0).add(EntityAttributes.GENERIC_ARMOR, 4.0);
     }
 
     @Override
@@ -85,6 +87,7 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
 
     @Override
     public boolean tryAttack(Entity target) {
+        target.timeUntilRegen = 0;
         if (super.tryAttack(target)) {
             target.timeUntilRegen = 0;
             if (target instanceof LivingEntity) {

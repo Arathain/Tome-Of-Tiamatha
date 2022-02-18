@@ -57,13 +57,13 @@ public class ArachneAttackLogicGoal extends Goal {
         }
         distance = this.arachne.squaredDistanceTo(this.targetX, this.targetY, this.targetZ);
         if (target.getY() - this.arachne.getY() >= -1 && target.getY() - this.arachne.getY() <= 3) {
-            boolean canEmitShockwave = distance < 6.0D * 6.0D && this.timeSinceShockwave > 20;
+            boolean canEmitShockwave = distance < 6.0D * 6.0D && this.timeSinceShockwave > 40;
 //            if (distance < 3.5D * 3.5D && Math.abs(MathHelper.wrapDegrees(this.arachne.getAngleBetweenEntities(target, this.arachne) - this.arachne.getYaw())) < 35.0D && (!canEmitShockwave || this.arachne.getRandom().nextFloat() < 0.667F)) {
 //                //attack
 //            } else
             if (canEmitShockwave) {
                 this.arachne.canSlam = true;
-                this.arachne.getDataTracker().set(ArachneEntity.ATTACK_STATE, 1);
+                this.arachne.setAttackState(1);
                 this.timeSinceShockwave = 0;
             }
         }

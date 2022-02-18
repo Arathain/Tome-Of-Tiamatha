@@ -15,6 +15,7 @@
   "entity.tot.weavethrall": "Weavethrall",
   "entity.tot.arachne": "Drider Broodmother",
 
+  "info.tot.wave_cleared": "Wave cleared - should have 10s delay before next one",
 
 
   "effect.tot.gender_swap": "Gender Swap",

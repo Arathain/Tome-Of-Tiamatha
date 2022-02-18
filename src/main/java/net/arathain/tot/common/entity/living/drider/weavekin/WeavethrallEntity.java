@@ -1,6 +1,7 @@
 package net.arathain.tot.common.entity.living.drider.weavekin;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.arathain.tot.common.entity.living.entityinterface.Broodchild;
 import net.arathain.tot.common.entity.living.entityinterface.TameableHostileEntity;
 import net.arathain.tot.common.entity.living.goal.ObedientRevengeGoal;
 import net.arathain.tot.common.entity.living.goal.TamedAttackWithOwnerGoal;
@@ -44,14 +45,14 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import java.util.Optional;
 import java.util.UUID;
 
-public class WeavethrallEntity extends WeavechildEntity implements TameableHostileEntity {
+public class WeavethrallEntity extends WeavechildEntity implements TameableHostileEntity, Broodchild {
     private static final TrackedData<Byte> TAMEABLE = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Optional<UUID>> BINDER_UUID = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public WeavethrallEntity(EntityType<? extends WeavechildEntity> entityType, World world) {
         super(entityType, world);
     }
     public static DefaultAttributeContainer.Builder createWeavethrallAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0).add(EntityAttributes.GENERIC_ARMOR, 7.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4.0).add(EntityAttributes.GENERIC_ARMOR, 7.0);
     }
 
     @Override

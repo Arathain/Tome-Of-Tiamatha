@@ -1,5 +1,6 @@
 package net.arathain.tot.common.entity.living.drider;
 
+import net.arathain.tot.common.entity.living.entityinterface.Broodchild;
 import net.arathain.tot.common.entity.living.goal.DriderAttackGoal;
 import net.arathain.tot.common.entity.living.goal.DriderShieldGoal;
 import net.arathain.tot.common.init.ToTObjects;
@@ -46,7 +47,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimationTickable {
+public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimationTickable, Broodchild {
     private static final UUID SHIELD_UUID = UUID.fromString("b57b8070-1020-47f1-9429-e742793892df");
     private static final EntityAttributeModifier SHIELD_SPEED_PENALTY = new EntityAttributeModifier(SHIELD_UUID, "Use item speed penalty", -0.25D, EntityAttributeModifier.Operation.ADDITION);
     private final AnimationFactory factory = new AnimationFactory(this);

@@ -86,7 +86,7 @@ dependencies {
 
 	//cursed shit:tm: (run modImplementation to have them ingame)
 	modImplementation "com.github.apace100:origins-fabric:${project.origins_version}"
-	modCompileOnly "curse.maven:female-gender-fabric-456319:${project.gender_version}"
+	modImplementation "curse.maven:female-gender-fabric-456319:${project.gender_version}"
 
 
 }

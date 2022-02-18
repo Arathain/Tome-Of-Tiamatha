@@ -34,15 +34,16 @@ public class ArachneEmitShockwaveGoal extends Goal {
     }
     @Override
     public void tick() {
+        arachne.slamTick();
         arachne.setVelocity(0, arachne.getVelocity().y, 0);
         if(arachne.getTarget() != null) arachne.lookAtEntity(arachne.getTarget(), 45, 45);
         double perpFacing = arachne.bodyYaw * (Math.PI / 180);
         int hitY = MathHelper.floor(arachne.getBoundingBox().minY - 0.5);
         double facingAngle = perpFacing + Math.PI / 2;
         ServerWorld world = (ServerWorld) arachne.world;
-        if(arachne.slamTicks >= 20) {
+        if(arachne.slamTicks >= 10) {
             if (arachne.slamTicks % 2 == 0) {
-                int distance = arachne.slamTicks / 2 - 8;
+                int distance = arachne.slamTicks / 2 - 3;
                 double spread = Math.PI * 2;
                 int arcLen = MathHelper.ceil(distance * spread);
                 double minY = arachne.getBoundingBox().minY;
