@@ -1,6 +1,7 @@
 package net.arathain.tot.common.entity.living.goal;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;
@@ -8,8 +9,12 @@ import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.RavagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.FireworkRocketEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
+
+import java.util.List;
 
 public class DriderShieldGoal extends Goal {
     public final DriderEntity drider;
@@ -38,8 +43,9 @@ public class DriderShieldGoal extends Goal {
 
     protected boolean raiseShield() {
         LivingEntity target = drider.getTarget();
+        List<Entity> projectiles = drider.world.getOtherEntities(drider, drider.getBoundingBox().expand(5), entity -> entity instanceof ProjectileEntity);
         if (target != null && drider.shieldCooldown == 0) {
-            return drider.distanceTo(target) <= 2.0D || target instanceof PlayerEntity && drider.distanceTo(target) <= 4.0D || target instanceof CreeperEntity || target instanceof RangedAttackMob && target.distanceTo(drider) >= 5.0D || target instanceof RavagerEntity || (target instanceof IronGolemEntity && drider.distanceTo(target) <= 3.5D);
+            return !projectiles.isEmpty() || drider.distanceTo(target) <= 2.0D || target instanceof PlayerEntity && drider.distanceTo(target) <= 4.0D || target instanceof CreeperEntity || target instanceof RangedAttackMob && target.distanceTo(drider) >= 5.0D || target instanceof RavagerEntity || (target instanceof IronGolemEntity && drider.distanceTo(target) <= 3.5D);
         }
         return false;
     }

@@ -1,16 +1,14 @@
 package net.arathain.tot.common.entity.living.drider.arachne;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
-import net.arathain.tot.common.entity.living.drider.arachne.waves.WaveSpawnEntry;
 import net.arathain.tot.common.entity.living.entityinterface.Broodchild;
 import net.arathain.tot.common.entity.living.goal.ArachneAttackLogicGoal;
 import net.arathain.tot.common.entity.living.goal.ArachneEmitShockwaveGoal;
-import net.arathain.tot.common.entity.living.goal.ArachneSummonWeavechildrenGoal;
-import net.arathain.tot.common.entity.living.goal.DriderAttackGoal;
+import net.arathain.tot.common.entity.living.goal.ArachneRevengeGoal;
+import net.arathain.tot.common.init.ToTEffects;
 import net.arathain.tot.common.init.ToTWaves;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.CobwebBlock;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -21,20 +19,18 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SpiderEntity;
-import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.command.TitleCommand;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -42,7 +38,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.village.raid.Raid;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -54,9 +49,10 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ArachneEntity extends DriderEntity {
     protected static final TrackedData<Boolean> RESTING = DataTracker.registerData(ArachneEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -74,8 +70,18 @@ public class ArachneEntity extends DriderEntity {
         super(entityType, world);
     }
     public static DefaultAttributeContainer.Builder createArachneAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 200.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0).add(EntityAttributes.GENERIC_ARMOR, 20.0).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 240.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0).add(EntityAttributes.GENERIC_ARMOR, 20.0).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0);
     }
+
+
+    @Override
+    public boolean canTarget(LivingEntity target) {
+        if(ToTUtil.isDrider(target)) {
+            return false;
+        }
+        return super.canTarget(target);
+    }
+
     @Override
     protected void updateDespawnCounter() {}
     @Override
@@ -86,10 +92,11 @@ public class ArachneEntity extends DriderEntity {
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 10.0f));
         this.goalSelector.add(6, new LookAtEntityGoal(this, DriderEntity.class, 6.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
-        this.targetSelector.add(1, new RevengeGoal(this, SpiderEntity.class).setGroupRevenge());
+        this.targetSelector.add(1, new ArachneRevengeGoal(this, SpiderEntity.class).setGroupRevenge());
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, true));
     }
+
     @Override
     public void writeCustomDataToNbt(NbtCompound tag) {
         super.skipWriteNbtData(tag);
@@ -112,6 +119,8 @@ public class ArachneEntity extends DriderEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
+        if(!source.isOutOfWorld())
+        amount = MathHelper.clamp(amount, 0, 8);
         if(source.getAttacker() instanceof LivingEntity attacker && !this.world.isClient) {
             this.getWorld().getEntitiesByClass(SpiderEntity.class, this.getBoundingBox().expand(20), spiderEntity -> isAlive()).forEach(spooder -> {spooder.setTarget(attacker);});
         }
@@ -214,6 +223,9 @@ public class ArachneEntity extends DriderEntity {
     @Override
     protected void mobTick() {
         this.bossBar.setPercent(this.getHealth()/this.getMaxHealth());
+        if(this.getAttackState() == 1) {
+            slamTick();
+        }
         super.mobTick();
     }
     @Override
@@ -221,15 +233,19 @@ public class ArachneEntity extends DriderEntity {
         super.tick();
         if(!isResting())
         waveTick();
+        if(getFireTicks() > 10) {
+            setFireTicks(10);
+        }
 
         if (age % 5 == 0 && getHealth() < getMaxHealth() && isResting()) {
             heal(2);
         }
-        //if (getTarget() != null && (!getTarget().isAlive() || getTarget().getHealth() <= 0)) setTarget(null);
+        if (getTarget() != null && (!getTarget().isAlive() || getTarget().getHealth() <= 0)) setTarget(null);
         if(!world.isClient) {
             if(!isResting()) {
                 if(this.getTarget() == null && forwardSpeed == 0 && isAtRestingPos()) {
                     setResting(true);
+                    setWave(0);
                 }
 
             } else if(getTarget() != null && squaredDistanceTo(getTarget()) < 30) {
@@ -240,10 +256,7 @@ public class ArachneEntity extends DriderEntity {
             setVelocity(0, getVelocity().y, 0);
             setYaw(prevYaw);
             setBodyYaw(prevBodyYaw);
-            setHeadYaw(MathHelper.clamp(headYaw, bodyYaw - 90, bodyYaw + 90));
-        }
-        if(this.getAttackState() == 1) {
-            slamTick();
+            setHeadYaw(MathHelper.clamp(headYaw, bodyYaw - 70, bodyYaw + 70));
         }
         if (getTarget() == null && getNavigation().isIdle() && !isAtRestingPos() && !isResting()) updateRestingPos();
     }
@@ -268,15 +281,22 @@ public class ArachneEntity extends DriderEntity {
     public double getAngleBetweenEntities(Entity first, Entity second) {
         return Math.atan2(second.getZ() - first.getZ(), second.getX() - first.getX()) * (180 / Math.PI) + 90;
     }
+
+    @Override
+    public void onDeath(DamageSource source) {
+        world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(entity -> ((ServerPlayerEntity) entity).removeStatusEffect(ToTEffects.BROODS_CURSE));
+        super.onDeath(source);
+    }
+
     private void waveTick() {
         if(waveCooldown > 0) waveCooldown--;
         if (!world.isClient && this.age % 5 == 0 && waveCooldown == 0) {
             int wave = this.getWave();
             if(ToTWaves.ARACHNE_WAVES.isEmpty() || ToTWaves.ARACHNE_WAVES.size() == 0 || ToTWaves.ARACHNE_WAVES.get(wave) == null)
-            ToTWaves.updateArachneWaves(this.getRandom());
+            ToTWaves.updateArachneWaves(this.getRandom(), this.getLocalDangerScale());
 
             // check if there are enemies left to spawn
-            List<MobEntity> enemiesLeft = world.getEntitiesByClass(MobEntity.class, this.getBoundingBox().expand(100f, 30f, 100f), entity -> entity instanceof Broodchild);
+            List<MobEntity> enemiesLeft = world.getEntitiesByClass(MobEntity.class, this.getBoundingBox().expand(80f, 30f, 80f), entity -> entity instanceof Broodchild);
             ToTWaves.ARACHNE_WAVES.get(wave).removeIf(waveSpawnEntry -> waveSpawnEntry.count <= 0);
             if (!ToTWaves.ARACHNE_WAVES.get(wave).isEmpty() && enemiesLeft.size() < 50 && this.getRestingPos().isPresent()) {
                 int i = random.nextInt(ToTWaves.ARACHNE_WAVES.get(wave).size());
@@ -303,18 +323,35 @@ public class ArachneEntity extends DriderEntity {
             } else {
                 // wave end check
                 if (enemiesLeft.size() <= 2) {
+                    if(wave == 2) {
+                        if(this.getHealth() <= 150f) {
+                            this.setWave(wave + 1);
+                        }
+                    } else if(wave == 4) {
+                        if(this.getHealth() <= 100f) {
+                            this.setWave(wave + 1);
+                        }
+                    } else if(wave == 6) {
+                        if(this.getHealth() <= 50f) {
+                            this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2400, 1));
+                            world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(serverPlayerEntity -> {
+                                ((ServerPlayerEntity) serverPlayerEntity).sendMessage(
+                                        new TranslatableText("info.tot.broods_curse", world.getRegistryKey().getValue().getPath()).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)), true);
+                            });
+                            world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(entity -> ((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(ToTEffects.BROODS_CURSE, 2400, 0)));
+                            this.setWave(wave + 1);
+                        }
+                    } else {
+                        this.setWave(wave + 1);
+                    }
 
-                    this.setWave(wave + 1);
 
-                    world.getPlayers().forEach(serverPlayerEntity -> {
-                        serverPlayerEntity.sendMessage(
-                                new TranslatableText("info.tot.wave_cleared", world.getRegistryKey().getValue().getPath()).setStyle(Style.EMPTY.withColor(Formatting.AQUA)), false);
-                    });
-
-                    if(getWave() >= 9) setWave(0);
-                    waveCooldown = 200;
-                    this.playSound(SoundEvents.ENTITY_SPIDER_DEATH, 1.0f, 1.2f);
-                    this.playSound(SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.2f);
+                    if(getWave() >= 8) setWave(0);
+                    if(getWave() > wave || (wave != 0 && getWave() == 0)) {
+                        waveCooldown = 100;
+                        this.playSound(SoundEvents.ENTITY_SPIDER_DEATH, 1.0f, 1.2f);
+                        this.playSound(SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.2f);
+                    }
                 }
             }
         }
@@ -331,7 +368,7 @@ public class ArachneEntity extends DriderEntity {
                 double perpX = Math.cos(perpFacing);
                 double perpZ = Math.sin(perpFacing);
                 double fx = getX() + vx + perpX * side;
-                double fy = getBoundingBox().minY + 0.1;
+                double fy = getY() + 0.1;
                 double fz = getZ() + vz + perpZ * side;
                 int amount = 16 + world.random.nextInt(8);
                 while (amount-- > 0) {
@@ -362,12 +399,27 @@ public class ArachneEntity extends DriderEntity {
                             double velX = vx * 0.075;
                             double velY = factor * 0.3 + 0.025;
                             double velZ = vz * 0.075;
-                            world.addParticle(ParticleTypes.CLOUD, px + world.random.nextFloat() * 2 - 1, getBoundingBox().minY + 0.1 + world.random.nextFloat() * 1.5, pz + world.random.nextFloat() * 2 - 1, velX, velY, velZ);
+                            world.addParticle(ParticleTypes.CLOUD, px + world.random.nextFloat() * 2 - 1, getY() + 0.1 + world.random.nextFloat() * 1.5, pz + world.random.nextFloat() * 2 - 1, velX, velY, velZ);
                         }
                     }
                 }
             }
         }
+    }
+    public int getLocalDangerScale() {
+        AtomicReference<Float> dangerScale = new AtomicReference<>(1f);
+        world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(entity -> dangerScale.updateAndGet(v -> v + getPlayerDangerScalingFactor((ServerPlayerEntity) entity)));
+        return Math.round(dangerScale.get());
+    }
+    private float getPlayerDangerScalingFactor(PlayerEntity player) {
+        float danger = player.isAlive() ? 1 : 0;
+        float armorMultiplier = player.getArmor();
+        AtomicInteger enchantedItems = new AtomicInteger();
+        player.getArmorItems().forEach(itemStack -> { if(itemStack.hasEnchantments()) enchantedItems.getAndIncrement();});
+        armorMultiplier *= 1 + enchantedItems.get() / 8f;
+        float handMultiplier = player.getMainHandStack().getItem() instanceof ToolItem tool ? tool.getMaterial().getAttackDamage() * (player.getMainHandStack().hasEnchantments() ? 1.8f : 1f) : 1;
+        danger *= (Math.pow(armorMultiplier, 4) / Math.pow(15 * 1.5, 4) + Math.pow(handMultiplier, 2) / Math.pow(10.8f, 2)) / 2;
+        return danger;
     }
 
     @Override

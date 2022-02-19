@@ -47,7 +47,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Override
     public boolean canHaveStatusEffect(StatusEffectInstance effect) {
-        if(ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && effect.getEffectType() == StatusEffects.SATURATION || effect.getEffectType() == StatusEffects.HUNGER || effect.getEffectType() == StatusEffects.POISON) {
+        if(ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && (effect.getEffectType() == StatusEffects.SATURATION || effect.getEffectType() == StatusEffects.HUNGER || effect.getEffectType() == StatusEffects.POISON)) {
             return false;
         }
         return super.canHaveStatusEffect(effect);

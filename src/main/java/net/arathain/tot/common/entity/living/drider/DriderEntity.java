@@ -16,6 +16,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SpiderEntity;
@@ -32,6 +33,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -97,6 +99,8 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.setStackInHand(Hand.OFF_HAND, new ItemStack(ToTObjects.SILKSTEEL_SHIELD));
         this.equipStack(EquipmentSlot.HEAD, ToTObjects.SILKSTEEL_HELMET.getDefaultStack());
         this.equipStack(EquipmentSlot.CHEST, ToTObjects.SILKSTEEL_CHESTPLATE.getDefaultStack());
+        this.setEquipmentDropChance(EquipmentSlot.HEAD, 0);
+        this.setEquipmentDropChance(EquipmentSlot.CHEST, 0);
     }
 
     @Override
@@ -107,8 +111,15 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityTag) {
         this.initEquipment(difficulty);
-
-        return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
+        this.getAttributeInstance(EntityAttributes.GENERIC_FOLLOW_RANGE).addPersistentModifier(new EntityAttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05, EntityAttributeModifier.Operation.MULTIPLY_BASE));
+        this.setLeftHanded(this.random.nextFloat() < 0.05f);
+        if (entityData == null) {
+            entityData = new SpiderData();
+            if (world.getDifficulty() == Difficulty.HARD && world.getRandom().nextFloat() < 0.1f * difficulty.getClampedLocalDifficulty()) {
+                ((SpiderData)entityData).setEffect(world.getRandom());
+            }
+        }
+        return entityData;
     }
     public void setUseTimeLeft(int timeLeft) {
         itemUseTimeLeft = timeLeft;
@@ -283,7 +294,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         if (increase)
             chance += 0.75;
         if (this.random.nextFloat() < chance) {
-            this.shieldCooldown = 80;
+            this.shieldCooldown = 40;
             this.stopUsingItem();
             this.world.sendEntityStatus(this, (byte) 30);
         }

@@ -29,7 +29,7 @@ public class ToTShaderHandler {
     private static void onEndTick(MinecraftClient client) {
         if (client.player != null && client.cameraEntity != null) {
             if (ToTUtil.isDrider(client.player)) {
-                DRIDER_VISION.findUniform1f("BrightnessAdjust").set(5.0f);
+                DRIDER_VISION.findUniform1f("BrightnessAdjust").set(2.0f);
             }
         }
     }

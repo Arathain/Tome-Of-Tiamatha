@@ -66,7 +66,7 @@ public class WeavethrallEntity extends WeavechildEntity implements TameableHosti
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.targetSelector.add(1, new ObedientRevengeGoal(this, DriderEntity.class).setGroupRevenge(ZombifiedPiglinEntity.class));
         this.targetSelector.add(1, new TamedTrackAttackerGoal(this));
-        this.targetSelector.add(2, new TamedAttackWithOwnerGoal(this));
+        this.targetSelector.add(2, new TamedAttackWithOwnerGoal<>(this));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, AnimalEntity.class, 10, true, false, animol -> !isTamed()));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player) && !isTamed()));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, 10, true, false, golem -> !isTamed()));

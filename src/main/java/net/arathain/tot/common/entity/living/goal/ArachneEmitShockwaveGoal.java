@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.RavagerEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -95,7 +96,7 @@ public class ArachneEmitShockwaveGoal extends Goal {
                 }
                 if (arachne.slamTicks > 32) {
                     this.arachne.slamTicks = 0;
-                    this.arachne.getDataTracker().set(ArachneEntity.ATTACK_STATE, 0);
+                    this.arachne.setAttackState(0);
                     this.arachne.canSlam = false;
                 }
             }

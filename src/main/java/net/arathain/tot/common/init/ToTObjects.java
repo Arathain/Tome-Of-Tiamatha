@@ -1,5 +1,6 @@
 package net.arathain.tot.common.init;
 
+import com.github.crimsondawn45.fabricshieldlib.lib.event.ShieldBlockCallback;
 import com.github.crimsondawn45.fabricshieldlib.lib.object.FabricShieldItem;
 import com.google.common.collect.ImmutableList;
 import net.arathain.tot.TomeOfTiamatha;
@@ -20,12 +21,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.Material;
 import net.minecraft.client.util.DefaultSkinHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.tag.Tag;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.BuiltinRegistries;
@@ -62,7 +67,7 @@ public class ToTObjects {
     public static final Item SILKSTEEL_CHESTPLATE = createItem("silksteel_chestplate", new SilksteelArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.CHEST, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
     public static final Item SYNTHESIS_SCEPTRE = createItem("synthesis_sceptre", new SynthesisScepterItem(ToolMaterials.NETHERITE, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.RARE)));
     public static final Item GAZING_LILY = createItem("gazing_lily", new GazingLilyItem(new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
-    public static final Item SILKSTEEL_SHIELD = createItem("silksteel_shield", new FabricShieldItem(new FabricItemSettings().group(TomeOfTiamatha.GROUP).maxDamage(2600), 6, 8));
+    public static final Item SILKSTEEL_SHIELD = createItem("silksteel_shield", new FabricShieldItem(new FabricItemSettings().group(TomeOfTiamatha.GROUP).maxDamage(2600), 40, 8));
     //registry end here
 
     //funky bits (do not touch)
@@ -104,6 +109,19 @@ public class ToTObjects {
         ITEMS.keySet().forEach(item -> Registry.register(Registry.ITEM, ITEMS.get(item), item));
         BiomeModification worldGen = BiomeModifications.create(new Identifier(TomeOfTiamatha.MODID, "features"));
         worldGen.add(ModificationPhase.ADDITIONS, BiomeSelectors.categories(Biome.Category.FOREST), biomeModificationContext -> biomeModificationContext.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.VEGETAL_DECORATION, MAGEDEW_PATCHES));
+        ShieldBlockCallback.EVENT.register((defender, source, amount, hand, shield) -> {
+            if(shield.getItem().equals(SILKSTEEL_SHIELD)) {
+                Entity attacker = source.getAttacker();
 
+                assert attacker != null;
+                if(defender instanceof PlayerEntity) {
+                    attacker.damage(DamageSource.player((PlayerEntity) defender), (int)Math.round(amount * 0.33F));
+                } else {
+                    attacker.damage(DamageSource.mob(defender), (int)Math.round(amount * 0.33F));
+                }
+            }
+
+            return ActionResult.PASS;
+        });
     }
 }

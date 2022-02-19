@@ -25,7 +25,7 @@ public class ToTUtil {
         vec31 = vec31.normalize();
         double dotProduct = vec3.dotProduct(vec31);
 
-        double range = 6.5D;
+        double range = 36.9D;
 
         return dotProduct > 1.0D - range / lenkth && canSee(entity, target);
 
