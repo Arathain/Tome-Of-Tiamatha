@@ -1,6 +1,6 @@
-package net.arathain.tot.client.entity.renderer;
+package net.arathain.tot.client.entity.renderer.drider;
 
-import net.arathain.tot.client.entity.model.WeaverkinEggModel;
+import net.arathain.tot.client.entity.model.drider.WeaverkinEggModel;
 import net.arathain.tot.common.block.entity.WeaverkinEggBlockEntity;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 

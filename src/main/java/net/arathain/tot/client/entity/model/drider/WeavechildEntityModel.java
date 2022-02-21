@@ -1,4 +1,4 @@
-package net.arathain.tot.client.entity.model;
+package net.arathain.tot.client.entity.model.drider;
 
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;

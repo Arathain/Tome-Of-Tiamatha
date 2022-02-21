@@ -1,6 +1,6 @@
-package net.arathain.tot.client.entity.renderer;
+package net.arathain.tot.client.entity.renderer.drider;
 
-import net.arathain.tot.client.entity.model.ArachneEntityModel;
+import net.arathain.tot.client.entity.model.drider.ArachneEntityModel;
 import net.arathain.tot.client.entity.renderer.layer.ArachneEyeLayer;
 import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;

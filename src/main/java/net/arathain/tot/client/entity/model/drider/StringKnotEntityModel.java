@@ -1,4 +1,4 @@
-package net.arathain.tot.client.entity.model;
+package net.arathain.tot.client.entity.model.drider;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

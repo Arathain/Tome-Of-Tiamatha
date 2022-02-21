@@ -7,6 +7,7 @@ import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.arathain.tot.common.entity.living.drider.weavekin.WeavechildEntity;
 import net.arathain.tot.common.entity.living.drider.weavekin.WeavethrallEntity;
+import net.arathain.tot.common.entity.living.raven.RavenEntity;
 import net.arathain.tot.common.entity.string.StringCollisionEntity;
 import net.arathain.tot.common.entity.string.StringKnotEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -26,13 +27,18 @@ public class ToTEntities {
     private static final Map<EntityType<?>, Identifier> ENTITY_TYPES = new LinkedHashMap<>();
     private static final Map<BlockEntityType<?>, Identifier> BLOCK_ENTITY_TYPES = new LinkedHashMap<>();
     //entities
+    //drider stuffs
     public static final EntityType<DriderEntity> DRIDER = createEntity("drider", DriderEntity.createDriderAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, DriderEntity::new).dimensions(EntityDimensions.fixed(0.9F, 1.5F)).build());
     public static final EntityType<WeavechildEntity> WEAVECHILD = createEntity("weavechild", WeavechildEntity.createWeavechildAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, WeavechildEntity::new).dimensions(EntityDimensions.fixed(0.4F, 0.6F)).build());
     public static final EntityType<WeavethrallEntity> WEAVETHRALL = createEntity("weavethrall", WeavethrallEntity.createWeavethrallAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, WeavethrallEntity::new).dimensions(EntityDimensions.fixed(0.95F, 0.8F)).build());
     public static final EntityType<ArachneEntity> ARACHNE = createEntity("arachne", ArachneEntity.createArachneAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ArachneEntity::new).dimensions(EntityDimensions.fixed(1.4F, 1.6F)).build());
+    // ravens n shiz
+    public static final EntityType<RavenEntity> RAVEN = createEntity("raven", RavenEntity.createRavenAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RavenEntity::new).dimensions(EntityDimensions.fixed(0.4F, 0.4F)).build());
+
     //string hell
     public static final EntityType<StringKnotEntity> STRING_KNOT = createEntity("string_knot", FabricEntityTypeBuilder.create(SpawnGroup.MISC, (EntityType.EntityFactory<StringKnotEntity>) StringKnotEntity::new).trackRangeBlocks(10).trackedUpdateRate(Integer.MAX_VALUE).forceTrackedVelocityUpdates(false).dimensions(EntityDimensions.fixed(0.6f, 0.6F)).spawnableFarFromPlayer().fireImmune().build());
     public static final EntityType<StringCollisionEntity> STRING_COLLISION = createEntity("string_collision", FabricEntityTypeBuilder.create(SpawnGroup.MISC, (EntityType.EntityFactory<StringCollisionEntity>) StringCollisionEntity::new).trackRangeBlocks(10).trackedUpdateRate(Integer.MAX_VALUE).forceTrackedVelocityUpdates(false).dimensions(EntityDimensions.fixed(0.25f, 0.25f)).disableSaving().disableSummon().fireImmune().build());
+
 
     //block entities
     public static final BlockEntityType<WeaverkinEggBlockEntity> WEAVERKIN_EGG = createBlockEntity("weaverkin_egg", FabricBlockEntityTypeBuilder.create(WeaverkinEggBlockEntity::new, ToTObjects.WEAVEKIN_EGG).build(null));

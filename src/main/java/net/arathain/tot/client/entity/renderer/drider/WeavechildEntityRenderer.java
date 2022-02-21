@@ -1,6 +1,6 @@
-package net.arathain.tot.client.entity.renderer;
+package net.arathain.tot.client.entity.renderer.drider;
 
-import net.arathain.tot.client.entity.model.WeavechildEntityModel;
+import net.arathain.tot.client.entity.model.drider.WeavechildEntityModel;
 import net.arathain.tot.client.entity.renderer.layer.WeavechildEyeLayer;
 import net.arathain.tot.common.entity.living.drider.weavekin.WeavechildEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;

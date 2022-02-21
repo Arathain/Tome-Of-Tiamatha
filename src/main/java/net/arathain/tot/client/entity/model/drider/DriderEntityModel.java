@@ -1,4 +1,4 @@
-package net.arathain.tot.client.entity.model;
+package net.arathain.tot.client.entity.model.drider;
 
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
@@ -28,6 +28,7 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
     public Identifier getAnimationFileLocation(DriderEntity animatable) {
         return new Identifier(TomeOfTiamatha.MODID, "animations/entity/drider.animation.json");
     }
+
 
     @Override
     public void codeAnimations(DriderEntity entity, Integer uniqueID, AnimationEvent customPredicate) {

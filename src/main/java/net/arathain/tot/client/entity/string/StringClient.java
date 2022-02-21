@@ -1,6 +1,6 @@
 package net.arathain.tot.client.entity.string;
 
-import net.arathain.tot.client.entity.model.StringKnotEntityModel;
+import net.arathain.tot.client.entity.model.drider.StringKnotEntityModel;
 import net.arathain.tot.client.entity.renderer.string.StringCollisionEntityRenderer;
 import net.arathain.tot.client.entity.renderer.string.StringKnotEntityRenderer;
 import net.arathain.tot.common.entity.string.StringCollisionEntity;

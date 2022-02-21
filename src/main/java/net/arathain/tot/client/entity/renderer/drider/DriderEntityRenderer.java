@@ -1,6 +1,6 @@
-package net.arathain.tot.client.entity.renderer;
+package net.arathain.tot.client.entity.renderer.drider;
 
-import net.arathain.tot.client.entity.model.DriderEntityModel;
+import net.arathain.tot.client.entity.model.drider.DriderEntityModel;
 import net.arathain.tot.client.entity.renderer.layer.DriderChestplateLayer;
 import net.arathain.tot.client.entity.renderer.layer.DriderEyeLayer;
 import net.arathain.tot.client.entity.renderer.layer.DriderHelmetLayer;

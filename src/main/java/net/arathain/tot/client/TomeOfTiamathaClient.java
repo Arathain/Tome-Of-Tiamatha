@@ -2,7 +2,8 @@ package net.arathain.tot.client;
 
 import draylar.omegaconfiggui.OmegaConfigGui;
 import net.arathain.tot.TomeOfTiamatha;
-import net.arathain.tot.client.entity.renderer.*;
+import net.arathain.tot.client.entity.renderer.drider.*;
+import net.arathain.tot.client.entity.renderer.raven.RavenEntityRenderer;
 import net.arathain.tot.client.entity.shader.ToTShaderHandler;
 import net.arathain.tot.client.entity.string.StringClient;
 import net.arathain.tot.common.init.ToTComponents;
@@ -10,17 +11,14 @@ import net.arathain.tot.common.init.ToTEffects;
 import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.network.packet.DriderComponentPacket;
-import net.arathain.tot.compat.WildfireGenderOriginsCompat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class TomeOfTiamathaClient implements ClientModInitializer {
@@ -31,6 +29,7 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
         EntityRendererRegistry.register(ToTEntities.ARACHNE, ArachneEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVECHILD, WeavechildEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVETHRALL, WeavethrallEntityRenderer::new);
+        EntityRendererRegistry.register(ToTEntities.RAVEN, RavenEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(ToTEntities.WEAVERKIN_EGG, (BlockEntityRendererFactory.Context rendererDispatcherIn) -> new WeaverkinEggRenderer());
         OmegaConfigGui.registerConfigScreen(TomeOfTiamatha.CONFIG);
         StringClient.init();

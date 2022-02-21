@@ -1,7 +1,5 @@
 package net.arathain.tot.client.entity.renderer.string;
 
-import net.arathain.tot.client.entity.model.StringKnotEntityModel;
-import net.arathain.tot.client.entity.string.StringClient;
 import net.arathain.tot.common.entity.string.StringKnotEntity;
 import net.arathain.tot.common.util.StringUtils;
 import net.fabricmc.api.EnvType;
@@ -13,8 +11,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
