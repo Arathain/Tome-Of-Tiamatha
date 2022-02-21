@@ -45,7 +45,7 @@ public class DriderShieldGoal extends Goal {
         LivingEntity target = drider.getTarget();
         List<Entity> projectiles = drider.world.getOtherEntities(drider, drider.getBoundingBox().expand(5), entity -> entity instanceof ProjectileEntity);
         if (target != null && drider.shieldCooldown == 0) {
-            return !projectiles.isEmpty() || drider.distanceTo(target) <= 2.0D || target instanceof PlayerEntity && drider.distanceTo(target) <= 4.0D || target instanceof CreeperEntity || target instanceof RangedAttackMob && target.distanceTo(drider) >= 5.0D || target instanceof RavagerEntity || (target instanceof IronGolemEntity && drider.distanceTo(target) <= 3.5D);
+            return !projectiles.isEmpty() || drider.distanceTo(target) <= 2.0D || (target instanceof PlayerEntity player && drider.distanceTo(target) <= 4.0D && !player.isBlocking()) || target instanceof CreeperEntity || (target instanceof RangedAttackMob && target.distanceTo(drider) >= 5.0D && drider.attackedCooldown == 0) || target instanceof RavagerEntity || (target instanceof IronGolemEntity && drider.distanceTo(target) <= 3.5D);
         }
         return false;
     }

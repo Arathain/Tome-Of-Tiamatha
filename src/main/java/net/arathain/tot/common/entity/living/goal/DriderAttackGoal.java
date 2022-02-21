@@ -52,11 +52,11 @@ public class DriderAttackGoal extends MeleeAttackGoal {
     @Override
     protected void attack(LivingEntity target, double squaredDistance) {
         double d0 = this.getSquaredMaxAttackDistance(target);
-        if (squaredDistance <= d0 && this.getCooldown() <= 0 && (this.drider.attackedCooldown > 0 || drider.getOffHandStack().getUseAction() != UseAction.BLOCK || drider.hurtTime > 100 || (drider.getAttacker() == null))) {
+        if (squaredDistance <= d0 && this.getCooldown() <= 0 && (this.drider.attackedCooldown > 0 || drider.getOffHandStack().getUseAction() != UseAction.BLOCK || drider.hurtTime > 80 || (drider.getAttacker() == null))) {
             this.resetCooldown();
             this.drider.stopUsingItem();
             if (drider.shieldCooldown == 0)
-                this.drider.shieldCooldown = 6;
+                this.drider.shieldCooldown = 10;
             this.drider.swingHand(Hand.MAIN_HAND);
             this.drider.tryAttack(target);
         }

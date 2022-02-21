@@ -53,9 +53,9 @@ public class DriderComponentPacket {
                     ScaleData height = ToTScaleTypes.MODIFY_HEIGHT_TYPE.getScaleData(player);
                     width.setScale(width.getBaseScale() * DRIDER_WIDTH);
                     height.setScale(height.getBaseScale() * DRIDER_HEIGHT);
+                    driderComponent.setStage(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() + 1);
                     driderComponent.setDrider(true);
                     player.removeStatusEffect(ToTEffects.BROODS_CURSE);
-                    System.out.println("womer momer");
                 }
             }
 

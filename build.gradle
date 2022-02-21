@@ -83,10 +83,12 @@ dependencies {
 	include "me.lucko:fabric-permissions-api:${project.fpa_version}"
 	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+	modImplementation "curse.maven:connectiblechains-415681:${project.chains_version}"
 
 	//cursed shit:tm: (run modImplementation to have them ingame)
 	modImplementation "com.github.apace100:origins-fabric:${project.origins_version}"
 	modImplementation "curse.maven:female-gender-fabric-456319:${project.gender_version}"
+
 
 
 }

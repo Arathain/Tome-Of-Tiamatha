@@ -58,7 +58,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
 
 
     public static DefaultAttributeContainer.Builder createDriderAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0).add(EntityAttributes.GENERIC_ARMOR, 6.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0).add(EntityAttributes.GENERIC_ARMOR, 6.0);
     }
     public int shieldCooldown;
     public int attackedCooldown;
@@ -95,12 +95,14 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
 
     @Override
     protected void initEquipment(LocalDifficulty difficulty) {
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD));
-        this.setStackInHand(Hand.OFF_HAND, new ItemStack(ToTObjects.SILKSTEEL_SHIELD));
+        this.setStackInHand(Hand.MAIN_HAND, Items.DIAMOND_SWORD.getDefaultStack());
+        this.setStackInHand(Hand.OFF_HAND, random.nextInt(10) == 1 ? Items.DIAMOND_SWORD.getDefaultStack() : ToTObjects.SILKSTEEL_SHIELD.getDefaultStack());
         this.equipStack(EquipmentSlot.HEAD, ToTObjects.SILKSTEEL_HELMET.getDefaultStack());
         this.equipStack(EquipmentSlot.CHEST, ToTObjects.SILKSTEEL_CHESTPLATE.getDefaultStack());
         this.setEquipmentDropChance(EquipmentSlot.HEAD, 0);
         this.setEquipmentDropChance(EquipmentSlot.CHEST, 0);
+        this.setEquipmentDropChance(EquipmentSlot.MAINHAND, 0);
+        this.setEquipmentDropChance(EquipmentSlot.OFFHAND, 0);
     }
 
     @Override

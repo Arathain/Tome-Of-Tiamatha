@@ -65,12 +65,13 @@ public class ArachneEntity extends DriderEntity {
     private final ServerBossBar bossBar = (new ServerBossBar(this.getDisplayName(), BossBar.Color.PINK, BossBar.Style.PROGRESS));
     public int slamTicks = 0;
     private int waveCooldown = 0;
+    private int waveTimer = 0;
     public boolean canSlam = false;
     public ArachneEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
     }
     public static DefaultAttributeContainer.Builder createArachneAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 240.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0).add(EntityAttributes.GENERIC_ARMOR, 20.0).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 200.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0).add(EntityAttributes.GENERIC_ARMOR, 20.0).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0);
     }
 
 
@@ -105,6 +106,7 @@ public class ArachneEntity extends DriderEntity {
         }
         tag.putBoolean("canSlam", canSlam);
         tag.putInt("WaveCooldown", waveCooldown);
+        tag.putInt("WaveTimer", waveTimer);
         tag.putInt("slamTicks", slamTicks);
         tag.putBoolean("Resting", this.isResting());
         tag.putBoolean("WaveInProgress", this.hasWaveInProgress());
@@ -120,7 +122,7 @@ public class ArachneEntity extends DriderEntity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         if(!source.isOutOfWorld())
-        amount = MathHelper.clamp(amount, 0, 8);
+        amount = MathHelper.clamp(amount, 0, 10);
         if(source.getAttacker() instanceof LivingEntity attacker && !this.world.isClient) {
             this.getWorld().getEntitiesByClass(SpiderEntity.class, this.getBoundingBox().expand(20), spiderEntity -> isAlive()).forEach(spooder -> {spooder.setTarget(attacker);});
         }
@@ -135,6 +137,7 @@ public class ArachneEntity extends DriderEntity {
             setRestingPos(NbtHelper.toBlockPos(nbt.getCompound("RestingPos")));
         }
         waveCooldown = nbt.getInt("WaveCooldown");
+        waveTimer = nbt.getInt("WaveTimer");
         slamTicks = nbt.getInt("slamTicks");
         this.setWave(nbt.getInt("Wave"));
         this.setHasWaveInProgress(nbt.getBoolean("WaveInProgress"));
@@ -289,6 +292,7 @@ public class ArachneEntity extends DriderEntity {
     }
 
     private void waveTick() {
+        waveTimer++;
         if(waveCooldown > 0) waveCooldown--;
         if (!world.isClient && this.age % 5 == 0 && waveCooldown == 0) {
             int wave = this.getWave();
@@ -322,7 +326,7 @@ public class ArachneEntity extends DriderEntity {
 
             } else {
                 // wave end check
-                if (enemiesLeft.size() <= 2) {
+                if (enemiesLeft.size() <= 2 || waveTimer > 900) {
                     if(wave == 2) {
                         if(this.getHealth() <= 150f) {
                             this.setWave(wave + 1);
