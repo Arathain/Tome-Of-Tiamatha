@@ -352,6 +352,7 @@ public class ArachneEntity extends DriderEntity {
 
                     if(getWave() >= 8) setWave(0);
                     if(getWave() > wave || (wave != 0 && getWave() == 0)) {
+                        waveTimer = 0;
                         waveCooldown = 100;
                         this.playSound(SoundEvents.ENTITY_SPIDER_DEATH, 1.0f, 1.2f);
                         this.playSound(SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.2f);

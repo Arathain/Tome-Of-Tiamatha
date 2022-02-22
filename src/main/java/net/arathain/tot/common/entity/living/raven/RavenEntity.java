@@ -1,5 +1,8 @@
 package net.arathain.tot.common.entity.living.raven;
 
+import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.arathain.tot.common.entity.living.goal.RavenDeliverBundleGoal;
+import net.arathain.tot.common.entity.living.goal.RavenFollowOwnerGoal;
 import net.arathain.tot.common.init.ToTObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -49,8 +52,10 @@ import java.util.UUID;
 
 public class RavenEntity extends TameableEntity implements IAnimatable, IAnimationTickable {
     private static final TrackedData<Optional<UUID>> RECEIVER_UUID = DataTracker.registerData(RavenEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    public static final TrackedData<String> TYPE = DataTracker.registerData(RavenEntity.class, TrackedDataHandlerRegistry.STRING);
     private final AnimationFactory factory = new AnimationFactory(this);
     private static final TrackedData<Boolean> SITTING = DataTracker.registerData(RavenEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    public static final TrackedData<Boolean> GOING_TO_RECEIVER = DataTracker.registerData(RavenEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public RavenEntity(EntityType<? extends TameableEntity> type, World world) {
         super(type, world);
         moveControl = new FlightMoveControl(this, 90, false);
@@ -58,9 +63,10 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
     @Override
     protected void initGoals() {
         goalSelector.add(1, new SwimGoal(this));
+        goalSelector.add(3, new RavenDeliverBundleGoal<>(this, 1, 6, 128, false));
         goalSelector.add(2, new SitGoal(this));
         goalSelector.add(3, new MeleeAttackGoal(this, 1, true));
-        goalSelector.add(4, new FollowOwnerGoal(this, 1, 10, 2, false));
+        goalSelector.add(4, new RavenFollowOwnerGoal(this, 1, 10, 2, false));
         goalSelector.add(5, new AnimalMateGoal(this, 1));
         goalSelector.add(6, new WanderAroundFarGoal(this, 1));
         goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 8));
@@ -77,21 +83,34 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putBoolean("sitting", isSitting());
+        nbt.putBoolean("goin", dataTracker.get(GOING_TO_RECEIVER));
         if (this.getReceiverUuid() != null) {
             nbt.putUuid("Receiver", this.getReceiverUuid());
         }
+        nbt.putString("Type", this.getRavenType().toString());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         setSitting(nbt.getBoolean("sitting"));
+        dataTracker.set(GOING_TO_RECEIVER, nbt.getBoolean("goin"));
+        if (nbt.contains("Type")) {
+            this.setRavenType(Type.valueOf(nbt.getString("Type")));
+        }
         if (nbt.containsUuid("Receiver")) {
             setReceiverUuid(nbt.getUuid("Receiver"));
         } else {
             String string = nbt.getString("Receiver");
             setReceiverUuid(ServerConfigHandler.getPlayerUuidByName(this.getServer(), string));
         }
+    }
+    public Type getRavenType() {
+        return Type.valueOf(this.dataTracker.get(TYPE));
+    }
+
+    public void setRavenType(Type type) {
+        this.dataTracker.set(TYPE, type.toString());
     }
 
     @Override
@@ -107,6 +126,13 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
 
         this.dataTracker.startTracking(SITTING, false);
         this.dataTracker.startTracking(RECEIVER_UUID, Optional.empty());
+        this.dataTracker.startTracking(GOING_TO_RECEIVER, false);
+
+        if (this.random.nextInt(11) == 0) {
+            this.dataTracker.startTracking(TYPE, Type.ALBINO.toString());
+        } else {
+            this.dataTracker.startTracking(TYPE, random.nextBoolean() ? Type.DARK.toString() : Type.SEA_GREEN.toString());
+        }
     }
 
     @Override
@@ -122,6 +148,18 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
             PlayerEntity entity = getServer().getPlayerManager().getPlayer(stack.getName().asString());
             if(entity != null && entity.getUuid() != null) {
                 this.setReceiverUuid(entity.getUuid());
+            } else {
+                this.setReceiverUuid(null);
+                this.dataTracker.set(GOING_TO_RECEIVER, false);
+            }
+        } else {
+            this.setReceiverUuid(null);
+            this.dataTracker.set(GOING_TO_RECEIVER, false);
+        }
+        if (this.hasCustomName()) {
+            String name = this.getCustomName().getString();
+            if (name.equalsIgnoreCase("three_eyed") || name.equalsIgnoreCase("three_eyed_raven") || name.equalsIgnoreCase("three eyed") || name.equalsIgnoreCase("three eyed raven")) {
+                this.setRavenType(Type.THREE_EYED);
             }
         }
     }
@@ -136,7 +174,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
             }
             return ActionResult.success(this.world.isClient);
         }
-        if(stack.isEmpty() && this.getStackInHand(Hand.MAIN_HAND).getItem().equals(Items.BUNDLE)) {
+        if(stack.isEmpty() && this.getStackInHand(Hand.MAIN_HAND).getItem().equals(Items.BUNDLE) && !player.isSneaking()) {
             if (!this.world.isClient) {
                 player.setStackInHand(Hand.MAIN_HAND, this.getStackInHand(Hand.MAIN_HAND));
                 this.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
@@ -229,7 +267,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
         if(!this.isOnGround()) {
-            animationBuilder.addAnimation(Math.abs(getVelocity().y) > 0.05f ? "flyFast" : "fly", true);
+            animationBuilder.addAnimation(Math.abs(getVelocity().y) > 0.1f ? "fastFly" : "fly", true);
             event.getController().setAnimation(animationBuilder);
         } else if(!dataTracker.get(SITTING)) {
             animationBuilder.addAnimation("idle", true);
@@ -282,5 +320,12 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
     @Override
     public int tickTimer() {
         return age;
+    }
+
+    public enum Type {
+        DARK,
+        ALBINO,
+        SEA_GREEN,
+        THREE_EYED
     }
 }

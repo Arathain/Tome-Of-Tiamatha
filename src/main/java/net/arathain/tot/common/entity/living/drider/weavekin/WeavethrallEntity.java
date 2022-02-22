@@ -28,6 +28,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.ServerConfigHandler;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.ActionResult;
@@ -67,7 +69,12 @@ public class WeavethrallEntity extends WeavechildEntity implements TameableHosti
         this.targetSelector.add(1, new ObedientRevengeGoal(this, DriderEntity.class).setGroupRevenge(ZombifiedPiglinEntity.class));
         this.targetSelector.add(1, new TamedTrackAttackerGoal(this));
         this.targetSelector.add(2, new TamedAttackWithOwnerGoal<>(this));
-        this.targetSelector.add(1, new ActiveTargetGoal<>(this, AnimalEntity.class, 10, true, false, animol -> !isTamed()));
+        this.targetSelector.add(1, new ActiveTargetGoal<>(this, AnimalEntity.class, 10, true, false, animol -> {
+            if (isTamed()) return false;
+            if (!(animol instanceof TameableEntity)) return true;
+            TameableEntity tameable = (TameableEntity) animol;
+            return tameable.getOwner() == null || tameable.getOwner() != null && !ToTUtil.isDrider(tameable.getOwner());
+        }));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player) && !isTamed()));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, 10, true, false, golem -> !isTamed()));
     }
@@ -80,7 +87,7 @@ public class WeavethrallEntity extends WeavechildEntity implements TameableHosti
             return bl ? ActionResult.CONSUME : ActionResult.PASS;
         }
         if(stack.isFood() && stack.isIn(ToTObjects.MEAT) && ToTUtil.isDrider(player)) {
-            if (this.getOwner() != player) {
+            if (!isTamed()) {
                 if (!player.getAbilities().creativeMode) {
                     stack.decrement(1);
                 }
@@ -110,6 +117,28 @@ public class WeavethrallEntity extends WeavechildEntity implements TameableHosti
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "controller", 3, this::predicate));
+    }
+    @Override
+    public void handleStatus(byte status) {
+        if (status == 7) {
+            this.showEmoteParticle(true);
+        } else if (status == 6) {
+            this.showEmoteParticle(false);
+        } else {
+            super.handleStatus(status);
+        }
+    }
+    protected void showEmoteParticle(boolean positive) {
+        DefaultParticleType particleEffect = ParticleTypes.HEART;
+        if (!positive) {
+            particleEffect = ParticleTypes.SMOKE;
+        }
+        for (int i = 0; i < 7; ++i) {
+            double d = this.random.nextGaussian() * 0.02;
+            double e = this.random.nextGaussian() * 0.02;
+            double f = this.random.nextGaussian() * 0.02;
+            this.world.addParticle(particleEffect, this.getParticleX(1.0), this.getRandomBodyY() + 0.5, this.getParticleZ(1.0), d, e, f);
+        }
     }
 
     @Override

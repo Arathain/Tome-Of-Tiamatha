@@ -8,6 +8,7 @@ import net.arathain.tot.common.block.HangingWebBlock;
 import net.arathain.tot.common.block.WeaverkinEggBlock;
 import net.arathain.tot.common.item.GazingLilyItem;
 import net.arathain.tot.common.item.SilksteelArmorItem;
+import net.arathain.tot.common.item.SilksteelShieldItem;
 import net.arathain.tot.common.item.SynthesisScepterItem;
 import net.fabricmc.fabric.api.biome.v1.BiomeModification;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -26,9 +27,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterials;
+import net.minecraft.item.*;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -67,7 +66,9 @@ public class ToTObjects {
     public static final Item SILKSTEEL_CHESTPLATE = createItem("silksteel_chestplate", new SilksteelArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.CHEST, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
     public static final Item SYNTHESIS_SCEPTRE = createItem("synthesis_sceptre", new SynthesisScepterItem(ToolMaterials.NETHERITE, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.RARE)));
     public static final Item GAZING_LILY = createItem("gazing_lily", new GazingLilyItem(new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
-    public static final Item SILKSTEEL_SHIELD = createItem("silksteel_shield", new FabricShieldItem(new FabricItemSettings().group(TomeOfTiamatha.GROUP).maxDamage(2600), 40, 8));
+    public static final Item SILKSTEEL_SHIELD = createItem("silksteel_shield", new SilksteelShieldItem(new FabricItemSettings().group(TomeOfTiamatha.GROUP).maxDamage(1600), 60, 8));
+
+    public static final Item RAVEN_SPAWN_EGG = createItem("raven_spawn_egg", new SpawnEggItem(ToTEntities.RAVEN, 0x182c3b, 0x828c78, (new Item.Settings()).group(ItemGroup.MISC)));
     //registry end here
 
     //funky bits (do not touch)

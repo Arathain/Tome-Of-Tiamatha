@@ -6,6 +6,8 @@ import net.minecraft.entity.mob.GhastEntity;
 import net.minecraft.entity.passive.HorseBaseEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleTypes;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
