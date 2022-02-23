@@ -1,4 +1,4 @@
 
 ## License
 
-CC0
+LGPL

@@ -5,9 +5,11 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.arathain.tot.common.entity.string.StringKnotEntity;
+import net.arathain.tot.common.entity.string.StringPacketCreator;
 import net.arathain.tot.common.network.NetworkingPackages;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,37 +31,31 @@ import java.util.List;
  * **/
 @Mixin(ThreadedAnvilChunkStorage.class)
 public abstract class ThreadedAnvilChunkStorageMixin {
-
     @Shadow
     @Final
     private Int2ObjectMap<ThreadedAnvilChunkStorage.EntityTracker> entityTrackers;
 
-    @Inject(method = "sendChunkDataPackets", at = @At(value = "TAIL"))
+    @Inject(
+            method = "sendChunkDataPackets",
+            at = @At(value = "TAIL")
+    )
     private void sendAttachChainPackets(ServerPlayerEntity player, MutableObject<ChunkDataS2CPacket> cachedDataPacket, WorldChunk chunk, CallbackInfo ci) {
-        ObjectIterator<ThreadedAnvilChunkStorage.EntityTracker> var6 = this.entityTrackers.values().iterator();
-        List<StringKnotEntity> list = Lists.newArrayList();
+        ObjectIterator<ThreadedAnvilChunkStorage.EntityTracker> trackers = this.entityTrackers.values().iterator();
+        List<StringKnotEntity> knots = Lists.newArrayList();
 
-        while (var6.hasNext()) {
-            ThreadedAnvilChunkStorage.EntityTracker entityTracker = var6.next();
+        while (trackers.hasNext()) {
+            ThreadedAnvilChunkStorage.EntityTracker entityTracker = trackers.next();
             Entity entity = entityTracker.entity;
             if (entity != player && entity.getChunkPos().equals(chunk.getPos())) {
-                if (entity instanceof StringKnotEntity && !((StringKnotEntity) entity).getHoldingEntities().isEmpty()) {
-                    list.add((StringKnotEntity) entity);
+                if (entity instanceof StringKnotEntity knot && !knot.getLinks().isEmpty()) {
+                    knots.add(knot);
                 }
             }
         }
 
-        if (!list.isEmpty()) {
-            for (StringKnotEntity stringKnotEntity : list) {
-                PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-                //Write our id and the id of the one we connect to.
-                int[] ids = stringKnotEntity.getHoldingEntities().stream().mapToInt(Entity::getId).toArray();
-                if (ids.length > 0) {
-                    passedData.writeInt(stringKnotEntity.getId());
-                    passedData.writeIntArray(ids);
-                    ServerPlayNetworking.send(player, NetworkingPackages.S2C_MULTI_STRING_ATTACH_PACKET_ID, passedData);
-                }
-            }
+        for (StringKnotEntity knot : knots) {
+            Packet<?> packet = StringPacketCreator.createMultiAttach(knot);
+            if (packet != null) player.networkHandler.sendPacket(packet);
         }
     }
 }

@@ -1,5 +1,6 @@
 package net.arathain.tot.common.entity.living.raven;
 
+import net.arathain.tot.client.particle.ToTParticles;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.goal.RavenDeliverBundleGoal;
 import net.arathain.tot.common.entity.living.goal.RavenFollowOwnerGoal;
@@ -76,7 +77,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         targetSelector.add(2, new RevengeGoal(this).setGroupRevenge());
     }
     public static DefaultAttributeContainer.Builder createRavenAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 20).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3).add(EntityAttributes.GENERIC_FLYING_SPEED, 0.7);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3).add(EntityAttributes.GENERIC_FLYING_SPEED, 0.7);
     }
 
     @Override
@@ -161,6 +162,16 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
             if (name.equalsIgnoreCase("three_eyed") || name.equalsIgnoreCase("three_eyed_raven") || name.equalsIgnoreCase("three eyed") || name.equalsIgnoreCase("three eyed raven")) {
                 this.setRavenType(Type.THREE_EYED);
             }
+        }
+    }
+
+    public void spawnFeatherParticles(int count) {
+        float height = this.getHeight();
+        if(height * 100 < 100) height = 1.0F;
+        else height = height + 0.5F;
+        for(int i = 0; i <= count; i++) {
+            double randomHeight = (double)this.random.nextInt((int)height * 10) / 10;
+            world.addParticle(this.getRavenType() == Type.ALBINO ? ToTParticles.RAVEN_FEATHER_ALBINO : this.getRavenType() == Type.SEA_GREEN ? ToTParticles.RAVEN_FEATHER_GREEN : ToTParticles.RAVEN_FEATHER, this.getX(), this.getY() + 0.2D + randomHeight, this.getZ(), 0, 0, 0);
         }
     }
 
@@ -308,6 +319,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         if (isInvulnerableTo(source)) {
             return false;
         } else {
+            spawnFeatherParticles(3);
             Entity entity = source.getAttacker();
             setSitting(false);
             if (entity != null && !(entity instanceof PlayerEntity) && !(entity instanceof PersistentProjectileEntity)) {

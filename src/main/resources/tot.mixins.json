@@ -7,17 +7,18 @@
   "mixins": [
     "ActiveTargetGoalMixin",
     "ArmorItemMixin",
-    "compat.genderorigins.BrewingRecipeAccessor",
     "EntityTrackerEntryMixin",
     "IronGolemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "NbtHelperMixin",
     "NoiseChunkGeneratorMixin",
     "PlayerEntityMixin",
     "RaiderEntityMixin",
     "SpiderEntityMixin",
     "ThreadedAnvilChunkStorageMixin",
-    "VillagerEntityMixin"
+    "VillagerEntityMixin",
+    "compat.gender.BrewingRecipeAccessor"
   ],
   "client": [
     "AbstractClientPlayerEntityMixin",
@@ -25,7 +26,7 @@
     "PlayerEntityRendererMixin",
     "compat.gender.PlayerEntityMixin",
     "compat.gender.WildfirePlayerListMixin",
-    "compat.genderorigins.WardrobeBrowserScreenMixin"
+    "compat.gender.WardrobeBrowserScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

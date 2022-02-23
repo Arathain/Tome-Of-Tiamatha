@@ -25,9 +25,6 @@ public class ToTMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.startsWith("net.arathain.tot.mixin.compat.gender")) {
             return FabricLoader.getInstance().isModLoaded("wildfire_gender");
         }
-        if (mixinClassName.startsWith("net.arathain.tot.mixin.compat.genderorigins")) {
-            return FabricLoader.getInstance().isModLoaded("wildfire_gender") && FabricLoader.getInstance().isModLoaded("origins");
-        }
         return true;
     }
 

@@ -1,4 +1,4 @@
-package net.arathain.tot.mixin.compat.genderorigins;
+package net.arathain.tot.mixin.compat.gender;
 
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;

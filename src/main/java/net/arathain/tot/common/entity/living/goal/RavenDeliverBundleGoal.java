@@ -98,6 +98,7 @@ public class RavenDeliverBundleGoal<T extends TameableEntity> extends Goal {
 
     private void tryTeleport() {
         BlockPos blockPos = this.receiver.getBlockPos();
+        ((RavenEntity) this.tameable).spawnFeatherParticles(10);
 
         for (int i = 0; i < 10; ++i) {
             int j = this.getRandomInt(-3, 3);

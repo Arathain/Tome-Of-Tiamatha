@@ -1,6 +1,9 @@
 package net.arathain.tot.client.entity.renderer.string;
 
+import com.github.legoatoom.connectiblechains.ConnectibleChains;
+import com.github.legoatoom.connectiblechains.util.Helper;
 import net.arathain.tot.common.entity.string.StringKnotEntity;
+import net.arathain.tot.common.entity.string.StringLink;
 import net.arathain.tot.common.util.StringUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,11 +14,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>This class renders the chain you see in game. The block around the fence and the chain.
@@ -26,12 +32,12 @@ import java.util.ArrayList;
  *
  * @see net.minecraft.client.render.entity.LeashKnotEntityRenderer
  * @see net.minecraft.client.render.entity.MobEntityRenderer
- * @author legoatoom
+ * @author legoatoom, Qendolin
  */
 @Environment(EnvType.CLIENT)
 public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
     private static final Identifier KNOT_TEXTURE = StringUtils.identifier("textures/entity/drider/string/string_knot.png");
-    private static final Identifier CHAIN_TEXTURE = StringUtils.identifier("textures/entity/drider/string/string.png");;
+    private static final Identifier STRING_TEXTURE = StringUtils.identifier("textures/entity/drider/string/string.png");;
     private final StringRenderer stringRenderer = new StringRenderer();
 
     public StringKnotEntityRenderer(EntityRendererFactory.Context context) {
@@ -40,23 +46,13 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
 
     @Override
     public boolean shouldRender(StringKnotEntity entity, Frustum frustum, double x, double y, double z) {
-        boolean should = entity.getHoldingEntities().stream().anyMatch(entity1 -> {
-            if (entity1 instanceof StringKnotEntity) {
-                if (!entity1.shouldRender(x, y, z)) {
-                    return false;
-                } else if (entity1.ignoreCameraFrustum) {
-                    return true;
-                } else {
-                    Box box = entity1.getVisibilityBoundingBox().expand(entity.distanceTo(entity1) / 2D);
-                    if (box.isValid() || box.getAverageSideLength() == 0.0D) {
-                        box = new Box(entity1.getX() - 2.0D, entity1.getY() - 2.0D, entity1.getZ() - 2.0D, entity1.getX() + 2.0D, entity1.getY() + 2.0D, entity1.getZ() + 2.0D);
-                    }
-
-                    return frustum.isVisible(box);
-                }
-            } else return entity1 instanceof PlayerEntity;
-        });
-        return super.shouldRender(entity, frustum, x, y, z) || should;
+        if (entity.ignoreCameraFrustum) return true;
+        for (StringLink link : entity.getLinks()) {
+            if (link.primary != entity) continue;
+            if (link.secondary instanceof PlayerEntity) return true;
+            else if (link.secondary.shouldRender(x, y, z)) return true;
+        }
+        return super.shouldRender(entity, frustum, x, y, z);
     }
 
     public Identifier getTexture(StringKnotEntity StringKnotEntity) {
@@ -64,17 +60,41 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
     }
 
     @Override
-    public void render(StringKnotEntity StringKnotEntity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        matrices.push();
-        Vec3d leashOffset = StringKnotEntity.getLeashPos(tickDelta).subtract(StringKnotEntity.getLerpedPos(tickDelta));
-        matrices.translate(leashOffset.x, leashOffset.y + 6.5/16f, leashOffset.z);
-        matrices.scale(5/6f, 1, 5/6f);
-        matrices.pop();
-        ArrayList<Entity> entities = StringKnotEntity.getHoldingEntities();
-        for (Entity entity : entities) {
-            this.createStringLine(StringKnotEntity, tickDelta, matrices, vertexConsumers, entity);
+    public void render(StringKnotEntity stringKnotEntity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        // Render the knot
+        if (stringKnotEntity.shouldRenderKnot()) {
+            matrices.push();
+            Vec3d leashOffset = stringKnotEntity.getLeashPos(tickDelta).subtract(stringKnotEntity.getLerpedPos(tickDelta));
+            matrices.translate(leashOffset.x, leashOffset.y + 6.5 / 16f, leashOffset.z);
+            // The model is 6 px wide, but it should be rendered at 5px
+            matrices.scale(5 / 6f, 1, 5 / 6f);
+            matrices.pop();
         }
-        super.render(StringKnotEntity, yaw, tickDelta, matrices, vertexConsumers, light);
+
+        // Render the links
+        List<StringLink> links = stringKnotEntity.getLinks();
+        for (StringLink link : links) {
+            if (link.primary != stringKnotEntity || link.isDead()) continue;
+            this.renderStringLink(link, tickDelta, matrices, vertexConsumers);
+            if (ConnectibleChains.runtimeConfig.doDebugDraw()) {
+                this.drawDebugVector(matrices, stringKnotEntity, link.secondary, vertexConsumers.getBuffer(RenderLayer.LINES));
+            }
+        }
+        if (ConnectibleChains.runtimeConfig.doDebugDraw()) {
+            matrices.push();
+            // F stands for "from", T for "to"
+            Text holdingCount = new LiteralText("F: " + stringKnotEntity.getLinks().stream()
+                    .filter(l -> l.primary == stringKnotEntity).count());
+            Text heldCount = new LiteralText("T: " + stringKnotEntity.getLinks().stream()
+                    .filter(l -> l.secondary == stringKnotEntity).count());
+            matrices.translate(0, 0.25, 0);
+            this.renderLabelIfPresent(stringKnotEntity, holdingCount, matrices, vertexConsumers, light);
+            matrices.translate(0, 0.25, 0);
+            this.renderLabelIfPresent(stringKnotEntity, heldCount, matrices, vertexConsumers, light);
+            matrices.pop();
+        }
+
+        super.render(stringKnotEntity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
     /**
@@ -82,14 +102,14 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
      * the {@link net.minecraft.client.render.entity.LeashKnotEntityRenderer}.
      * Many variables therefore have simple names. I tried my best to comment and explain what everything does.
      *
-     * @param fromEntity             The origin Entity
+     * @param link                   A link that provides the positions and type
      * @param tickDelta              Delta tick
      * @param matrices               The render matrix stack.
      * @param vertexConsumerProvider The VertexConsumerProvider, whatever it does.
-     * @param toEntity               The entity that we connect the chain to, this can be a {@link PlayerEntity} or a {@link StringKnotEntity}.
      */
-    private void createStringLine(StringKnotEntity fromEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, Entity toEntity) {
-        if (toEntity == null) return; // toEntity can be null, this will return the function if it is null.
+    private void renderStringLink(StringLink link, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider) {
+        StringKnotEntity fromEntity = link.primary;
+        Entity toEntity = link.secondary;
         matrices.push();
 
         // Don't have to lerp knot position as it can't move
@@ -98,7 +118,7 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         Vec3d srcPos = fromEntity.getPos().add(fromEntity.getLeashOffset());
         Vec3d dstPos;
 
-        if(toEntity instanceof AbstractDecorationEntity) {
+        if (toEntity instanceof AbstractDecorationEntity) {
             dstPos = toEntity.getPos().add(toEntity.getLeashOffset());
         } else {
             dstPos = toEntity.getLeashPos(tickDelta);
@@ -114,16 +134,17 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         // - does not have an overlay
         // - does not have vertex color
         // - uses a tri strip instead of quads
-        VertexConsumer buffer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutoutNoCull(CHAIN_TEXTURE));
+        VertexConsumer buffer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutoutNoCull(STRING_TEXTURE));
+        if (ConnectibleChains.runtimeConfig.doDebugDraw()) {
+            buffer = vertexConsumerProvider.getBuffer(RenderLayer.getLines());
+        }
 
-        Vec3f offset = StringUtils.getStringOffset(srcPos, dstPos);
+        Vec3f offset = Helper.getChainOffset(srcPos, dstPos);
         matrices.translate(offset.getX(), 0, offset.getZ());
 
         // Now we gather light information for the chain. Since the chain is lighter if there is more light.
         BlockPos blockPosOfStart = new BlockPos(fromEntity.getCameraPosVec(tickDelta));
         BlockPos blockPosOfEnd = new BlockPos(toEntity.getCameraPosVec(tickDelta));
-        blockPosOfStart = new BlockPos(MathHelper.lerp(0.3, blockPosOfStart.getX(), blockPosOfEnd.getX()), MathHelper.lerp(0.3, blockPosOfStart.getY(), blockPosOfEnd.getY()), MathHelper.lerp(0.3, blockPosOfStart.getZ(), blockPosOfEnd.getZ()));
-        blockPosOfEnd = new BlockPos(MathHelper.lerp(0.7, blockPosOfStart.getX(), blockPosOfEnd.getX()), MathHelper.lerp(0.7, blockPosOfStart.getY(), blockPosOfEnd.getY()), MathHelper.lerp(0.7, blockPosOfStart.getZ(), blockPosOfEnd.getZ()));
         int blockLightLevelOfStart = fromEntity.world.getLightLevel(LightType.BLOCK, blockPosOfStart);
         int blockLightLevelOfEnd = toEntity.world.getLightLevel(LightType.BLOCK, blockPosOfEnd);
         int skylightLevelOfStart = fromEntity.world.getLightLevel(LightType.SKY, blockPosOfStart);
@@ -144,6 +165,22 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         }
 
         matrices.pop();
+    }
+
+    /**
+     * Draws a line fromEntity - toEntity, from green to red.
+     */
+    private void drawDebugVector(MatrixStack matrices, Entity fromEntity, Entity toEntity, VertexConsumer buffer) {
+        if (toEntity == null) return;
+        Matrix4f modelMat = matrices.peek().getPositionMatrix();
+        Vec3d vec = toEntity.getPos().subtract(fromEntity.getPos());
+        Vec3d normal = vec.normalize();
+        buffer.vertex(modelMat, 0, 0, 0)
+                .color(0, 255, 0, 255)
+                .normal((float) normal.x, (float) normal.y, (float) normal.z).next();
+        buffer.vertex(modelMat, (float) vec.x, (float) vec.y, (float) vec.z)
+                .color(255, 0, 0, 255)
+                .normal((float) normal.x, (float) normal.y, (float) normal.z).next();
     }
 
     public StringRenderer getStringRenderer() {

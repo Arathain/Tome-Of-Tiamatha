@@ -57,7 +57,7 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
                 leftArm.setRotationY(leftArm.getRotationY() - 1);
             } else {
                 leftArm.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * 2.0F * entity.limbDistance * 0.5F + ((entity.getActiveHand() == Hand.OFF_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)) : 0))).getX());
-                leftArm.setRotationZ((float) (leftArm.getRotationZ() - ((entity.getActiveHand() == Hand.OFF_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 0.5f, entity.handSwingProgress * 0.5f)) : 0)));
+                leftArm.setRotationZ((float) (leftArm.getRotationZ() - ((entity.getActiveHand() == Hand.OFF_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 0.8f, entity.handSwingProgress * 0.8f)) : 0)));
             }
         }
 
@@ -67,7 +67,7 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
                 sendHelp.setRotationY(sendHelp.getRotationY() + 1);
             } else {
                 sendHelp.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * -2.0F * entity.limbDistance * 0.5F + ((entity.getActiveHand() == Hand.MAIN_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)) : 0))).getX());
-                sendHelp.setRotationZ((float) (sendHelp.getRotationZ() + ((entity.getActiveHand() == Hand.MAIN_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 0.5f, entity.handSwingProgress * 0.5f)) : 0)));
+                sendHelp.setRotationZ((float) (sendHelp.getRotationZ() + ((entity.getActiveHand() == Hand.MAIN_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 0.8f, entity.handSwingProgress * 0.8f)) : 0)));
             }
         }
     }

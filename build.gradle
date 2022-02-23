@@ -89,8 +89,6 @@ dependencies {
 	modImplementation "com.github.apace100:origins-fabric:${project.origins_version}"
 	modImplementation "curse.maven:female-gender-fabric-456319:${project.gender_version}"
 
-
-
 }
 
 processResources {

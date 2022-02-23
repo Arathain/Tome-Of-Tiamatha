@@ -1,4 +1,4 @@
-package net.arathain.tot.mixin.compat.genderorigins;
+package net.arathain.tot.mixin.compat.gender;
 
 import com.wildfire.gui.WildfireButton;
 import com.wildfire.gui.screen.WardrobeBrowserScreen;

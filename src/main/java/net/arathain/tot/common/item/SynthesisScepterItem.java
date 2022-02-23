@@ -1,6 +1,7 @@
 package net.arathain.tot.common.item;
 
 import net.arathain.tot.common.entity.string.StringKnotEntity;
+import net.arathain.tot.common.entity.string.StringLink;
 import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.util.ToTUtil;
 import net.fabricmc.api.EnvType;
@@ -140,29 +141,26 @@ public class SynthesisScepterItem extends MiningToolItem {
             assert targetPos != null;
             BlockPos blockPos = new BlockPos(targetPos.getFloat("X"), targetPos.getFloat("Y"), targetPos.getFloat("Z"));
             Block block = world.getBlockState(blockPos).getBlock();
-                if (StringKnotEntity.canConnectTo(block)) {
-                    if (!world.isClient) {
-                        StringKnotEntity knot = StringKnotEntity.getOrCreate(world, blockPos, false);
-                        if (!StringKnotEntity.tryAttachHeldStringsToBlock((PlayerEntity) user, world, blockPos, knot)) {
-                            // If this didn't work connect the player to the new chain instead.
-                            assert knot != null; // This can never happen as long as getOrCreate has false as parameter.
-                            if (knot.getHoldingEntities().contains(user)) {
-                                knot.detachString(user, true, false);
-                                knot.onBreak(null);
-                            } else if (knot.attachString(user, true, 0)) {
-                                knot.onPlace();
-                            }
-                        }
-                    }
-                }
-
-            if (StringKnotEntity.canConnectTo(block)) {
-                if (world.isClient) {
-
-                } else {
-                    StringKnotEntity.tryAttachHeldStringsToBlock((PlayerEntity) user, world, blockPos, StringKnotEntity.getOrCreate(world, blockPos, true));
+            // 1. Try with existing knot, regardless of hand item
+            StringKnotEntity knot = StringKnotEntity.getKnotAt(world, blockPos);
+            if (knot != null) {
+                if (knot.interact((PlayerEntity) user, user.getActiveHand()) == ActionResult.CONSUME) {
                 }
             }
+
+            // 2. Check if any held chains can be attached.
+            List<StringLink> attachableChains = StringKnotEntity.getHeldStringsInRange((PlayerEntity) user, blockPos);
+
+            // Allow default interaction behaviour.
+            if (attachableChains.size() == 0);
+
+
+            // 3. Create new knot if none exists and delegate interaction
+            knot = new StringKnotEntity(world, blockPos);
+            knot.setGraceTicks((byte) 0);
+            world.spawnEntity(knot);
+            knot.onPlace();
+            knot.interact((PlayerEntity) user, user.getActiveHand());
         }
         if(!world.isClient() && hasFocus(stack) && getFocusStack(stack).getItem().equals(Items.TOTEM_OF_UNDYING)) {
             NbtCompound targetPos = (NbtCompound) stack.getNbt().get("targetPos");

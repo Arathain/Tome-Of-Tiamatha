@@ -3,22 +3,23 @@ package net.arathain.tot.common.entity.living.goal;
 import net.arathain.tot.common.entity.living.raven.RavenEntity;
 import net.minecraft.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class RavenFollowOwnerGoal extends FollowOwnerGoal {
-    private TameableEntity tamed;
+    private final TameableEntity tameable;
     public RavenFollowOwnerGoal(TameableEntity tameable, double speed, float minDistance, float maxDistance, boolean leavesAllowed) {
         super(tameable, speed, minDistance, maxDistance, leavesAllowed);
-        tamed = tameable;
+        this.tameable = tameable;
     }
 
     @Override
     public boolean canStart() {
-        return !tamed.getDataTracker().get(RavenEntity.GOING_TO_RECEIVER) && super.canStart();
+        return !tameable.getDataTracker().get(RavenEntity.GOING_TO_RECEIVER) && super.canStart();
     }
 
     @Override
     public boolean shouldContinue() {
-        if(tamed.getDataTracker().get(RavenEntity.GOING_TO_RECEIVER)) {
+        if(tameable.getDataTracker().get(RavenEntity.GOING_TO_RECEIVER)) {
             return false;
         }
         return super.shouldContinue();

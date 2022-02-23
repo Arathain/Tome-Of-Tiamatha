@@ -5,6 +5,7 @@ import com.wildfire.main.WildfireGender;
 import com.wildfire.main.WildfireGenderServer;
 import net.arathain.tot.common.component.DriderPlayerComponent;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.arathain.tot.common.init.ToTComponents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
@@ -33,6 +34,29 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Inject(method = "shouldDismount", at = @At("HEAD"), cancellable = true)
+    private void webbingScuffedry(CallbackInfoReturnable<Boolean> cir) {
+        if(this.getVehicle() instanceof WebbingEntity) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Override
+    public boolean isSneaking() {
+        if(this.getVehicle() instanceof WebbingEntity) {
+            return false;
+        }
+        return super.isSneaking();
+    }
+
+    @Override
+    public boolean isInSneakingPose() {
+        if(this.getVehicle() instanceof WebbingEntity) {
+            return false;
+        }
+        return super.isInSneakingPose();
     }
 
     @Override
