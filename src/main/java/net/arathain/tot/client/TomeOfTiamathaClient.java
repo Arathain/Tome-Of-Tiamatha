@@ -4,6 +4,7 @@ import draylar.omegaconfiggui.OmegaConfigGui;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.client.entity.model.drider.weaver.WebbingEntityModel;
 import net.arathain.tot.client.entity.renderer.drider.*;
+import net.arathain.tot.client.entity.renderer.drider.weaver.WeaverEntityRenderer;
 import net.arathain.tot.client.entity.renderer.drider.weaver.WebbingEntityRenderer;
 import net.arathain.tot.client.entity.renderer.raven.RavenEntityRenderer;
 import net.arathain.tot.client.entity.shader.ToTShaderHandler;
@@ -36,6 +37,7 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
         EntityRendererRegistry.register(ToTEntities.DRIDER, DriderEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.ARACHNE, ArachneEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVECHILD, WeavechildEntityRenderer::new);
+        EntityRendererRegistry.register(ToTEntities.WEAVER, WeaverEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVETHRALL, WeavethrallEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.RAVEN, RavenEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(ToTEntities.WEAVERKIN_EGG, (BlockEntityRendererFactory.Context rendererDispatcherIn) -> new WeaverkinEggRenderer());

@@ -411,7 +411,7 @@
       "bones": {
         "mandible1": {
           "rotation": {
-            "vector": [-10, 25, 90]
+            "vector": [-17, 25, 90]
           }
         },
         "part": {
@@ -421,7 +421,7 @@
         },
         "mandible2": {
           "rotation": {
-            "vector": [-10, -25, -90]
+            "vector": [-17, -25, -90]
           }
         },
         "part2": {

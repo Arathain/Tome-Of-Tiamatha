@@ -7,6 +7,7 @@ import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.arathain.tot.common.entity.living.drider.weavekin.WeavechildEntity;
 import net.arathain.tot.common.entity.living.drider.weavekin.WeavethrallEntity;
+import net.arathain.tot.common.entity.living.drider.weaver.WeaverEntity;
 import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.arathain.tot.common.entity.living.raven.RavenEntity;
 import net.arathain.tot.common.entity.string.StringCollisionEntity;
@@ -33,6 +34,7 @@ public class ToTEntities {
     public static final EntityType<WeavechildEntity> WEAVECHILD = createEntity("weavechild", WeavechildEntity.createWeavechildAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, WeavechildEntity::new).dimensions(EntityDimensions.fixed(0.4F, 0.6F)).build());
     public static final EntityType<WeavethrallEntity> WEAVETHRALL = createEntity("weavethrall", WeavethrallEntity.createWeavethrallAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, WeavethrallEntity::new).dimensions(EntityDimensions.fixed(0.95F, 0.8F)).build());
     public static final EntityType<ArachneEntity> ARACHNE = createEntity("arachne", ArachneEntity.createArachneAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, ArachneEntity::new).dimensions(EntityDimensions.fixed(1.4F, 1.6F)).build());
+    public static final EntityType<WeaverEntity> WEAVER = createEntity("weaver", WeaverEntity.createWeaverAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WeaverEntity::new).dimensions(EntityDimensions.fixed(0.9F, 1.5F)).build());
     public static final EntityType<WebbingEntity> WEBBING = createEntity("webbing", FabricEntityTypeBuilder.<WebbingEntity>create(SpawnGroup.MISC, WebbingEntity::new).trackRangeBlocks(10).dimensions(EntityDimensions.fixed(0.9f, 1.8F)).build());
     // ravens n shiz
     public static final EntityType<RavenEntity> RAVEN = createEntity("raven", RavenEntity.createRavenAttributes(), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RavenEntity::new).dimensions(EntityDimensions.fixed(0.4F, 0.4F)).build());

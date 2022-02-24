@@ -1,6 +1,7 @@
 package net.arathain.tot.mixin;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.util.ToTUtil;
@@ -85,6 +86,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(entity).render(entity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
                 callbackInfo.cancel();
             }
+        }
+        if(player.getVehicle() instanceof WebbingEntity) {
+            callbackInfo.cancel();
         }
     }
 

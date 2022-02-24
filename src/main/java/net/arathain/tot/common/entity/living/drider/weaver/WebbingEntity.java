@@ -1,11 +1,16 @@
 package net.arathain.tot.common.entity.living.drider.weaver;
 
+import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.arathain.tot.common.init.ToTEntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
@@ -13,6 +18,7 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockLocating;
 import net.minecraft.world.World;
@@ -22,6 +28,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class WebbingEntity extends Entity implements IAnimatable {
+    public static final TrackedData<Boolean> DEPOSITED = DataTracker.registerData(WebbingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private final AnimationFactory factory = new AnimationFactory(this);
 
     public WebbingEntity(EntityType<? extends WebbingEntity> type, World world) {
@@ -36,10 +43,16 @@ public class WebbingEntity extends Entity implements IAnimatable {
         this.prevY = y;
         this.prevZ = z;
     }
+    public void setDeposited(boolean deposited) {
+        this.dataTracker.set(DEPOSITED, deposited);
+    }
+    public boolean getDeposited() {
+        return this.dataTracker.get(DEPOSITED);
+    }
 
     @Override
     protected void initDataTracker() {
-
+        this.dataTracker.startTracking(DEPOSITED, false);
     }
 
     @Override
@@ -79,10 +92,10 @@ public class WebbingEntity extends Entity implements IAnimatable {
         }
         float f = 0.0f;
         float g = (float) ((this.isRemoved() ? (double) 0.01f : this.getMountedHeightOffset()) + passenger.getHeightOffset());
-        passenger.setPosition(this.getX(), this.getY(), this.getZ());
-        passenger.setYaw(this.getYaw());
-        passenger.setPitch(0);
-        passenger.setHeadYaw(this.getYaw());
+        passenger.setPosition(this.getX(), this.getY() - 0.3, this.getZ());
+        passenger.setYaw(MathHelper.clamp(passenger.getYaw(), this.getYaw() - 10f, this.getYaw() + 10f));
+        passenger.setPitch(MathHelper.clamp(passenger.getPitch(), this.getPitch() -10f, this.getPitch() + 10f));
+        passenger.setHeadYaw(MathHelper.clamp(passenger.getHeadYaw(), this.getYaw() - 10f, this.getYaw() + 10f));
 
     }
 
@@ -106,6 +119,9 @@ public class WebbingEntity extends Entity implements IAnimatable {
             return player.startRiding(this) ? ActionResult.CONSUME : ActionResult.PASS;
         }
         return ActionResult.SUCCESS;
+    }
+    public double getMountedHeightOffset() {
+        return -0.1;
     }
 
     @Override
