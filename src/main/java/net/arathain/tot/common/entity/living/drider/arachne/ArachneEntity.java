@@ -342,7 +342,7 @@ public class ArachneEntity extends DriderEntity {
                                 ((ServerPlayerEntity) serverPlayerEntity).sendMessage(
                                         new TranslatableText("info.tot.broods_curse", world.getRegistryKey().getValue().getPath()).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)), true);
                             });
-                            world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(entity -> ((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(ToTEffects.BROODS_CURSE, 2400, 0)));
+                            world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(entity -> ((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(ToTEffects.BROODS_CURSE, 3600, 0)));
                             this.setWave(wave + 1);
                         }
                     } else {

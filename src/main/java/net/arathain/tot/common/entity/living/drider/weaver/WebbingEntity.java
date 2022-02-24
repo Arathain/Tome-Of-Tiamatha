@@ -110,16 +110,6 @@ public class WebbingEntity extends Entity implements IAnimatable {
 
     }
 
-    @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
-        if (player.shouldCancelInteraction()) {
-            return ActionResult.PASS;
-        }
-        if (!this.world.isClient) {
-            return player.startRiding(this) ? ActionResult.CONSUME : ActionResult.PASS;
-        }
-        return ActionResult.SUCCESS;
-    }
     public double getMountedHeightOffset() {
         return -0.1;
     }

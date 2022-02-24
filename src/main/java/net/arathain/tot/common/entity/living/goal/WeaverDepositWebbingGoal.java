@@ -3,8 +3,11 @@ package net.arathain.tot.common.entity.living.goal;
 import net.arathain.tot.common.entity.living.drider.weaver.WeaverEntity;
 import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.minecraft.block.Block;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -43,6 +46,7 @@ public class WeaverDepositWebbingGoal extends MoveToTargetPosGoal {
             if (this.hasReached() && blockPos2 != null) {
                 obj.getFirstPassenger().setPos(getTargetPos().getX() + 0.5f, getTargetPos().getY() + 1, getTargetPos().getZ() + 0.5f);
                 ((WebbingEntity) obj.getFirstPassenger()).setDeposited(true);
+                ((LivingEntity) obj.getFirstPassenger().getFirstPassenger()).addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 10, 10));
                 obj.getFirstPassenger().dismountVehicle();
             }
             super.tick();

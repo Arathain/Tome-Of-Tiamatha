@@ -2,14 +2,12 @@ package net.arathain.tot.common.entity.living.drider.weaver;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
-import net.arathain.tot.common.entity.living.goal.DriderAttackGoal;
-import net.arathain.tot.common.entity.living.goal.DriderShieldGoal;
-import net.arathain.tot.common.entity.living.goal.WeaverDepositWebbingGoal;
-import net.arathain.tot.common.entity.living.goal.WeaverPickUpWebbingGoal;
+import net.arathain.tot.common.entity.living.goal.*;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -79,6 +77,7 @@ public class WeaverEntity extends DriderEntity {
         this.goalSelector.add(1, new DriderShieldGoal(this));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(1, new WeaverPickUpWebbingGoal(this));
+        this.goalSelector.add(1, new WeaverImprisonTargetGoal(this));
         this.goalSelector.add(0 , new WeaverDepositWebbingGoal(this, Blocks.CHISELED_DEEPSLATE));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));

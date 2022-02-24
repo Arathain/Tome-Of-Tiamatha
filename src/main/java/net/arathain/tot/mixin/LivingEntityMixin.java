@@ -1,5 +1,7 @@
 package net.arathain.tot.mixin;
 
+import net.arathain.tot.client.entity.model.drider.weaver.WebbingEntityModel;
+import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.*;
@@ -30,6 +32,12 @@ public abstract class LivingEntityMixin extends Entity {
                 this.setBodyYaw(-this.getYaw());
                 this.setHeadYaw(-this.getYaw());
                 this.setPitch(-this.getPitch());
+        }
+    }
+    @Inject(method = "canTarget(Lnet/minecraft/entity/LivingEntity;)Z", at = @At("HEAD"), cancellable = true)
+    private void webbingShenanigans(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
+        if(entity.getVehicle() instanceof WebbingEntity) {
+            cir.setReturnValue(false);
         }
     }
 
