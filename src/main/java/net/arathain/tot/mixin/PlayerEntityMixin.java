@@ -86,7 +86,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
     private void handleFallDamage(float fallDistance, float damageMultiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
-        if(ToTComponents.DRIDER_COMPONENT.get(this).isDrider() && !this.hasStatusEffect(StatusEffects.WEAKNESS)) {
+        if(ToTComponents.DRIDER_COMPONENT.get(this).isDrider()) {
             cir.setReturnValue(false);
         }
 
@@ -116,13 +116,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 if (this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).hasModifier(DriderPlayerComponent.DRIDER_MOVEMENT_SPEED_MODIFIER))
                     this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).removeModifier(DriderPlayerComponent.DRIDER_MOVEMENT_SPEED_MODIFIER);
             }
-        }
-    }
-
-    @Inject(at = @At("HEAD"), method = "handleFallDamage")
-    public void handleDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
-        if (ToTComponents.DRIDER_COMPONENT.get(this).isDrider()) {
-            info.setReturnValue(false);
         }
     }
 }

@@ -2,6 +2,8 @@ package net.arathain.tot.common.entity.living.drider.weaver;
 
 import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.arathain.tot.common.init.ToTEntities;
+import net.arathain.tot.common.util.ToTUtil;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -117,11 +119,14 @@ public class WebbingEntity extends Entity implements IAnimatable {
     @Override
     public void tick() {
         super.tick();
+        if(ToTUtil.isDrider(this.getFirstPassenger())) {
+            this.getWorld().addBlockBreakParticles(this.getBlockPos(), Blocks.COBWEB.getDefaultState());
+            this.getFirstPassenger().dismountVehicle();
+            this.discard();
+        }
         if (this.isLogicalSideForUpdatingMovement()) {
             this.updateVelocity(1, new Vec3d(0, -0.1f, 0));
             this.move(MovementType.SELF, this.getVelocity());
-
-
         } else {
             this.setVelocity(Vec3d.ZERO);
         }

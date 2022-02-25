@@ -73,8 +73,8 @@ public class WeaverEntity extends DriderEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(2, new DriderAttackGoal(this, 1.0, false));
-        this.goalSelector.add(1, new DriderShieldGoal(this));
+        //this.goalSelector.add(2, new DriderAttackGoal(this, 1.0, false));
+        //this.goalSelector.add(1, new DriderShieldGoal(this));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(1, new WeaverPickUpWebbingGoal(this));
         this.goalSelector.add(1, new WeaverImprisonTargetGoal(this));
