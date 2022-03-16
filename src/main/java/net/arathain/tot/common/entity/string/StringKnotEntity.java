@@ -353,22 +353,23 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
      */
     @Override
     public float applyMirror(BlockMirror mirror) {
-//        // Mirror the X axis, I am not sure why
-//        for (NbtElement element : incompleteLinks) {
-//            if (element instanceof NbtCompound link) {
-//                if (link.contains("RelX")) {
-//                    link.putInt("RelX", -link.getInt("RelX"));
-//                }
-//            }
-//        }
-
-        // Opposite of Entity.applyMirror, again I am not sure why, but it works
-        float yaw = MathHelper.wrapDegrees(this.getYaw());
-        return switch (mirror) {
-            case LEFT_RIGHT -> 180 - yaw;
-            case FRONT_BACK -> -yaw;
-            default -> yaw;
-        };
+        if(mirror != BlockMirror.NONE) {
+            // Mirror the X axis, I am not sure why
+            for (NbtElement element : incompleteLinks) {
+                if (element instanceof NbtCompound link) {
+                    if (link.contains("RelX")) {
+                        link.putInt("RelX", -link.getInt("RelX"));
+                    }
+                }
+            }
+        }
+            // Opposite of Entity.applyMirror, again I am not sure why, but it works
+            float yaw = MathHelper.wrapDegrees(this.getYaw());
+            return switch (mirror) {
+                case LEFT_RIGHT -> 180 - yaw;
+                case FRONT_BACK -> -yaw;
+                default -> yaw;
+            };
     }
 
     /**
