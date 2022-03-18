@@ -4,6 +4,7 @@ import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
 import net.arathain.tot.TomeOfTiamatha;
+import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.util.ToTUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -20,7 +21,7 @@ public class ToTShaderHandler {
     private static void renderShaderEffects(float v) {
         if (MinecraftClient.getInstance().player != null) {
             ClientPlayerEntity player = MinecraftClient.getInstance().player;
-            if (ToTUtil.isDrider(player)) {
+            if (ToTUtil.isDrider(player) || ToTComponents.DRIDER_COMPONENT.get(player).getStage() > 0) {
                 DRIDER_VISION.render(v);
             }
         }
@@ -28,8 +29,8 @@ public class ToTShaderHandler {
 
     private static void onEndTick(MinecraftClient client) {
         if (client.player != null && client.cameraEntity != null) {
-            if (ToTUtil.isDrider(client.player)) {
-                DRIDER_VISION.findUniform1f("BrightnessAdjust").set(2.0f);
+            if (ToTUtil.isDrider(client.player) || ToTComponents.DRIDER_COMPONENT.get(client.player).getStage() > 0) {
+                DRIDER_VISION.findUniform1f("BrightnessAdjust").set((float) (Math.pow(ToTComponents.DRIDER_COMPONENT.get(client.player).getStage(), 2) / 8f));
             }
         }
     }
