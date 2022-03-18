@@ -259,7 +259,7 @@ public class ArachneEntity extends DriderEntity {
             setVelocity(0, getVelocity().y, 0);
             setYaw(prevYaw);
             setBodyYaw(prevBodyYaw);
-            setHeadYaw(MathHelper.clamp(headYaw, bodyYaw - 70, bodyYaw + 70));
+            setHeadYaw(MathHelper.clamp(headYaw, bodyYaw - 60, bodyYaw + 60));
         }
         if (getTarget() == null && getNavigation().isIdle() && !isAtRestingPos() && !isResting()) updateRestingPos();
     }

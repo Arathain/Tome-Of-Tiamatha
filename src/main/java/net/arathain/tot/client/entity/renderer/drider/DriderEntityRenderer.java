@@ -27,7 +27,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
     private ItemStack offStack;
     private DriderEntity driderEntity;
     private VertexConsumerProvider vertexConsumerProvider;
-    private boolean mainHandStack;
+
     public DriderEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new DriderEntityModel());
         this.addLayer(new DriderHelmetLayer(this));
@@ -41,7 +41,6 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
         this.mainStack = driderEntity.getEquippedStack(EquipmentSlot.MAINHAND);
         this.driderEntity = driderEntity;
         this.offStack = driderEntity.getEquippedStack(EquipmentSlot.OFFHAND);
-        this.mainHandStack = driderEntity.getMainArm() == Arm.RIGHT;
         this.vertexConsumerProvider = vertexConsumerProvider;
 
         super.renderEarly(driderEntity, stackIn, ticks, vertexConsumerProvider, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);

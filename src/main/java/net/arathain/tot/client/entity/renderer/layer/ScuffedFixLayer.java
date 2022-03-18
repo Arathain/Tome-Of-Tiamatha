@@ -23,7 +23,7 @@ public class ScuffedFixLayer extends GeoLayerRenderer<DriderEntity> {
             Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/drider_" + entitylivingbaseIn.getDriderType().toString().toLowerCase() + ".png");
             RenderLayer armor = RenderLayer.getEntityCutoutNoCull(location);
 
-            this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f, entitylivingbaseIn.hurtTime > 0 ? 0.3f : 1.0f, entitylivingbaseIn.hurtTime > 0 ? 0.3f : 1.0f, 1.0f);
+            this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f,1.0f,1.0f, 1.0f);
         }
     }
 }

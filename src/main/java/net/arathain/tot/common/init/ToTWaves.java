@@ -33,8 +33,10 @@ public class ToTWaves {
         ARACHNE_WAVES.get(6).add(new WaveSpawnEntry(ToTEntities.WEAVECHILD, 8 * dangerScale));
         ARACHNE_WAVES.get(6).add(new WaveSpawnEntry(ToTEntities.DRIDER, 3 * dangerScale));
 
+        ARACHNE_WAVES.get(7).add(new WaveSpawnEntry(ToTEntities.WEAVER, dangerScale));
         ARACHNE_WAVES.get(7).add(new WaveSpawnEntry(ToTEntities.WEAVECHILD, 20 * dangerScale));
 
+        ARACHNE_WAVES.get(8).add(new WaveSpawnEntry(ToTEntities.WEAVER, dangerScale));
         ARACHNE_WAVES.get(8).add(new WaveSpawnEntry(ToTEntities.WEAVETHRALL, 10 * dangerScale));
         ARACHNE_WAVES.get(8).add(new WaveSpawnEntry(ToTEntities.DRIDER, 6 * dangerScale));
     }

@@ -22,7 +22,7 @@ public class DriderHelmetLayer extends GeoLayerRenderer<DriderEntity> {
     public void render(MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn, DriderEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if(!entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).isEmpty()) {
             Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/" + entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).getItem().toString() + ".png");
-            RenderLayer armor = RenderLayer.getEntityTranslucent(location);
+            RenderLayer armor = RenderLayer.getEntityTranslucent(location, true);
             if (entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof DyeableArmorItem) {
                 int i = ((DyeableArmorItem)entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).getItem()).getColor((entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD)));
                 float f = (float)(i >> 16 & 0xFF) / 255.0F;
@@ -34,5 +34,10 @@ public class DriderHelmetLayer extends GeoLayerRenderer<DriderEntity> {
                 this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f);
             }
         }
+    }
+
+    @Override
+    public RenderLayer getRenderType(Identifier textureLocation) {
+        return RenderLayer.getEntityTranslucent(textureLocation, true);
     }
 }
