@@ -23,10 +23,7 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
-    private ItemStack mainStack;
-    private ItemStack offStack;
     private DriderEntity driderEntity;
-    private VertexConsumerProvider vertexConsumerProvider;
 
     public DriderEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new DriderEntityModel());
@@ -38,18 +35,14 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
 
     @Override
     public void renderEarly(DriderEntity driderEntity, MatrixStack stackIn, float ticks, VertexConsumerProvider vertexConsumerProvider, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
-        this.mainStack = driderEntity.getEquippedStack(EquipmentSlot.MAINHAND);
         this.driderEntity = driderEntity;
-        this.offStack = driderEntity.getEquippedStack(EquipmentSlot.OFFHAND);
-        this.vertexConsumerProvider = vertexConsumerProvider;
-
         super.renderEarly(driderEntity, stackIn, ticks, vertexConsumerProvider, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
     }
 
     @Override
     public void renderRecursively(GeoBone bone, MatrixStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if (bone.getName().equals("rightItem")) {
-            if((mainStack).getUseAction() == UseAction.BLOCK) {
+        if (bone.getName().equals("rightItem") && !mainHand.isEmpty()) {
+            if(mainHand.getUseAction() == UseAction.BLOCK) {
                 stack.push();
                 stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
                 if(driderEntity.isBlocking() && driderEntity.getItemUseTimeLeft() > 0) {
@@ -63,22 +56,22 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
                 }
                 stack.scale(0.68f, 0.68f, 0.68f);
                 stack.translate(0.35,0.5,1.0f);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(mainStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(mainHand, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, rtb, 0);
                 stack.pop();
-                bufferIn = rtb.getBuffer(RenderLayer.getItemEntityTranslucentCull(whTexture));
+                bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
             } else {
                 stack.push();
                 stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
                 stack.scale(0.68f, 0.68f, 0.68f);
                 stack.translate(0.35,0.5,0.9f);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(mainStack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(mainHand, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, rtb, 0);
                 stack.pop();
-                bufferIn = rtb.getBuffer(RenderLayer.getItemEntityTranslucentCull(whTexture));
+                bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
             }
 
         }
         if (bone.getName().equals("leftItem")) {
-            if((offStack).getUseAction() == UseAction.BLOCK) {
+            if(!offHand.isEmpty() && offHand.getUseAction() == UseAction.BLOCK) {
                 stack.push();
                 stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
                 stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
@@ -93,18 +86,18 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
                 }
                 stack.scale(0.68f, 0.68f, 0.68f);
                 stack.translate(0.35, 0.5, -1.8f);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(offStack, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(offHand, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, packedLightIn, packedOverlayIn, stack, rtb, 0);
                 stack.pop();
-                bufferIn = rtb.getBuffer(RenderLayer.getItemEntityTranslucentCull(whTexture));
+                bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
             } else {
                 stack.push();
                 stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(160));
                 stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
                 stack.scale(0.68f, 0.68f, 0.68f);
                 stack.translate(0.32, -1.4, -0.4f);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(offStack, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, packedLightIn, packedOverlayIn, stack, this.vertexConsumerProvider, 0);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(offHand, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, packedLightIn, packedOverlayIn, stack, rtb, 0);
                 stack.pop();
-                bufferIn = rtb.getBuffer(RenderLayer.getItemEntityTranslucentCull(whTexture));
+                bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
             }
         }
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
@@ -112,7 +105,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
 
     @Override
     public RenderLayer getRenderType(DriderEntity animatable, float partialTicks, MatrixStack stack, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(getTextureLocation(animatable));
+        return RenderLayer.getEntityTranslucent(this.getTextureLocation(animatable));
     }
 
 }
