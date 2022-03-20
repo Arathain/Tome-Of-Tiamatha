@@ -10,10 +10,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
+public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
     @Override
     public Identifier getModelLocation(DriderEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/drider.geo.json");
@@ -31,8 +31,8 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
 
 
     @Override
-    public void codeAnimations(DriderEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.codeAnimations(entity, uniqueID, customPredicate);
+    public void setLivingAnimations(DriderEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
+        super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         IBone torso = this.getAnimationProcessor().getBone("torso");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -47,7 +47,7 @@ public class DriderEntityModel extends AnimatedTickingGeoModel<DriderEntity> {
         }
         if (torso != null) {
             if(head != null)
-            head.setRotationY(head.getRotationY() - torso.getRotationY());
+                head.setRotationY(head.getRotationY() - torso.getRotationY());
         }
         if(leftArm != null) {
             leftArm.setRotationX(leftArm.getRotationX());
