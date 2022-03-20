@@ -7,6 +7,7 @@
   "mixins": [
     "ActiveTargetGoalMixin",
     "ArmorItemMixin",
+    "EntityMixin",
     "EntityTrackerEntryMixin",
     "IronGolemEntityMixin",
     "ItemStackMixin",
@@ -25,8 +26,8 @@
     "InventoryScreenMixin",
     "PlayerEntityRendererMixin",
     "compat.gender.PlayerEntityMixin",
-    "compat.gender.WildfirePlayerListMixin",
-    "compat.gender.WardrobeBrowserScreenMixin"
+    "compat.gender.WardrobeBrowserScreenMixin",
+    "compat.gender.WildfirePlayerListMixin"
   ],
   "injectors": {
     "defaultRequire": 1

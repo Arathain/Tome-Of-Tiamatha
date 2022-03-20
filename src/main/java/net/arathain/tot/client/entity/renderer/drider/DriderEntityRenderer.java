@@ -18,6 +18,7 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
     private DriderEntity driderEntity;
+    public boolean isLayer = false;
     public DriderEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new DriderEntityModel());
         this.addLayer(new DriderHelmetLayer(this));
@@ -39,7 +40,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
 
     @Override
     public void renderRecursively(GeoBone bone, MatrixStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        if (bone.getName().equals("rightItem") && !mainHand.isEmpty()) {
+        if (!isLayer && bone.getName().equals("rightBalls") && !mainHand.isEmpty()) {
             stack.push();
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
             if(mainHand.getUseAction() == UseAction.BLOCK) {
@@ -62,7 +63,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
 
-        }else if (bone.getName().equals("leftItem") && !offHand.isEmpty()) {
+        }else if (!isLayer && bone.getName().equals("leftItem") && !offHand.isEmpty()) {
             stack.push();
             if(offHand.getUseAction() == UseAction.BLOCK) {
                 stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));

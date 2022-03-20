@@ -68,6 +68,11 @@
 					"pivot": [-3, 11, -4]
 				},
 				{
+					"name": "rightBalls",
+					"parent": "rightItem",
+					"pivot": [-3, 11, -4]
+				},
+				{
 					"name": "leftarm",
 					"parent": "torso",
 					"pivot": [3, 17, -4],

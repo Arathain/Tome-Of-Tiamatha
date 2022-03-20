@@ -1,6 +1,7 @@
 package net.arathain.tot.client.entity.renderer.layer;
 
 import net.arathain.tot.TomeOfTiamatha;
+import net.arathain.tot.client.entity.renderer.drider.DriderEntityRenderer;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -14,9 +15,11 @@ import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 public class DriderChestplateLayer extends GeoLayerRenderer<DriderEntity> {
+    private final IGeoRenderer<DriderEntity> driderEntityRenderer;
 
     public DriderChestplateLayer(IGeoRenderer<DriderEntity> entityRendererIn) {
         super(entityRendererIn);
+        driderEntityRenderer = entityRendererIn;
     }
 
     @Override
@@ -24,26 +27,27 @@ public class DriderChestplateLayer extends GeoLayerRenderer<DriderEntity> {
         if(!entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).isEmpty()) {
             Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/" + entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem().toString() + ".png");
             RenderLayer armor = RenderLayer.getArmorCutoutNoCull(location);
-            var model = this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn));
+            GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn));
             model.getBone("spider").get().setHidden(true);
-            model.getBone("leftarm").get().setHidden(true);
+            ((DriderEntityRenderer) driderEntityRenderer).isLayer = true;
+            //model.getBone("leftarm").get().setHidden(true);
             if (entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem() instanceof DyeableArmorItem) {
                 int i = ((DyeableArmorItem)entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem()).getColor((entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST)));
                 float f = (float)(i >> 16 & 0xFF) / 255.0F;
                 float g = (float)(i >> 8 & 0xFF) / 255.0F;
                 float h = (float)(i & 0xFF) / 255.0F;
-                this.getRenderer().render(model, entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, f, g, h, 1.0f);
+                driderEntityRenderer.render(model, entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, f, g, h, 1.0f);
             }
             else {
-                this.getRenderer().render(model, entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f);
+                driderEntityRenderer.render(model, entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f);
             }
+            ((DriderEntityRenderer) driderEntityRenderer).isLayer = false;
             model.getBone("spider").get().setHidden(false);
-            model.getBone("leftarm").get().setHidden(false);
         }
     }
 
     @Override
     public RenderLayer getRenderType(Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(textureLocation, true);
+        return RenderLayer.getArmorCutoutNoCull(textureLocation);
     }
 }

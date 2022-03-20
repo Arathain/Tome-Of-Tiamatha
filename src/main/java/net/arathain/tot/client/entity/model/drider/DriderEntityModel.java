@@ -2,6 +2,7 @@ package net.arathain.tot.client.entity.model.drider;
 
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -38,11 +39,9 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         IBone leftArm = this.getAnimationProcessor().getBone("leftarm");
         IBone sendHelp = this.getAnimationProcessor().getBone("rightarm");
-        IBone leftGlove = this.getAnimationProcessor().getBone("glove2");
-        leftGlove.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
 
         if (head != null) {
-            head.setRotationX(head.getRotationX() + (extraData.headPitch * (float) Math.PI / 180F));
+            head.setRotationX(head.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 :(extraData.headPitch * (float) Math.PI / 180F)));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if (torso != null) {
