@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.arathain.tot.common.init.ToTEntities;
+import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.network.NetworkingPackages;
 import net.arathain.tot.common.network.PacketBufUtil;
 import net.arathain.tot.common.network.packet.StringSpawnPacketCreator;
@@ -264,7 +265,7 @@ public class StringLink {
         if (!world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)) drop = false;
 
         if (drop) {
-            ItemStack stack = new ItemStack(Items.STRING);
+            ItemStack stack = new ItemStack(ToTObjects.STEELSILK);
             if (secondary instanceof PlayerEntity player) {
                 player.giveItemStack(stack);
             } else {

@@ -8,6 +8,8 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.PillagerEntityRenderer;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -59,7 +61,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
                 stack.scale(0.68f, 0.68f, 0.68f);
                 stack.translate(0.35,0.5,0.9f);
             }
-            MinecraftClient.getInstance().getItemRenderer().renderItem(mainHand, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, packedLightIn, packedOverlayIn, stack, rtb, 0);
+            MinecraftClient.getInstance().getHeldItemRenderer().renderItem(driderEntity, mainHand, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, false, stack, rtb, packedLightIn);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
 
@@ -67,25 +69,24 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
             stack.push();
             if(offHand.getUseAction() == UseAction.BLOCK) {
                 stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270));
-                stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
                 if(driderEntity.isBlocking() && driderEntity.getItemUseTimeLeft() > 0) {
                     stack.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(10));
-                    stack.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(20));
-                    stack.translate(-0.15,0.2,0.2f);
+                    stack.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(-20));
+                    stack.translate(0.15,0.2,-0.2f);
                 } else {
                     stack.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(0));
                     stack.translate(0,0,0);
                     stack.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(0));
                 }
                 stack.scale(0.68f, 0.68f, 0.68f);
-                stack.translate(0.35, 0.5, -1.8f);
+                stack.translate(-0.35, 0.5, 1.0f);
             } else {
-                stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(160));
-                stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
+                stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
+                //stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
                 stack.scale(0.68f, 0.68f, 0.68f);
-                stack.translate(0.32, -1.4, -0.4f);
+                stack.translate(-0.35, 0.5, 0.9f);
             }
-            MinecraftClient.getInstance().getItemRenderer().renderItem(offHand, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, packedLightIn, packedOverlayIn, stack, rtb, 0);
+            MinecraftClient.getInstance().getHeldItemRenderer().renderItem(driderEntity, offHand, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, true, stack, rtb, packedLightIn);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
         }

@@ -261,7 +261,7 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
         // At the start the server and client need to tell each other the info.
         // So we need to check if the object is old enough for these things to exist before we delete them.
         if (graceTicks <= 0) {
-            dropItem(Items.STRING);
+            dropItem(ToTObjects.STEELSILK);
             onBreak(null);
             return true;
         }

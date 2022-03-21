@@ -45,6 +45,9 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if (torso != null) {
+            if(entity.getItemUseTimeLeft() > 0 && (entity.getMainHandStack().getUseAction() == UseAction.BOW || entity.getOffHandStack().getUseAction() == UseAction.BOW || entity.getMainHandStack().getUseAction() == UseAction.CROSSBOW || entity.getOffHandStack().getUseAction() == UseAction.CROSSBOW)) {
+                torso.setRotationY(torso.getRotationY() + extraData.netHeadYaw * ((float) Math.PI / 180F));
+            }
             if(head != null)
                 head.setRotationY(head.getRotationY() - torso.getRotationY());
         }
@@ -52,8 +55,11 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
             leftArm.setRotationX(leftArm.getRotationX());
             leftArm.setRotationY(leftArm.getRotationY());
             if(entity.isBlocking() && entity.getItemUseTimeLeft() > 0 && entity.getOffHandStack().getUseAction() == UseAction.BLOCK && !(entity.getMainHandStack().getUseAction() == UseAction.BLOCK)){
-                leftArm.setRotationX(leftArm.getRotationX() + 1.3f);
-                leftArm.setRotationY(leftArm.getRotationY() - 1);
+                leftArm.setRotationX(leftArm.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 : 1.3f));
+                leftArm.setRotationY(leftArm.getRotationY() - (MinecraftClient.getInstance().isPaused() ? 0 : 1));
+            } else if(entity.getItemUseTimeLeft() > 0 && (entity.getMainHandStack().getUseAction() == UseAction.BOW || entity.getOffHandStack().getUseAction() == UseAction.BOW)) {
+                leftArm.setRotationX(leftArm.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 : 1.3f));
+                leftArm.setRotationX(leftArm.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 :(extraData.headPitch * (float) Math.PI / 180F)));
             } else {
                 leftArm.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * 2.0F * entity.limbDistance * 0.5F + ((entity.getActiveHand() == Hand.OFF_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)) : 0))).getX());
                 leftArm.setRotationZ((float) (leftArm.getRotationZ() - ((entity.getActiveHand() == Hand.OFF_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 0.8f, entity.handSwingProgress * 0.8f)) : 0)));
@@ -62,8 +68,11 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
 
         if (sendHelp != null) {
             if(entity.isBlocking() && entity.getItemUseTimeLeft() > 0 && entity.getMainHandStack().getUseAction() == UseAction.BLOCK){
-                sendHelp.setRotationX(sendHelp.getRotationX() + 1.3f);
-                sendHelp.setRotationY(sendHelp.getRotationY() + 1);
+                sendHelp.setRotationX(sendHelp.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 : 1.3f));
+                sendHelp.setRotationY(sendHelp.getRotationY() + (MinecraftClient.getInstance().isPaused() ? 0 : 1));
+            } else if(entity.getItemUseTimeLeft() > 0 && (entity.getMainHandStack().getUseAction() == UseAction.BOW || entity.getOffHandStack().getUseAction() == UseAction.BOW)) {
+                sendHelp.setRotationX(sendHelp.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 : 1.3f));
+                sendHelp.setRotationX(sendHelp.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 :(extraData.headPitch * (float) Math.PI / 180F)));
             } else {
                 sendHelp.setRotationX(Vec3f.POSITIVE_X.getRadialQuaternion((float) (MathHelper.cos(entity.limbAngle * 0.6662F + 3.1415927F) * -2.0F * entity.limbDistance * 0.5F + ((entity.getActiveHand() == Hand.MAIN_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 8, entity.handSwingProgress * 8)) : 0))).getX());
                 sendHelp.setRotationZ((float) (sendHelp.getRotationZ() + ((entity.getActiveHand() == Hand.MAIN_HAND) ? (MathHelper.lerp(MathHelper.clamp(customPredicate.animationTick, 0, 1), entity.lastHandSwingProgress * 0.8f, entity.handSwingProgress * 0.8f)) : 0)));

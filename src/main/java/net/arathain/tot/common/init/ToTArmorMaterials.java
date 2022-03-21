@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public enum ToTArmorMaterials implements ArmorMaterial {
 
-    SILKSTEEL("silksteel", 32, new int[]{3, 6, 8, 3}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> Ingredient.ofItems(Items.STRING));
+    SILKSTEEL("silksteel", 32, new int[]{3, 6, 8, 3}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> Ingredient.ofItems(ToTObjects.STEELSILK));
 
     private static final int[] BASE_DURABILITY;
     private final String name;

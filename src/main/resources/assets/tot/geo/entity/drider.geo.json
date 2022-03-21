@@ -95,6 +95,11 @@
 					"pivot": [3, 11, -4]
 				},
 				{
+					"name": "leftBalls",
+					"parent": "leftItem",
+					"pivot": [3, 11, -4]
+				},
+				{
 					"name": "spider",
 					"parent": "body",
 					"pivot": [0, 1, -1]

@@ -143,8 +143,8 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         matrices.translate(offset.getX(), 0, offset.getZ());
 
         // Now we gather light information for the chain. Since the chain is lighter if there is more light.
-        BlockPos blockPosOfStart = new BlockPos(fromEntity.getCameraPosVec(tickDelta));
-        BlockPos blockPosOfEnd = new BlockPos(toEntity.getCameraPosVec(tickDelta));
+        BlockPos blockPosOfStart = new BlockPos(MathHelper.lerp(0.2, fromEntity.getCameraPosVec(tickDelta).x, toEntity.getCameraPosVec(tickDelta).x), MathHelper.lerp(0.2, fromEntity.getCameraPosVec(tickDelta).y, toEntity.getCameraPosVec(tickDelta).y), MathHelper.lerp(0.2, fromEntity.getCameraPosVec(tickDelta).z, toEntity.getCameraPosVec(tickDelta).z));
+        BlockPos blockPosOfEnd = new BlockPos(MathHelper.lerp(0.8, fromEntity.getCameraPosVec(tickDelta).x, toEntity.getCameraPosVec(tickDelta).x), MathHelper.lerp(0.8, fromEntity.getCameraPosVec(tickDelta).y, toEntity.getCameraPosVec(tickDelta).y), MathHelper.lerp(0.8, fromEntity.getCameraPosVec(tickDelta).z, toEntity.getCameraPosVec(tickDelta).z));
         int blockLightLevelOfStart = fromEntity.world.getLightLevel(LightType.BLOCK, blockPosOfStart);
         int blockLightLevelOfEnd = toEntity.world.getLightLevel(LightType.BLOCK, blockPosOfEnd);
         int skylightLevelOfStart = fromEntity.world.getLightLevel(LightType.SKY, blockPosOfStart);

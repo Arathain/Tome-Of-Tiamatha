@@ -13,6 +13,7 @@ import net.arathain.tot.common.entity.string.StringCollisionEntity;
 import net.arathain.tot.common.entity.string.StringKnotEntity;
 import net.arathain.tot.common.entity.string.StringLink;
 import net.arathain.tot.common.init.ToTEntities;
+import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.network.NetworkingPackages;
 import net.arathain.tot.common.network.PacketBufUtil;
 import net.arathain.tot.common.util.StringUtils;
@@ -76,9 +77,9 @@ public class StringClient {
             if (result instanceof EntityHitResult) {
                 Entity entity = ((EntityHitResult) result).getEntity();
                 if (entity instanceof StringKnotEntity knot) {
-                    return new ItemStack(Items.STRING);
+                    return new ItemStack(ToTObjects.STEELSILK);
                 } else if (entity instanceof StringCollisionEntity collision) {
-                    return new ItemStack(Items.STRING);
+                    return new ItemStack(ToTObjects.STEELSILK);
                 }
             }
             return ItemStack.EMPTY;
