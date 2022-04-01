@@ -1,13 +1,11 @@
 package net.arathain.tot.common.entity.string;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
 import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.network.NetworkingPackages;
 import net.arathain.tot.common.util.ToTUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -86,7 +84,7 @@ public class StringCollisionEntity extends Entity implements StringLinkEntity {
     }
 
     /**
-     * We only allow the collision box to be rendered if a player is holding an item that has tag {@link FabricToolTags#SHEARS}.
+     * We only allow the collision box to be rendered if a player is holding an item that has cocaine.
      * This might be helpful when using F3+B to see the boxes of the String.
      *
      * @param distance the camera distance from the collider.

@@ -14,6 +14,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -33,7 +34,6 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 import java.util.Optional;
 
-//TODO: literally make all of this
 public class WeaverEntity extends DriderEntity {
     public static final TrackedData<Integer> ACTION_STATE = DataTracker.registerData(ArachneEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public WeaverEntity(EntityType<? extends SpiderEntity> entityType, World world) {

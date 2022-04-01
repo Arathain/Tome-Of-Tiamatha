@@ -51,10 +51,10 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 
     @Inject(method = "afterUsing", at = @At("HEAD"))
     public void happyTrade(TradeOffer offer, CallbackInfo info) {
-        if (this.getCurrentCustomer() != null) {
-            ToTComponents.VI_ALIGNMENT_COMPONENT.get(this.getCurrentCustomer()).incrementVAlignment(1);
+        if (this.getCustomer() != null) {
+            ToTComponents.VI_ALIGNMENT_COMPONENT.get(this.getCustomer()).incrementVAlignment(1);
             if(this.canLevelUp()) {
-                ToTComponents.VI_ALIGNMENT_COMPONENT.get(this.getCurrentCustomer()).incrementVAlignment(2);
+                ToTComponents.VI_ALIGNMENT_COMPONENT.get(this.getCustomer()).incrementVAlignment(2);
             }
         }
 

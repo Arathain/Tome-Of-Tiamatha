@@ -33,7 +33,7 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         StringClient.init();
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB, ToTObjects.MAGEDEW);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB);
         EntityRendererRegistry.register(ToTEntities.DRIDER, DriderEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.ARACHNE, ArachneEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVECHILD, WeavechildEntityRenderer::new);

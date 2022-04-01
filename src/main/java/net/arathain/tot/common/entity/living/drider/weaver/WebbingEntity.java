@@ -1,6 +1,5 @@
 package net.arathain.tot.common.entity.living.drider.weaver;
 
-import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.Blocks;
@@ -12,30 +11,22 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockLocating;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class WebbingEntity extends Entity implements IAnimatable {
+public class WebbingEntity extends Entity {
     public static final TrackedData<Boolean> DEPOSITED = DataTracker.registerData(WebbingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private final AnimationFactory factory = new AnimationFactory(this);
 
     public WebbingEntity(EntityType<? extends WebbingEntity> type, World world) {
         super(type, world);
-        this.inanimate = true;
+        this.intersectionChecked = true;
     }
 
     public WebbingEntity(World world, double x, double y, double z) {
@@ -135,15 +126,5 @@ public class WebbingEntity extends Entity implements IAnimatable {
     @Override
     public Packet<?> createSpawnPacket() {
         return new EntitySpawnS2CPacket(this);
-    }
-
-    @Override
-    public void registerControllers(AnimationData animationData) {
-
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 }

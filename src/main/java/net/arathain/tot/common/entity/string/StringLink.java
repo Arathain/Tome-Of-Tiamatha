@@ -176,7 +176,7 @@ public class StringLink {
         double distance = startPos.distanceTo(endPos);
 
         double x = MathHelper.lerp(v, startPos.getX(), endPos.getX());
-        double y = startPos.getY() + Helper.drip2((v * distance), distance, endPos.getY() - startPos.getY());
+        double y = startPos.getY() + StringUtils.drip2((v * distance), distance, endPos.getY() - startPos.getY());
         double z = MathHelper.lerp(v, startPos.getZ(), endPos.getZ());
 
         y += -ToTEntities.STRING_COLLISION.getHeight() + 2 / 16f;

@@ -1,7 +1,7 @@
 package net.arathain.tot.common.entity.living.raven;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import net.arathain.tot.client.particle.ToTParticles;
-import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.goal.RavenDeliverBundleGoal;
 import net.arathain.tot.common.entity.living.goal.RavenFollowOwnerGoal;
 import net.arathain.tot.common.init.ToTObjects;
@@ -31,7 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.ServerConfigHandler;
-import net.minecraft.server.command.GiveCommand;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;

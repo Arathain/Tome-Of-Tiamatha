@@ -2,7 +2,6 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.arathain.tot.mixin",
-  "plugin": "net.arathain.tot.compat.ToTMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ActiveTargetGoalMixin",
@@ -13,21 +12,16 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "NbtHelperMixin",
-    "NoiseChunkGeneratorMixin",
     "PlayerEntityMixin",
     "RaiderEntityMixin",
     "SpiderEntityMixin",
     "ThreadedAnvilChunkStorageMixin",
-    "VillagerEntityMixin",
-    "compat.gender.BrewingRecipeAccessor"
+    "VillagerEntityMixin"
   ],
   "client": [
     "AbstractClientPlayerEntityMixin",
     "InventoryScreenMixin",
-    "PlayerEntityRendererMixin",
-    "compat.gender.PlayerEntityMixin",
-    "compat.gender.WardrobeBrowserScreenMixin",
-    "compat.gender.WildfirePlayerListMixin"
+    "PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

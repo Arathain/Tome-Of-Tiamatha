@@ -1,11 +1,12 @@
 package net.arathain.tot.common.entity.string;
 
+import com.github.legoatoom.connectiblechains.tag.CommonTags;
 import net.arathain.tot.common.util.ToTUtil;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.item.ToolItem;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -63,7 +64,7 @@ public interface StringLinkEntity {
      * @return true if a chain link entity can be destroyed with the item
      */
     static boolean canDestroyWith(Item item, Random random) {
-        return FabricToolTags.SHEARS.contains(item) || item instanceof ToolItem tool && random.nextInt(20 - MathHelper.ceil(tool.getMaterial().getAttackDamage())) == 2;
+        return item.getDefaultStack().isIn(CommonTags.SHEARS) || item instanceof ToolItem tool && random.nextInt(20 - MathHelper.ceil(tool.getMaterial().getAttackDamage())) == 2;
     }
 
     /**

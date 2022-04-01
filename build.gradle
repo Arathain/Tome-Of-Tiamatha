@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'fabric-loom' version '0.11-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -16,12 +16,8 @@ repositories {
 		url = "https://www.cursemaven.com"
 	}
 	maven {
-		name = "Ladysnake Mods"
-		url = "https://ladysnake.jfrog.io/artifactory/mods"
-		content {
-			includeGroup 'io.github.ladysnake'
-			includeGroupByRegex 'io\\.github\\.onyxstudios.*'
-		}
+		name "lad snak"
+		url "https://ladysnake.jfrog.io/artifactory/mods"
 	}
 	maven {
 		name = "Nexus Repository Manager"
@@ -58,12 +54,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${cca_version}"
-	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.27'
+	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.32'
 	modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 	include "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {
@@ -75,19 +66,20 @@ dependencies {
 	modImplementation("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")
 	modCompileOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
 	modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
-	modApi "io.github.ladysnake:satin:${project.satin_version}"
+	modImplementation "io.github.ladysnake:satin:${project.satin_version}"
 	include "io.github.ladysnake:satin:${project.satin_version}"
-	modImplementation "io.github.ladysnake:locki:${project.locki_version}"
-	include "io.github.ladysnake:locki:${project.locki_version}"
+	// Adds a dependency on the base cardinal components module (required by every other module)
+	// Replace modImplementation with modApi if you expose components in your own API
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}"
+	// Adds a dependency on a specific module
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}"
+	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional)
+	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}"
+	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}"
 
-	include "me.lucko:fabric-permissions-api:${project.fpa_version}"
 	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 	modImplementation "curse.maven:connectiblechains-415681:${project.chains_version}"
-
-	//cursed shit:tm: (run modImplementation to have them ingame)
-	modImplementation "com.github.apace100:origins-fabric:${project.origins_version}"
-	modImplementation "curse.maven:female-gender-fabric-456319:${project.gender_version}"
 
 }
 

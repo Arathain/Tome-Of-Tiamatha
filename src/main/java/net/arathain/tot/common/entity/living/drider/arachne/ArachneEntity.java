@@ -183,7 +183,7 @@ public class ArachneEntity extends DriderEntity {
     }
     private boolean isAtRestingPos() {
         Optional<BlockPos> restPos = getRestingPos();
-        return restPos.filter(blockPos -> blockPos.getSquaredDistance(getPos(), false) < 9).isPresent();
+        return restPos.filter(blockPos -> blockPos.getSquaredDistance(getPos()) < 9).isPresent();
     }
 
     private void updateRestingPos() {
@@ -297,7 +297,7 @@ public class ArachneEntity extends DriderEntity {
         if (!world.isClient && this.age % 5 == 0 && waveCooldown == 0) {
             int wave = this.getWave();
             if(ToTWaves.ARACHNE_WAVES.isEmpty() || ToTWaves.ARACHNE_WAVES.size() == 0 || ToTWaves.ARACHNE_WAVES.get(wave) == null)
-            ToTWaves.updateArachneWaves(this.getRandom(), this.getLocalDangerScale());
+            ToTWaves.updateArachneWaves(this.getRandom(), (int) Math.floor(Math.cbrt(this.getLocalDangerScale())));
 
             // check if there are enemies left to spawn
             List<MobEntity> enemiesLeft = world.getEntitiesByClass(MobEntity.class, this.getBoundingBox().expand(80f, 30f, 80f), entity -> entity instanceof Broodchild);

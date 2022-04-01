@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.entity.EntityHandler;
+import virtuoel.pehkui.mixin.reach.compat.ReachEntityAttributesMixin;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -87,8 +88,9 @@ public class ArachneEmitShockwaveGoal extends Goal {
                         BlockState state = world.getBlockState(pos);
                         BlockState stateAbove = world.getBlockState(abovePos);
                         if (state.getMaterial() != Material.AIR && state.isOpaqueFullCube(world, pos) && world.getBlockEntity(abovePos) == null && !stateAbove.getMaterial().blocksMovement()) {
-                            FallingBlockEntity fallingBlock = new FallingBlockEntity(world, hitX + 0.5, hitY + 1, hitZ + 0.5, state);
+                            FallingBlockEntity fallingBlock = FallingBlockEntity.spawnFromBlock(world, pos.add(0, 1, 0), state);
                             fallingBlock.setPosition(hitX + 0.5, hitY + 1, hitZ + 0.5);
+//                            world.setBlockState()
                             fallingBlock.setVelocity(0, 0.4 + factor * 0.2, 0);
                             world.spawnEntity(fallingBlock);
                         }

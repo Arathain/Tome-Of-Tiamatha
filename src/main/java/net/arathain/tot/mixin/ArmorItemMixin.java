@@ -1,7 +1,6 @@
 package net.arathain.tot.mixin;
 
-import io.github.ladysnake.locki.DefaultInventoryNodes;
-import io.github.ladysnake.locki.InventoryKeeper;
+
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,12 +23,12 @@ public abstract class ArmorItemMixin extends Item {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     private void cancelUse(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        if (InventoryKeeper.get(user).isLocked(DefaultInventoryNodes.FEET) && MobEntity.getPreferredEquipmentSlot(itemStack).equals(EquipmentSlot.FEET)) {
-            cir.setReturnValue(TypedActionResult.fail(user.getStackInHand(hand)));
-        }
-        if (InventoryKeeper.get(user).isLocked(DefaultInventoryNodes.LEGS) && MobEntity.getPreferredEquipmentSlot(itemStack).equals(EquipmentSlot.LEGS)) {
-            cir.setReturnValue(TypedActionResult.fail(user.getStackInHand(hand)));
-        }
+//        ItemStack itemStack = user.getStackInHand(hand);
+//        if (InventoryKeeper.get(user).isLocked(DefaultInventoryNodes.FEET) && MobEntity.getPreferredEquipmentSlot(itemStack).equals(EquipmentSlot.FEET)) {
+//            cir.setReturnValue(TypedActionResult.fail(user.getStackInHand(hand)));
+//        }
+//        if (InventoryKeeper.get(user).isLocked(DefaultInventoryNodes.LEGS) && MobEntity.getPreferredEquipmentSlot(itemStack).equals(EquipmentSlot.LEGS)) {
+//            cir.setReturnValue(TypedActionResult.fail(user.getStackInHand(hand)));
+//        }
     }
 }

@@ -1,16 +1,12 @@
 package net.arathain.tot.mixin;
 
 import com.google.common.collect.Lists;
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.arathain.tot.common.entity.string.StringKnotEntity;
 import net.arathain.tot.common.entity.string.StringPacketCreator;
-import net.arathain.tot.common.network.NetworkingPackages;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;

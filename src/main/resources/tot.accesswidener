@@ -2,3 +2,4 @@ accessWidener v1 named
 accessible    class    net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker
 accessible    field    net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker    entity    Lnet/minecraft/entity/Entity;
 accessible    field    net/minecraft/entity/LivingEntity  climbingPos  Ljava/util/Optional;
+accessible    method   net/minecraft/entity/FallingBlockEntity <init> (Lnet/minecraft/world/World;DDDLnet/minecraft/block/BlockState;)V

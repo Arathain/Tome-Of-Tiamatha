@@ -65,7 +65,7 @@ public class WeaverDepositWebbingGoal extends MoveToTargetPosGoal {
     }
 
     @Override
-    public double getDesiredSquaredDistanceToTarget() {
+    public double getDesiredDistanceToTarget() {
         return 1;
     }
 

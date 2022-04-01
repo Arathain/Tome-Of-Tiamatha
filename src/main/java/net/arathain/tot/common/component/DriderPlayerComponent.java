@@ -3,18 +3,14 @@ package net.arathain.tot.common.component;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import io.github.ladysnake.locki.DefaultInventoryNodes;
-import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
-import net.arathain.tot.common.util.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
+import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
@@ -97,10 +93,10 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
             armorAttribute.addPersistentModifier(DRIDER_ARMOR_MODIFIER);
             attackRange.addPersistentModifier(DRIDER_ATTACK_RANGE_MODIFIER);
             reach.addPersistentModifier(DRIDER_REACH_MODIFIER);
-            if(!obj.world.isClient) {
-                TomeOfTiamatha.DRIDER_LOCK.lock(obj, DefaultInventoryNodes.LEGS);
-                TomeOfTiamatha.DRIDER_LOCK.lock(obj, DefaultInventoryNodes.FEET);
-            }
+//            if(!obj.world.isClient) {
+//                TomeOfTiamatha.DRIDER_LOCK.lock(obj, DefaultInventoryNodes.LEGS);
+//                TomeOfTiamatha.DRIDER_LOCK.lock(obj, DefaultInventoryNodes.FEET);
+//            }
         }
         else if (!dreeder && attackSpeedAttribute.hasModifier(DRIDER_ATTACK_SPEED_MODIFIER)) {
             attackSpeedAttribute.removeModifier(DRIDER_ATTACK_SPEED_MODIFIER);
