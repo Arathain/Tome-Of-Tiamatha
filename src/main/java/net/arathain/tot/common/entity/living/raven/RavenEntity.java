@@ -1,13 +1,12 @@
 package net.arathain.tot.common.entity.living.raven;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import net.arathain.tot.client.particle.ToTParticles;
 import net.arathain.tot.common.entity.living.goal.RavenDeliverBundleGoal;
 import net.arathain.tot.common.entity.living.goal.RavenFollowOwnerGoal;
-import net.arathain.tot.common.init.ToTObjects;
+import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.control.FlightMoveControl;
 import net.minecraft.entity.ai.goal.*;
@@ -36,6 +35,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -47,6 +47,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -71,12 +72,17 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         goalSelector.add(6, new WanderAroundFarGoal(this, 1));
         goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 8));
         goalSelector.add(7, new LookAroundGoal(this));
-        targetSelector.add(0, new TrackOwnerAttackerGoal(this));
-        targetSelector.add(1, new AttackWithOwnerGoal(this));
-        targetSelector.add(2, new RevengeGoal(this).setGroupRevenge());
+        targetSelector.add(1, new TrackOwnerAttackerGoal(this));
+        targetSelector.add(2, new AttackWithOwnerGoal(this));
+        targetSelector.add(0, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> ToTComponents.ALIGNMENT_COMPONENT.get(player).getRAlignment() < 0));
+        targetSelector.add(3, new RevengeGoal(this).setGroupRevenge());
     }
     public static DefaultAttributeContainer.Builder createRavenAttributes() {
         return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3).add(EntityAttributes.GENERIC_FLYING_SPEED, 0.7);
+    }
+    @Override
+    protected void initEquipment(LocalDifficulty difficulty) {
+        this.setEquipmentDropChance(EquipmentSlot.MAINHAND, 1);
     }
 
     @Override
@@ -137,7 +143,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
 
     @Override
     public boolean isBreedingItem(ItemStack stack) {
-        return (stack.isIn(ToTObjects.MEAT) || (stack.getItem().getFoodComponent() != null && stack.getItem().getFoodComponent().isMeat()));
+        return ((stack.getItem().getFoodComponent() != null && stack.getItem().getFoodComponent().isMeat()));
     }
 
     @Override
@@ -157,22 +163,13 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
             this.dataTracker.set(GOING_TO_RECEIVER, false);
         }
         if (this.hasCustomName()) {
-            String name = this.getCustomName().getString();
-            if (name.equalsIgnoreCase("three_eyed") || name.equalsIgnoreCase("three_eyed_raven") || name.equalsIgnoreCase("three eyed") || name.equalsIgnoreCase("three eyed raven")) {
+            String name = Objects.requireNonNull(this.getCustomName()).getString();
+            if (name.equalsIgnoreCase("three_eyed") || name.equalsIgnoreCase("three_eyed_raven") || name.equalsIgnoreCase("three eyed") || name.equalsIgnoreCase("three eyed raven") || name.equalsIgnoreCase("three-eyed raven")) {
                 this.setRavenType(Type.THREE_EYED);
             }
         }
     }
 
-    public void spawnFeatherParticles(int count) {
-        float height = this.getHeight();
-        if(height * 100 < 100) height = 1.0F;
-        else height = height + 0.5F;
-        for(int i = 0; i <= count; i++) {
-            double randomHeight = (double)this.random.nextInt((int)height * 10) / 10;
-            world.addParticle(this.getRavenType() == Type.ALBINO ? ToTParticles.RAVEN_FEATHER_ALBINO : this.getRavenType() == Type.SEA_GREEN ? ToTParticles.RAVEN_FEATHER_GREEN : ToTParticles.RAVEN_FEATHER, this.getX(), this.getY() + 0.2D + randomHeight, this.getZ(), 0, 0, 0);
-        }
-    }
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
@@ -204,11 +201,13 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
                     eat(player, hand, stack);
                     if (random.nextInt(4) == 0) {
                         setOwner(player);
+                        ToTComponents.ALIGNMENT_COMPONENT.get(player).incrementRAlignment(6);
                         setSitting(true);
                         setTarget(null);
                         navigation.stop();
                         world.sendEntityStatus(this, (byte) 7);
                     } else {
+                        ToTComponents.ALIGNMENT_COMPONENT.get(player).incrementRAlignment(1);
                         world.sendEntityStatus(this, (byte) 6);
                     }
                 }
@@ -261,6 +260,18 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+//        RavenEntity child = MasonObjects.RAVEN.create(world);
+//        if (child != null) {
+//            child.initialize(world, world.getLocalDifficulty(getBlockPos()), SpawnReason.BREEDING, null, null);
+//            UUID owner = getOwnerUuid();
+//            if (owner != null) {
+//                child.setOwnerUuid(owner);
+//                child.setTamed(true);
+//            }
+//            if (entity instanceof RavenEntity && random.nextFloat() < 0.95f) {
+//                child.dataTracker.set(TYPE, random.nextBoolean() ? dataTracker.get(TYPE) : entity.getDataTracker().get(TYPE));
+//            }
+//        }
         return null;
     }
 
@@ -279,7 +290,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         if(!this.isOnGround()) {
             animationBuilder.addAnimation(Math.abs(getVelocity().y) > 0.1f ? "fastFly" : "fly", true);
             event.getController().setAnimation(animationBuilder);
-        } else if(!dataTracker.get(SITTING)) {
+        } else if(!dataTracker.get(SITTING) && !this.hasVehicle()) {
             animationBuilder.addAnimation("idle", true);
             event.getController().setAnimation(animationBuilder);
         } else {
@@ -291,6 +302,8 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
 
     @Override
     public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
+        if(target instanceof PlayerEntity player && ToTComponents.ALIGNMENT_COMPONENT.get(player).getRAlignment() < -20)
+            return true;
         if (target instanceof TameableEntity && ((TameableEntity) target).isTamed()) {
             return false;
         }
@@ -318,14 +331,26 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         if (isInvulnerableTo(source)) {
             return false;
         } else {
-            spawnFeatherParticles(3);
             Entity entity = source.getAttacker();
             setSitting(false);
             if (entity != null && !(entity instanceof PlayerEntity) && !(entity instanceof PersistentProjectileEntity)) {
                 amount = (amount + 1) / 2f;
             }
+            if(entity instanceof PlayerEntity player && !this.world.isClient) {
+                ToTComponents.ALIGNMENT_COMPONENT.get(player).incrementRAlignment(-4);
+                System.out.println(ToTComponents.ALIGNMENT_COMPONENT.get(player).getRAlignment());
+            }
             return super.damage(source, amount);
         }
+    }
+
+    @Override
+    public void onDeath(DamageSource source) {
+        Entity entity = source.getAttacker();
+        if(entity instanceof PlayerEntity player && !this.world.isClient) {
+            ToTComponents.ALIGNMENT_COMPONENT.get(player).incrementRAlignment(-24);
+        }
+        super.onDeath(source);
     }
 
     @Override

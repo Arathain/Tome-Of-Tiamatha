@@ -98,7 +98,6 @@ public class RavenDeliverBundleGoal<T extends TameableEntity> extends Goal {
 
     private void tryTeleport() {
         BlockPos blockPos = this.receiver.getBlockPos();
-        ((RavenEntity) this.tameable).spawnFeatherParticles(10);
 
         for (int i = 0; i < 10; ++i) {
             int j = this.getRandomInt(-3, 3);
@@ -118,7 +117,7 @@ public class RavenDeliverBundleGoal<T extends TameableEntity> extends Goal {
         } else if (!this.canTeleportTo(new BlockPos(x, y, z))) {
             return false;
         } else {
-            this.tameable.refreshPositionAndAngles((double) x + 0.5D, (double) y, (double) z + 0.5D, this.tameable.headYaw, this.tameable.getPitch());
+            this.tameable.refreshPositionAndAngles((double) x + 0.5D, y, (double) z + 0.5D, this.tameable.headYaw, this.tameable.getPitch());
             this.navigation.stop();
             return true;
         }

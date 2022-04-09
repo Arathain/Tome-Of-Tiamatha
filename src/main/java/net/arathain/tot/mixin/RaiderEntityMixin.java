@@ -24,10 +24,7 @@ public abstract class RaiderEntityMixin extends PatrolEntity {
     private void death(DamageSource source, CallbackInfo info) {
         if (source.getSource() != null) {
             if (source.getSource() instanceof PlayerEntity player) {
-                ToTComponents.VI_ALIGNMENT_COMPONENT.get(player).incrementIAlignment(-40);
-                if(this.hasActiveRaid()) {
-                    ToTComponents.VI_ALIGNMENT_COMPONENT.get(player).incrementVAlignment(10);
-                }
+                ToTComponents.ALIGNMENT_COMPONENT.get(player).incrementIAlignment(-40);
             }
         }
     }

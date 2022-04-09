@@ -40,9 +40,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
             if (!world.isClient) {
                 for (PlayerEntity entity : entities) {
                     if(entity.equals(source.getSource())) {
-                        ToTComponents.VI_ALIGNMENT_COMPONENT.get(entity).incrementVAlignment(-50);
-                    } else {
-                        ToTComponents.VI_ALIGNMENT_COMPONENT.get(entity).incrementVAlignment(-5);
+                        ToTComponents.ALIGNMENT_COMPONENT.get(entity).incrementVAlignment(-50);
                     }
                 }
             }
@@ -52,9 +50,9 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     @Inject(method = "afterUsing", at = @At("HEAD"))
     public void happyTrade(TradeOffer offer, CallbackInfo info) {
         if (this.getCustomer() != null) {
-            ToTComponents.VI_ALIGNMENT_COMPONENT.get(this.getCustomer()).incrementVAlignment(1);
+            ToTComponents.ALIGNMENT_COMPONENT.get(this.getCustomer()).incrementVAlignment(1);
             if(this.canLevelUp()) {
-                ToTComponents.VI_ALIGNMENT_COMPONENT.get(this.getCustomer()).incrementVAlignment(2);
+                ToTComponents.ALIGNMENT_COMPONENT.get(this.getCustomer()).incrementVAlignment(2);
             }
         }
 

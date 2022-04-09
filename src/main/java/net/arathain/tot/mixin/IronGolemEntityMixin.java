@@ -21,6 +21,6 @@ public abstract class IronGolemEntityMixin extends GolemEntity {
 
     @Inject(method = "initGoals", at = @At("HEAD"))
     public void inmitGoalsm(CallbackInfo info) {
-        this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> ToTUtil.isDrider(player) || ToTComponents.VI_ALIGNMENT_COMPONENT.get(player).getVAlignment() < 0));
+        this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> ToTUtil.isDrider(player) || ToTComponents.ALIGNMENT_COMPONENT.get(player).getVAlignment() < 0));
     }
 }
