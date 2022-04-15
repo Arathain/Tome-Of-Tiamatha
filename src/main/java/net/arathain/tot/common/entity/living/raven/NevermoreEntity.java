@@ -6,6 +6,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -20,6 +21,29 @@ public class NevermoreEntity extends HostileEntity implements IAnimatable {
 
     protected NevermoreEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(ATTACK_STATE, 0);
+    }
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putInt("AttackState", getAttackState());
+    }
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.setAttackState(nbt.getInt("AttackState"));
+    }
+
+    public int getAttackState() {
+        return this.dataTracker.get(ATTACK_STATE);
+    }
+
+    public void setAttackState(int state) {
+        this.dataTracker.set(ATTACK_STATE, state);
     }
 
     @Override

@@ -8,6 +8,7 @@
   "item.tot.silksteel_chestplate": "Silksteel Chestplate",
   "item.tot.synthesis_sceptre": "Synthesis Sceptre",
   "item.tot.gazing_lily": "Gazing Lily",
+  "item.tot.dedrider_soup": "Dedrider Soup",
   "item.tot.steelsilk": "Steelsilk",
   "item.tot.silksteel_shield": "Silksteel Shield",
   "effect.tot.broods_curse": "Brood's Curse",
@@ -21,19 +22,5 @@
   "entity.tot.arachne": "Drider Broodmother",
   "entity.tot.raven": "Raven",
 
-  "info.tot.broods_curse": "Curse obtained.",
-
-
-  "effect.tot.gender_swap": "Gender Swap",
-  "effect.tot.testosterone": "Testosterone",
-  "effect.tot.estrogen": "Estrogen",
-  "block.tot.magedew": "Magedew",
-  "item.minecraft.potion.effect.estrogen": "Potion of Estrogen",
-  "item.minecraft.splash_potion.effect.estrogen": "Splash Potion of Estrogen",
-  "item.minecraft.lingering_potion.effect.estrogen": "Lingering Potion of Estrogen",
-  "item.minecraft.tipped_arrow.effect.estrogen": "Arrow of Estrogen",
-  "item.minecraft.potion.effect.testosterone": "Potion of Testosterone",
-  "item.minecraft.splash_potion.effect.testosterone": "Splash Potion of Testosterone",
-  "item.minecraft.lingering_potion.effect.testosterone": "Lingering Potion of Testosterone",
-  "item.minecraft.tipped_arrow.effect.testosterone": "Arrow of Testosterone"
+  "info.tot.broods_curse": "Curse obtained."
 }

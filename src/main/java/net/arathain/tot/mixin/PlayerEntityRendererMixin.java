@@ -63,6 +63,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
             entity.setLeftHanded(player.getMainArm() == Arm.RIGHT);
             entity.preferredHand = player.preferredHand;
             entity.setActiveItemStack(player.getActiveItem());
+            entity.itemUseTimeLeft = player.getItemUseTimeLeft();
             entity.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
             entity.setStackInHand(Hand.OFF_HAND, player.getOffHandStack());
             entity.setCurrentHand(player.getActiveHand() == null ? Hand.OFF_HAND : player.getActiveHand());

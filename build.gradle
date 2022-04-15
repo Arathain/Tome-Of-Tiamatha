@@ -60,6 +60,7 @@ dependencies {
 	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+	include ("com.github.virtuoel:pehkui:${project.pehkui_version}")
 	include("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
 	modImplementation("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
 	include("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")

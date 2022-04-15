@@ -5,6 +5,8 @@ import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.init.ToTComponents;
+import net.arathain.tot.common.init.ToTEffects;
+import net.arathain.tot.common.init.ToTScaleTypes;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -13,9 +15,13 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import virtuoel.pehkui.api.ScaleData;
 
 import java.util.Objects;
 import java.util.UUID;
+
+import static net.arathain.tot.common.network.packet.DriderComponentPacket.PLAYER_HEIGHT;
+import static net.arathain.tot.common.network.packet.DriderComponentPacket.PLAYER_WIDTH;
 
 public class DriderPlayerComponent implements AutoSyncedComponent, ServerTickingComponent {
     private static final EntityAttributeModifier DRIDER_ATTACK_SPEED_MODIFIER = new EntityAttributeModifier(UUID.fromString("c2b783da-45c2-4fc2-8ba8-9d5b0d81434d"), "Drider modifier", 3, EntityAttributeModifier.Operation.ADDITION);
@@ -60,6 +66,13 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
 
     public void setDrider(boolean drider) {
         this.drider = drider;
+        if(!drider) {
+            setStage(0);
+            ScaleData width = ToTScaleTypes.MODIFY_WIDTH_TYPE.getScaleData(obj);
+            ScaleData height = ToTScaleTypes.MODIFY_HEIGHT_TYPE.getScaleData(obj);
+            width.setScale(width.getBaseScale() * PLAYER_WIDTH);
+            height.setScale(height.getBaseScale() * PLAYER_HEIGHT);
+        }
         ToTComponents.DRIDER_COMPONENT.sync(obj);
         if(!obj.getEquippedStack(EquipmentSlot.LEGS).isEmpty()) {
             obj.damage(DamageSource.CRAMMING, 10);
@@ -71,10 +84,7 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
 
     @Override
     public void serverTick() {
-        boolean dreeder = ToTUtil.isDrider(obj);
-        if (dreeder) {
-           // obj.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, Integer.MAX_VALUE, 0, true, false));
-        }
+
     }
 
     @SuppressWarnings("ConstantConditions")

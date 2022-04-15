@@ -35,6 +35,7 @@ public class ToTObjects {
     public static final Item SILKSTEEL_HELMET = createItem("silksteel_helmet", new SilksteelArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.HEAD, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
     public static final Item SILKSTEEL_CHESTPLATE = createItem("silksteel_chestplate", new SilksteelArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.CHEST, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
     public static final Item SYNTHESIS_SCEPTRE = createItem("synthesis_sceptre", new SynthesisScepterItem(ToolMaterials.NETHERITE, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.RARE)));
+    public static final Item DEDRIDER_SOUP = createItem("dedrider_soup", new DedriderSoupItem(new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.EPIC)));
     public static final Item SILKSTEEL_INGOT = createItem("silksteel_ingot", new Item(new Item.Settings().group(TomeOfTiamatha.GROUP)));
     public static final Item SILKSTEEL_SWORD = createItem("silksteel_sword", new SilksteelSwordItem(ToTToolMaterials.SILKSTEEL, 1, -2.0f, new Item.Settings().group(TomeOfTiamatha.GROUP)));
     public static final Item STEELSILK = createItem("steelsilk", new Item(new Item.Settings().group(TomeOfTiamatha.GROUP)));
