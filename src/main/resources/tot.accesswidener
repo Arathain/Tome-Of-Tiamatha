@@ -3,4 +3,5 @@ accessible    class    net/minecraft/server/world/ThreadedAnvilChunkStorage$Enti
 accessible    field    net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker    entity    Lnet/minecraft/entity/Entity;
 accessible    field    net/minecraft/entity/LivingEntity  climbingPos  Ljava/util/Optional;
 accessible    field    net/minecraft/entity/LivingEntity  itemUseTimeLeft I
+accessible    field    net/minecraft/entity/ai/goal/BowAttackGoal actor Lnet/minecraft/entity/mob/HostileEntity;
 accessible    method   net/minecraft/entity/FallingBlockEntity <init> (Lnet/minecraft/world/World;DDDLnet/minecraft/block/BlockState;)V

@@ -3,11 +3,11 @@ package net.arathain.tot.common.entity.living.drider.weaver;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.arathain.tot.common.entity.living.goal.*;
+import net.arathain.tot.common.init.ToTEffects;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -21,6 +21,9 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
@@ -34,7 +37,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 import java.util.Optional;
 
-public class WeaverEntity extends DriderEntity {
+public class WeaverEntity extends DriderEntity implements RangedAttackMob {
     public static final TrackedData<Integer> ACTION_STATE = DataTracker.registerData(ArachneEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public WeaverEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
@@ -73,8 +76,17 @@ public class WeaverEntity extends DriderEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        //this.goalSelector.add(2, new DriderAttackGoal(this, 1.0, false));
-        //this.goalSelector.add(1, new DriderShieldGoal(this));
+        this.goalSelector.add(4, new BowAttackGoal<>(this, 1, 20, 20) {
+            @Override
+            protected boolean isHoldingBow() {
+                return super.isHoldingBow() && this.actor.getTarget() != null && !this.actor.getTarget().hasStatusEffect(ToTEffects.BROODS_CURSE) && !this.actor.hasPassengers();
+            }
+
+            @Override
+            public boolean shouldContinue() {
+                return super.shouldContinue() && this.actor.getTarget() != null && !this.actor.getTarget().hasStatusEffect(ToTEffects.BROODS_CURSE) && !this.actor.hasPassengers();
+            }
+        });
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(1, new WeaverPickUpWebbingGoal(this));
         this.goalSelector.add(1, new WeaverImprisonTargetGoal(this));
@@ -116,7 +128,7 @@ public class WeaverEntity extends DriderEntity {
 
     @Override
     protected void initEquipment(LocalDifficulty difficulty) {
-
+        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -145,5 +157,17 @@ public class WeaverEntity extends DriderEntity {
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
+    }
+    //TODO: replace with custom projectile
+    @Override
+    public void attack(LivingEntity target, float pullProgress) {
+        FallingBlockEntity thrown = new FallingBlockEntity(this.world, this.getX(), this.getY(), this.getZ(), Blocks.COBWEB.getDefaultState());
+        double d = target.getX() - this.getX();
+        double e = target.getBodyY(0.3333333333333333) - thrown.getY();
+        double f = target.getZ() - this.getZ();
+        double g = Math.sqrt(d * d + f * f);
+        thrown.setVelocity(d, e + g * 0.1F, f);
+        this.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.world.spawnEntity(thrown);
     }
 }
