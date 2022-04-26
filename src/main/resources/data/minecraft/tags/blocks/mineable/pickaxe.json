@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "tot:webbed_stone",
+    "tot:webbed_cobblestone",
+    "tot:ornate_webbed_stone"
+  ]
+}

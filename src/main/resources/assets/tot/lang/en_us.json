@@ -1,6 +1,9 @@
 {
   "itemGroup.tot.tot": "Tome Of T'matha",
   "block.tot.hanging_web": "Hanging Web",
+  "block.tot.webbed_stone": "Webbed Stone",
+  "block.tot.webbed_cobblestone": "Webbed Cobblestone",
+  "block.tot.ornate_webbed_stone": "Ornate Webbed Stone",
   "block.tot.weavekin_egg": "Weavechild Egg",
   "item.tot.silksteel_ingot": "Silksteel Ingot",
   "item.tot.silksteel_sword": "Silksteel Sword",

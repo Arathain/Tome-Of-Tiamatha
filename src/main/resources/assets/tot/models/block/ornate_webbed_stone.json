@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "tot:block/ornate_webbed_stone"
+  }
+}

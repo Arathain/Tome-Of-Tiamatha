@@ -5,6 +5,7 @@ import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.arathain.tot.common.entity.living.goal.*;
 import net.arathain.tot.common.init.ToTEffects;
 import net.arathain.tot.common.util.ToTUtil;
+import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -167,6 +168,7 @@ public class WeaverEntity extends DriderEntity implements RangedAttackMob {
         double f = target.getZ() - this.getZ();
         double g = Math.sqrt(d * d + f * f);
         thrown.setVelocity(d, e + g * 0.1F, f);
+        thrown.setHurtEntities(2.0F, 10);
         this.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(thrown);
     }

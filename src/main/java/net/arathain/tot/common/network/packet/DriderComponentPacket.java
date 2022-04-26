@@ -24,8 +24,6 @@ public class DriderComponentPacket {
 
     private static final float DRIDER_WIDTH = ToTEntities.DRIDER.getWidth() / EntityType.PLAYER.getWidth();
     private static final float DRIDER_HEIGHT = ToTEntities.DRIDER.getHeight() / EntityType.PLAYER.getHeight();
-    public static final float PLAYER_WIDTH = EntityType.PLAYER.getWidth() / ToTEntities.DRIDER.getWidth();
-    public static final float PLAYER_HEIGHT = EntityType.PLAYER.getHeight() / ToTEntities.DRIDER.getHeight();
 
     public static void send() {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());

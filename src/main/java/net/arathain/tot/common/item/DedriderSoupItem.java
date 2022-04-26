@@ -40,10 +40,10 @@ public class DedriderSoupItem extends Item {
             }
         }
         if (stack.isEmpty()) {
-            return new ItemStack(Items.GLASS_BOTTLE);
+            return new ItemStack(Items.BOWL);
         }
         if (user instanceof PlayerEntity && !((PlayerEntity)user).getAbilities().creativeMode) {
-            ItemStack itemStack = new ItemStack(Items.GLASS_BOTTLE);
+            ItemStack itemStack = new ItemStack(Items.BOWL);
             PlayerEntity playerEntity = (PlayerEntity)user;
             if (!playerEntity.getInventory().insertStack(itemStack)) {
                 playerEntity.dropItem(itemStack, false);

@@ -20,8 +20,6 @@ import virtuoel.pehkui.api.ScaleData;
 import java.util.Objects;
 import java.util.UUID;
 
-import static net.arathain.tot.common.network.packet.DriderComponentPacket.PLAYER_HEIGHT;
-import static net.arathain.tot.common.network.packet.DriderComponentPacket.PLAYER_WIDTH;
 
 public class DriderPlayerComponent implements AutoSyncedComponent, ServerTickingComponent {
     private static final EntityAttributeModifier DRIDER_ATTACK_SPEED_MODIFIER = new EntityAttributeModifier(UUID.fromString("c2b783da-45c2-4fc2-8ba8-9d5b0d81434d"), "Drider modifier", 3, EntityAttributeModifier.Operation.ADDITION);
@@ -70,8 +68,8 @@ public class DriderPlayerComponent implements AutoSyncedComponent, ServerTicking
             setStage(0);
             ScaleData width = ToTScaleTypes.MODIFY_WIDTH_TYPE.getScaleData(obj);
             ScaleData height = ToTScaleTypes.MODIFY_HEIGHT_TYPE.getScaleData(obj);
-            width.setScale(width.getBaseScale() * PLAYER_WIDTH);
-            height.setScale(height.getBaseScale() * PLAYER_HEIGHT);
+            width.setScale(1);
+            height.setScale(1);
         }
         ToTComponents.DRIDER_COMPONENT.sync(obj);
         if(!obj.getEquippedStack(EquipmentSlot.LEGS).isEmpty()) {
