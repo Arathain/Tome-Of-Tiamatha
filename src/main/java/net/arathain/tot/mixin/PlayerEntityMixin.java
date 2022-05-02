@@ -4,18 +4,17 @@ import net.arathain.tot.common.component.DriderPlayerComponent;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.arathain.tot.common.init.ToTComponents;
+import net.arathain.tot.common.item.RemorseItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,6 +30,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+    }
+    @Inject(method = "attack", at = @At("HEAD"))
+    private void attack(Entity target, CallbackInfo ci) {
+        if(this.getStackInHand(Hand.MAIN_HAND).getItem() instanceof RemorseItem) {
+
+        }
     }
 
     @Inject(method = "shouldDismount", at = @At("HEAD"), cancellable = true)

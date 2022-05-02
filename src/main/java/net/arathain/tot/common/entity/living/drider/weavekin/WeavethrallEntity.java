@@ -48,8 +48,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class WeavethrallEntity extends WeavechildEntity implements TameableHostileEntity, Broodchild {
-    private static final TrackedData<Byte> TAMEABLE = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
-    private static final TrackedData<Optional<UUID>> BINDER_UUID = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    private static final TrackedData<Byte> TAMEABLE = DataTracker.registerData(WeavethrallEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final TrackedData<Optional<UUID>> BINDER_UUID = DataTracker.registerData(WeavethrallEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public WeavethrallEntity(EntityType<? extends WeavechildEntity> entityType, World world) {
         super(entityType, world);
     }

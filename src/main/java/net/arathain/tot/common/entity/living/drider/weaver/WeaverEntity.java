@@ -39,7 +39,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import java.util.Optional;
 
 public class WeaverEntity extends DriderEntity implements RangedAttackMob {
-    public static final TrackedData<Integer> ACTION_STATE = DataTracker.registerData(ArachneEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final TrackedData<Integer> ACTION_STATE = DataTracker.registerData(WeaverEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public WeaverEntity(EntityType<? extends SpiderEntity> entityType, World world) {
         super(entityType, world);
     }

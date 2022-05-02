@@ -3,6 +3,7 @@ package net.arathain.tot.common.init;
 import net.fabricmc.yarn.constants.MiningLevels;
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Lazy;
@@ -10,7 +11,8 @@ import net.minecraft.util.Lazy;
 import java.util.function.Supplier;
 
 public enum ToTToolMaterials implements ToolMaterial {
-    SILKSTEEL(MiningLevels.DIAMOND, 2031, 8.5f, 4.0f, 15, () -> Ingredient.ofItems(ToTObjects.SILKSTEEL_INGOT));
+    SILKSTEEL(MiningLevels.DIAMOND, 2031, 8.5f, 4.0f, 15, () -> Ingredient.ofItems(ToTObjects.SILKSTEEL_INGOT)),
+    BONE(MiningLevels.STONE, 46, 4.5f, 2.0f, 10, () -> Ingredient.ofItems(Items.BONE));
 
     private final int miningLevel;
     private final int itemDurability;

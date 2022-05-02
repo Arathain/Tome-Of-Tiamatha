@@ -42,6 +42,9 @@ public class ToTObjects {
     public static final Item GAZING_LILY = createItem("gazing_lily", new GazingLilyItem(new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
     public static final Item SILKSTEEL_SHIELD = createItem("silksteel_shield", new SilksteelShieldItem(new FabricItemSettings().group(TomeOfTiamatha.GROUP).maxDamage(1600), 60, 8));
 
+    //TODO make this deal self-damage
+    public static final Item REMORSE = createItem("remorse", new SwordItem(ToTToolMaterials.SILKSTEEL, 1, -2.2f, new Item.Settings().group(TomeOfTiamatha.GROUP)));
+    public static final Item REMEMBRANCE_TOKEN = createItem("remembrance_token", new Item(new Item.Settings().group(TomeOfTiamatha.GROUP)));
     public static final Item RAVEN_SPAWN_EGG = createItem("raven_spawn_egg", new SpawnEggItem(ToTEntities.RAVEN, 0x182c3b, 0x828c78, (new Item.Settings()).group(ItemGroup.MISC)));
     //registry end here
 
