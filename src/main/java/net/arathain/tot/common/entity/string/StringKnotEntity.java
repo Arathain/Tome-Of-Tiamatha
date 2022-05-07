@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
+import net.minecraft.entity.decoration.LeashKnotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
@@ -481,7 +482,7 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
      */
     @Environment(EnvType.CLIENT)
     @Override
-    public Vec3d getLeashPos(float f) {
+    public Vec3d method_30951(float f) {
         return getLerpedPos(f);
     }
 

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "net.arathain",
+    "id": "tot",
+    "version": "${version}",
+    "metadata": {
+      "name": "Tome of T'matha",
+      "description": "GoG 2: Electric Boogaloo",
+      "contributors": {
+        "Arathain": "Owner",
+        "punic": "ideas guy"
+      },
+      "license": {
+        "name": "ARR assets, LGPL code",
+        "id": "LGPL",
+        "url": "https://github.com/Arathain/Tome-Of-Tiamatha/blob/1.18/LICENSE",
+        "description": "Do not steal my assets and ya good"
+      },
+      "icon": "assets/tot/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": "net.arathain.tot.TomeOfTiamatha",
+      "client_init":  "net.arathain.tot.client.TomeOfTiamathaClient",
+      "cardinal-components": "net.arathain.tot.common.init.ToTComponents"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.16.0-"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=1.0.0-"
+      },
+      {
+        "id": "cardinal-components-base",
+        "versions": ">=4.1.4"
+      },
+      {
+        "id": "cardinal-components-entity",
+        "versions": ">=4.1.4"
+      },
+      {
+        "id": "satin",
+        "versions": ">=1.7.2"
+      },
+      {
+        "id": "java",
+        "versions": ">=17"
+      }
+    ]
+  },
+  "access_widener": "tot.accesswidener",
+  "mixin": "tot.mixins.json"
+}

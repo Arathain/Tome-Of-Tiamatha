@@ -1,7 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.11-SNAPSHOT'
-	id "io.github.juuxel.loom-quiltflower" version "1.+"
-	id "org.quiltmc.quilt-mappings-on-loom" version "4.2.+"
+	alias(libs.plugins.quilt.loom)
 	id 'maven-publish'
 }
 
@@ -55,19 +53,17 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings(loom.layered {
-		addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${project.minecraft_version}+build.${project.quilt_mappings}:v2"))
-	})
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	minecraft libs.minecraft
+	mappings loom.layered {
+		addLayer quiltMappings.mappings("org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:v2")
+	}
+	modImplementation libs.quilt.loader
+	modImplementation libs.quilted.fabric.api
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.18:3.0.32'
+	modImplementation 'software.bernie.geckolib:geckolib-quilt-1.18:3.0.0'
 	modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 	include "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
-	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
+	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}")
 	include ("com.github.virtuoel:pehkui:${project.pehkui_version}")
 	include("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
 	modImplementation("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
@@ -88,14 +84,26 @@ dependencies {
 
 	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
-	modImplementation "curse.maven:connectiblechains-415681:${project.chains_version}"
-
+	modImplementation ("curse.maven:connectiblechains-415681:${project.chains_version}")
+}
+configurations.all {
+	resolutionStrategy.dependencySubstitution {
+		substitute module('net.fabricmc:fabric-loader') using module(libs.quilt.loader.get().toString())
+		all { DependencySubstitution dependency ->
+			if (dependency.requested instanceof ModuleComponentSelector && dependency.requested.group == 'net.fabricmc.fabric-api') {
+				if (dependency.requested.module == 'fabric-api')
+					dependency.useTarget libs.quilted.fabric.api.get().toString()
+				else
+					dependency.useTarget 'org.quiltmc.quilted-fabric-api' + ':' + dependency.requested.module + ':' + libs.versions.quilted.fabric.api.get()
+			}
+		}
+	}
 }
 
 processResources {
 	inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
+	filesMatching("quilt.mod.json") {
 		expand "version": project.version
 	}
 }

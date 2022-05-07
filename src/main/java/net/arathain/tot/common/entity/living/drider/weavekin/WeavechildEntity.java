@@ -44,9 +44,9 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.targetSelector.add(1, new ObedientRevengeGoal(this, DriderEntity.class).setGroupRevenge());
-        this.targetSelector.add(1, new ActiveTargetGoal<>(this, AnimalEntity.class, true));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, 10, true, false, golem -> true));
+        this.targetSelector.add(1, new TargetGoal<>(this, AnimalEntity.class, true));
+        this.targetSelector.add(2, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
+        this.targetSelector.add(2, new TargetGoal<>(this, IronGolemEntity.class, 10, true, false, golem -> true));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
         }
     }
     public void growUp() {
-        WeavethrallEntity grown = new WeavethrallEntity(ToTEntities.WEAVETHRALL, this.getEntityWorld());
+        WeavethrallEntity grown = new WeavethrallEntity(ToTEntities.WEAVETHRALL, this.getWorld());
         grown.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
         world.spawnEntity(grown);
         this.remove(RemovalReason.DISCARDED);

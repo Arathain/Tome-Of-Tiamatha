@@ -64,7 +64,7 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         // Render the knot
         if (stringKnotEntity.shouldRenderKnot()) {
             matrices.push();
-            Vec3d leashOffset = stringKnotEntity.getLeashPos(tickDelta).subtract(stringKnotEntity.getLerpedPos(tickDelta));
+            Vec3d leashOffset = stringKnotEntity.method_30951(tickDelta).subtract(stringKnotEntity.getLerpedPos(tickDelta));
             matrices.translate(leashOffset.x, leashOffset.y + 6.5 / 16f, leashOffset.z);
             // The model is 6 px wide, but it should be rendered at 5px
             matrices.scale(5 / 6f, 1, 5 / 6f);
@@ -121,7 +121,7 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         if (toEntity instanceof AbstractDecorationEntity) {
             dstPos = toEntity.getPos().add(toEntity.getLeashOffset());
         } else {
-            dstPos = toEntity.getLeashPos(tickDelta);
+            dstPos = toEntity.method_30951(tickDelta);
         }
 
         // The leash pos offset
@@ -172,7 +172,7 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
      */
     private void drawDebugVector(MatrixStack matrices, Entity fromEntity, Entity toEntity, VertexConsumer buffer) {
         if (toEntity == null) return;
-        Matrix4f modelMat = matrices.peek().getPositionMatrix();
+        Matrix4f modelMat = matrices.peek().getModel();
         Vec3d vec = toEntity.getPos().subtract(fromEntity.getPos());
         Vec3d normal = vec.normalize();
         buffer.vertex(modelMat, 0, 0, 0)

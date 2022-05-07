@@ -3,7 +3,7 @@ package net.arathain.tot.mixin;
 import net.arathain.tot.common.util.ToTUtil;
 import net.arathain.tot.common.init.ToTComponents;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
+import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,6 +21,6 @@ public abstract class IronGolemEntityMixin extends GolemEntity {
 
     @Inject(method = "initGoals", at = @At("HEAD"))
     public void inmitGoalsm(CallbackInfo info) {
-        this.goalSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> ToTUtil.isDrider(player) || ToTComponents.ALIGNMENT_COMPONENT.get(player).getVAlignment() < 0));
+        this.goalSelector.add(3, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> ToTUtil.isDrider(player) || ToTComponents.ALIGNMENT_COMPONENT.get(player).getVAlignment() < 0));
     }
 }

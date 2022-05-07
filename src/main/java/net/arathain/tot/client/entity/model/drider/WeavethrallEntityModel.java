@@ -5,23 +5,23 @@ import net.arathain.tot.common.entity.living.drider.weavekin.WeavethrallEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib3q.model.AnimatedTickingGeoModel;
+import software.bernie.geckolib3q.model.provider.data.EntityModelData;
 
 public class WeavethrallEntityModel extends AnimatedTickingGeoModel<WeavethrallEntity> {
 
     @Override
-    public Identifier getModelLocation(WeavethrallEntity object) {
+    public Identifier getModelResource(WeavethrallEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/weavethrall.geo.json");
     }
 
     @Override
-    public Identifier getTextureLocation(WeavethrallEntity object) {
+    public Identifier getTextureResource(WeavethrallEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "textures/entity/weavekin/weavethrall.png");
     }
 
     @Override
-    public Identifier getAnimationFileLocation(WeavethrallEntity animatable) {
+    public Identifier getAnimationResource(WeavethrallEntity animatable) {
         return new Identifier(TomeOfTiamatha.MODID, "animations/entity/weavethrall.animation.json");
     }
 

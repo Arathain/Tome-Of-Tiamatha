@@ -5,22 +5,22 @@ import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib3q.model.AnimatedTickingGeoModel;
+import software.bernie.geckolib3q.model.provider.data.EntityModelData;
 
 public class ArachneEntityModel extends AnimatedTickingGeoModel<ArachneEntity> {
     @Override
-    public Identifier getModelLocation(ArachneEntity object) {
+    public Identifier getModelResource(ArachneEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/arachne.geo.json");
     }
 
     @Override
-    public Identifier getTextureLocation(ArachneEntity object) {
+    public Identifier getTextureResource(ArachneEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/arachne/arachne.png");
     }
 
     @Override
-    public Identifier getAnimationFileLocation(ArachneEntity animatable) {
+    public Identifier getAnimationResource(ArachneEntity animatable) {
         return new Identifier(TomeOfTiamatha.MODID, "animations/entity/arachne.animation.json");
     }
     @Override

@@ -26,7 +26,7 @@ public class WebbingEntity extends Entity {
 
     public WebbingEntity(EntityType<? extends WebbingEntity> type, World world) {
         super(type, world);
-        this.intersectionChecked = true;
+        this.inanimate = true;
     }
 
     public WebbingEntity(World world, double x, double y, double z) {

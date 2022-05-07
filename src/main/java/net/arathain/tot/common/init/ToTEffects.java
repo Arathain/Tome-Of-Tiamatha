@@ -3,7 +3,7 @@ package net.arathain.tot.common.init;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.effect.DriderCurseStatusEffect;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 public class ToTEffects {
     private static final Map<StatusEffect, Identifier> STATUS_EFFECTS = new LinkedHashMap<>();
 
-    public static final StatusEffect BROODS_CURSE = create("broods_curse", new DriderCurseStatusEffect(StatusEffectCategory.BENEFICIAL, 0x691b9a));
+    public static final StatusEffect BROODS_CURSE = create("broods_curse", new DriderCurseStatusEffect(StatusEffectType.BENEFICIAL, 0x691b9a));
 
     private static <T extends StatusEffect> T create(String name, T effect) {
         STATUS_EFFECTS.put(effect, new Identifier(TomeOfTiamatha.MODID, name));

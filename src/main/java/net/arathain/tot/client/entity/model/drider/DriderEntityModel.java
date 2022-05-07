@@ -14,22 +14,22 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib3q.model.AnimatedGeoModel;
+import software.bernie.geckolib3q.model.provider.data.EntityModelData;
 
 public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
     @Override
-    public Identifier getModelLocation(DriderEntity object) {
+    public Identifier getModelResource(DriderEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/drider.geo.json");
     }
 
     @Override
-    public Identifier getTextureLocation(DriderEntity object) {
+    public Identifier getTextureResource(DriderEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/drider_" + object.getDriderType().toString().toLowerCase() + ".png");
     }
 
     @Override
-    public Identifier getAnimationFileLocation(DriderEntity animatable) {
+    public Identifier getAnimationResource(DriderEntity animatable) {
         return new Identifier(TomeOfTiamatha.MODID, "animations/entity/drider.animation.json");
     }
 

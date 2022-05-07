@@ -21,8 +21,8 @@ public class StringModel {
     }
 
     public void render(VertexConsumer buffer, MatrixStack matrices, int bLight0, int bLight1, int sLight0, int sLight1) {
-        Matrix4f modelMatrix = matrices.peek().getPositionMatrix();
-        Matrix3f normalMatrix = matrices.peek().getNormalMatrix();
+        Matrix4f modelMatrix = matrices.peek().getModel();
+        Matrix3f normalMatrix = matrices.peek().getNormal();
         int count = vertices.length / 3;
         for (int i = 0; i < count; i++) {
             // divide by 2 because chain has 2 face sets

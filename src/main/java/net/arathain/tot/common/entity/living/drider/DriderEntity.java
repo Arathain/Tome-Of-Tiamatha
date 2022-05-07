@@ -83,9 +83,9 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.targetSelector.add(1, new RevengeGoal(this, SpiderEntity.class).setGroupRevenge());
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, true));
-        this.targetSelector.add(3, new TargetGoal<>(this, IronGolemEntity.class));
+        this.targetSelector.add(2, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
+        this.targetSelector.add(2, new TargetGoal<>(this, IronGolemEntity.class, true));
+        this.targetSelector.add(3, new DriderTargetGoal<>(this, IronGolemEntity.class));
     }
 
     @Override
@@ -333,9 +333,9 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         return age;
     }
 
-    static class TargetGoal<T extends LivingEntity>
-            extends ActiveTargetGoal<T> {
-        public TargetGoal(SpiderEntity spider, Class<T> targetEntityClass) {
+    static class DriderTargetGoal<T extends LivingEntity>
+            extends TargetGoal<T> {
+        public DriderTargetGoal(SpiderEntity spider, Class<T> targetEntityClass) {
             super((MobEntity)spider, targetEntityClass, true);
         }
 

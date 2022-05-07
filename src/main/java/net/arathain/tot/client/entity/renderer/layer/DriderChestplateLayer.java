@@ -10,9 +10,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.DyeableArmorItem;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
-import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
+import software.bernie.geckolib3q.geo.render.built.GeoModel;
+import software.bernie.geckolib3q.renderers.geo.GeoLayerRenderer;
+import software.bernie.geckolib3q.renderers.geo.IGeoRenderer;
 
 public class DriderChestplateLayer extends GeoLayerRenderer<DriderEntity> {
     private final IGeoRenderer<DriderEntity> driderEntityRenderer;
@@ -27,7 +27,7 @@ public class DriderChestplateLayer extends GeoLayerRenderer<DriderEntity> {
         if(!entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).isEmpty()) {
             Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/" + entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem().toString() + ".png");
             RenderLayer armor = RenderLayer.getArmorCutoutNoCull(location);
-            GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn));
+            GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelResource(entitylivingbaseIn));
             model.getBone("spider").get().setHidden(true);
             ((DriderEntityRenderer) driderEntityRenderer).isLayer = true;
             //model.getBone("leftarm").get().setHidden(true);
