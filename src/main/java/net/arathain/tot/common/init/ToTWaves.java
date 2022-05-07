@@ -28,6 +28,7 @@ public class ToTWaves {
         ARACHNE_WAVES.get(4).add(new WaveSpawnEntry(ToTEntities.WEAVECHILD, 5 * dangerScale));
         ARACHNE_WAVES.get(4).add(new WaveSpawnEntry(ToTEntities.WEAVETHRALL, 5 * dangerScale));
 
+        ARACHNE_WAVES.get(5).add(new WaveSpawnEntry(ToTEntities.WEAVER, dangerScale));
         ARACHNE_WAVES.get(5).add(new WaveSpawnEntry(EntityType.SPIDER, EntityType.CAVE_SPIDER, 11 * dangerScale, random.nextInt(5) == 2));
 
         ARACHNE_WAVES.get(6).add(new WaveSpawnEntry(ToTEntities.WEAVECHILD, 8 * dangerScale));
