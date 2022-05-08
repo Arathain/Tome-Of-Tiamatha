@@ -12,7 +12,6 @@ early_features = "1.0.2"
 blabber = "0.1.2"
 cloth_config = "6.0.42"
 mixinextras = "0.0.7"
-lucko_perms = "0.1-SNAPSHOT"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -29,7 +28,6 @@ early_features = { module = "com.williambl.early_features:early_features", versi
 blabber = { module = "io.github.ladysnake:blabber", version.ref = "blabber" }
 cloth_config = { module = "me.shedaniel.cloth:cloth-config-fabric", version.ref = "cloth_config" }
 mixinextras = { module = "com.github.LlamaLad7:MixinExtras", version.ref = "mixinextras" }
-lucko_perms = { module = "me.lucko:fabric-permissions-api", version.ref = "lucko_perms" }
 
 [plugins]
 quilt_loom = { id = "org.quiltmc.loom", version = "0.12.+" }

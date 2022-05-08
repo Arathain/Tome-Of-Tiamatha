@@ -1,5 +1,5 @@
 plugins {
-	alias(libs.plugins.quilt.loom)
+	id 'org.quiltmc.loom' version '0.12.+'
 	id 'maven-publish'
 }
 
@@ -60,41 +60,77 @@ dependencies {
 	modImplementation libs.quilt.loader
 	modImplementation libs.quilted.fabric.api
 
-	modImplementation 'software.bernie.geckolib:geckolib-quilt-1.18:3.0.0'
-	modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
+	modImplementation ('software.bernie.geckolib:geckolib-quilt-1.18:3.0.2') {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modImplementation("com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 	include "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
-	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}")
+	modImplementation("com.github.virtuoel:pehkui:${project.pehkui_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 	include ("com.github.virtuoel:pehkui:${project.pehkui_version}")
 	include("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
-	modImplementation("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
+	modImplementation("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 	include("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")
-	modImplementation("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")
-	modCompileOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
-	modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
-	modImplementation "io.github.ladysnake:satin:${project.satin_version}"
+	modImplementation("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modCompileOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") {
+		transitive = false
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") {
+		transitive = false
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modImplementation ("io.github.ladysnake:satin:${project.satin_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 	include "io.github.ladysnake:satin:${project.satin_version}"
 	// Adds a dependency on the base cardinal components module (required by every other module)
 	// Replace modImplementation with modApi if you expose components in your own API
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}"
+	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 	// Adds a dependency on a specific module
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}"
+	modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional)
 	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}"
 	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}"
 
-	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+	modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
-	modImplementation ("curse.maven:connectiblechains-415681:${project.chains_version}")
+	modImplementation("curse.maven:connectiblechains-415681:${project.chains_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 }
+
 configurations.all {
 	resolutionStrategy.dependencySubstitution {
 		substitute module('net.fabricmc:fabric-loader') using module(libs.quilt.loader.get().toString())
 		all { DependencySubstitution dependency ->
 			if (dependency.requested instanceof ModuleComponentSelector && dependency.requested.group == 'net.fabricmc.fabric-api') {
-				if (dependency.requested.module == 'fabric-api')
-					dependency.useTarget libs.quilted.fabric.api.get().toString()
-				else
-					dependency.useTarget 'org.quiltmc.quilted-fabric-api' + ':' + dependency.requested.module + ':' + libs.versions.quilted.fabric.api.get()
+				dependency.useTarget libs.quilted.fabric.api.get().toString()
 			}
 		}
 	}

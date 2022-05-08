@@ -15,7 +15,6 @@ import net.arathain.tot.common.init.ToTEffects;
 import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.network.packet.DriderComponentPacket;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
@@ -27,11 +26,13 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 
 public class TomeOfTiamathaClient implements ClientModInitializer {
     public static final EntityModelLayer WEBBING_MODEL_LAYER = new EntityModelLayer(new Identifier(TomeOfTiamatha.MODID, "webbing"), "main");
     @Override
-    public void onInitializeClient() {
+    public void onInitializeClient(ModContainer mod) {
         StringClient.init();
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB);
         EntityRendererRegistry.register(ToTEntities.DRIDER, DriderEntityRenderer::new);

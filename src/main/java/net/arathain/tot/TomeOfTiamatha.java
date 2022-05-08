@@ -8,7 +8,6 @@ import net.arathain.tot.common.init.ToTScaleTypes;
 import net.arathain.tot.common.network.packet.DriderComponentPacket;
 import net.arathain.tot.common.util.ToTCallbacks;
 import net.arathain.tot.common.util.config.ToTConfig;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -17,6 +16,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.bernie.geckolib3q.GeckoLib;
@@ -29,7 +30,7 @@ public class TomeOfTiamatha implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("tot");
 
 	@Override
-	public void onInitialize() {
+	public void onInitialize(ModContainer mod) {
 		ToTObjects.init();
 		GeckoLib.initialize();
 		ToTEntities.init();
