@@ -5,7 +5,7 @@ import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
+import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.mob.HostileEntity;
@@ -25,7 +25,7 @@ public class SpiderEntityMixin extends HostileEntity implements Broodchild {
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 7), method = "initGoals")
     private void redirectTargetGoal(GoalSelector goalSelector, int priority, Goal goal) {
-        Goal newGoal = new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)).setMaxTimeWithoutVisibility(200);
+        Goal newGoal = new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)).setMaxTimeWithoutVisibility(200);
         goalSelector.add(priority, newGoal);
     }
 

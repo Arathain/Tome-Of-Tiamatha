@@ -69,14 +69,14 @@ public class WeavethrallEntity extends WeavechildEntity implements TameableHosti
         this.targetSelector.add(1, new ObedientRevengeGoal(this, DriderEntity.class).setGroupRevenge(ZombifiedPiglinEntity.class));
         this.targetSelector.add(1, new TamedTrackAttackerGoal(this));
         this.targetSelector.add(2, new TamedAttackWithOwnerGoal<>(this));
-        this.targetSelector.add(1, new ActiveTargetGoal<>(this, AnimalEntity.class, 10, true, false, animol -> {
+        this.targetSelector.add(1, new TargetGoal<>(this, AnimalEntity.class, 10, true, false, animol -> {
             if (isTamed()) return false;
             if (!(animol instanceof TameableEntity)) return true;
             TameableEntity tameable = (TameableEntity) animol;
             return tameable.getOwner() == null || tameable.getOwner() != null && !ToTUtil.isDrider(tameable.getOwner());
         }));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player) && !isTamed()));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, 10, true, false, golem -> !isTamed()));
+        this.targetSelector.add(2, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player) && !isTamed()));
+        this.targetSelector.add(2, new TargetGoal<>(this, IronGolemEntity.class, 10, true, false, golem -> !isTamed()));
     }
 
     @Override

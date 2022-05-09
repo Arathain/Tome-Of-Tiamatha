@@ -94,8 +94,8 @@ public class ArachneEntity extends DriderEntity {
         this.goalSelector.add(6, new LookAtEntityGoal(this, DriderEntity.class, 6.0f));
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.targetSelector.add(1, new ArachneRevengeGoal(this, SpiderEntity.class).setGroupRevenge());
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, IronGolemEntity.class, true));
+        this.targetSelector.add(2, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
+        this.targetSelector.add(2, new TargetGoal<>(this, IronGolemEntity.class, true));
     }
 
     @Override
@@ -183,7 +183,7 @@ public class ArachneEntity extends DriderEntity {
     }
     private boolean isAtRestingPos() {
         Optional<BlockPos> restPos = getRestingPos();
-        return restPos.filter(blockPos -> blockPos.getSquaredDistance(getPos()) < 9).isPresent();
+        return restPos.filter(blockPos -> blockPos.getSquaredDistanceToCenter(this.getPos()) < 9).isPresent();
     }
 
     private void updateRestingPos() {
@@ -280,9 +280,6 @@ public class ArachneEntity extends DriderEntity {
     public void onStartedTrackingBy(ServerPlayerEntity player) {
         super.onStartedTrackingBy(player);
         this.bossBar.addPlayer(player);
-    }
-    public double getAngleBetweenEntities(Entity first, Entity second) {
-        return Math.atan2(second.getZ() - first.getZ(), second.getX() - first.getX()) * (180 / Math.PI) + 90;
     }
 
     @Override

@@ -481,7 +481,7 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
      */
     @Environment(EnvType.CLIENT)
     @Override
-    public Vec3d getLeashPos(float f) {
+    public Vec3d method_30951(float f) {
         return getLerpedPos(f);
     }
 

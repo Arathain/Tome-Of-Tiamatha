@@ -74,7 +74,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         goalSelector.add(7, new LookAroundGoal(this));
         targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         targetSelector.add(2, new AttackWithOwnerGoal(this));
-        targetSelector.add(0, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> ToTComponents.ALIGNMENT_COMPONENT.get(player).getRAlignment() < 0));
+        targetSelector.add(0, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> ToTComponents.ALIGNMENT_COMPONENT.get(player).getRAlignment() < 0));
         targetSelector.add(3, new RevengeGoal(this).setGroupRevenge());
     }
     public static DefaultAttributeContainer.Builder createRavenAttributes() {
