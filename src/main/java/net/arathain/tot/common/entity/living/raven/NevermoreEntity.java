@@ -3,10 +3,13 @@ package net.arathain.tot.common.entity.living.raven;
 import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.init.ToTObjects;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.Angerable;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,7 +43,11 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
             (entity, random) -> new TradeOffer(new ItemStack(Items.BONE_BLOCK, 40), ToTObjects.REMEMBRANCE_TOKEN.getDefaultStack(), 2, 1, 0.05f)
     };
 
-    protected NevermoreEntity(EntityType<? extends MerchantEntity> entityType, World world) {
+    public static DefaultAttributeContainer.Builder createNevermoreAttributes() {
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 60.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0).add(EntityAttributes.GENERIC_ARMOR, 12.0);
+    }
+
+    public NevermoreEntity(EntityType<? extends MerchantEntity> entityType, World world) {
         super(entityType, world);
     }
 
