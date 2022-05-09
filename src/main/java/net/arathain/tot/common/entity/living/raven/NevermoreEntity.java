@@ -17,6 +17,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -83,7 +84,7 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
     }
 
     public static DefaultAttributeContainer.Builder createNevermoreAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 60.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0).add(EntityAttributes.GENERIC_ARMOR, 12.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 128.0).add(EntityAttributes.GENERIC_MAX_HEALTH, 60.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4f).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0).add(EntityAttributes.GENERIC_ARMOR, 12.0);
     }
 
     public NevermoreEntity(EntityType<? extends MerchantEntity> entityType, World world) {
@@ -136,37 +137,6 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
                 } else {
                 }
             }
-        }
-    }
-    public boolean teleportTo(Entity entity) {
-        Vec3d vec3d = new Vec3d(this.getX() - entity.getX(), this.getBodyY(0.5D) - entity.getEyeY(), this.getZ() - entity.getZ());
-        vec3d = vec3d.normalize();
-        double d = 16.0D;
-        double e = this.getX() + (this.random.nextDouble() - 0.5D) * 8.0D - vec3d.x * 16.0D;
-        double f = this.getY() + (double)(this.random.nextInt(16) - 8) - vec3d.y * 16.0D;
-        double g = this.getZ() + (this.random.nextDouble() - 0.5D) * 8.0D - vec3d.z * 16.0D;
-        return this.teleportTo(e, f, g);
-    }
-
-    private boolean teleportTo(double x, double y, double z) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable(x, y, z);
-
-        while(mutable.getY() > this.world.getBottomY() && !this.world.getBlockState(mutable).getMaterial().blocksMovement()) {
-            mutable.move(Direction.DOWN);
-        }
-
-        BlockState blockState = this.world.getBlockState(mutable);
-        boolean bl = blockState.getMaterial().blocksMovement();
-        if (bl) {
-            boolean bl3 = this.teleport(x, y, z, true);
-            if (bl3 && !this.isSilent()) {
-                this.world.playSound((PlayerEntity)null, this.prevX, this.prevY, this.prevZ, SoundEvents.ENTITY_PARROT_STEP, this.getSoundCategory(), 1.0F, 1.0F);
-                this.playSound(SoundEvents.ENTITY_PARROT_STEP, 1.0F, 1.0F);
-            }
-
-            return bl3;
-        } else {
-            return false;
         }
     }
 
