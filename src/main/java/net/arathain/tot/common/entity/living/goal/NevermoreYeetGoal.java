@@ -35,11 +35,16 @@ public class NevermoreYeetGoal extends NevermoreAttackGoal {
 
     @Override
     public void start() {
-        LivingEntity target = this.nevermore.getTarget();
-        if (target != null) {
-            this.nevermore.teleportTo(target);
-        }
         super.start();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        LivingEntity target = this.nevermore.getTarget();
+        if (target != null && this.nevermore.squaredDistanceTo(target) > 4) {
+            this.nevermore.getNavigation().startMovingTo(target, 1);
+        }
     }
 
     @Override
