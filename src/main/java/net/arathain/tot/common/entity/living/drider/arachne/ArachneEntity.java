@@ -183,7 +183,7 @@ public class ArachneEntity extends DriderEntity {
     }
     private boolean isAtRestingPos() {
         Optional<BlockPos> restPos = getRestingPos();
-        return restPos.filter(blockPos -> blockPos.getSquaredDistanceToCenter(getPos()) < 9).isPresent();
+        return restPos.filter(blockPos -> blockPos.getSquaredDistanceToCenter(this.getPos()) < 9).isPresent();
     }
 
     private void updateRestingPos() {
@@ -280,9 +280,6 @@ public class ArachneEntity extends DriderEntity {
     public void onStartedTrackingBy(ServerPlayerEntity player) {
         super.onStartedTrackingBy(player);
         this.bossBar.addPlayer(player);
-    }
-    public double getAngleBetweenEntities(Entity first, Entity second) {
-        return Math.atan2(second.getZ() - first.getZ(), second.getX() - first.getX()) * (180 / Math.PI) + 90;
     }
 
     @Override
