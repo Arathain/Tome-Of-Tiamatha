@@ -112,23 +112,25 @@ public class SynthesisScepterItem extends MiningToolItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        boolean hitscanRequired = hasFocus(itemStack) && getFocusStack(itemStack).getItem().equals(Items.TOTEM_OF_UNDYING) || getFocusStack(itemStack).getItem().equals(ToTObjects.GAZING_LILY);
-        if (!getUsing(itemStack) && hitscanRequired) {
-            BlockHitResult blockHit = ToTUtil.hitscanBlock(world, user, 64, RaycastContext.FluidHandling.NONE, (target) -> !target.equals(Blocks.AIR));
-            EntityHitResult entityHit = ToTUtil.hitscanEntity(world, user, 64, (target) -> target instanceof LivingEntity && !target.isSpectator() && user.canSee(target));
-            if (entityHit !=null) {
+        if(hasFocus(itemStack)) {
+            boolean hitscanRequired = hasFocus(itemStack) && getFocusStack(itemStack).getItem().equals(Items.TOTEM_OF_UNDYING) || getFocusStack(itemStack).getItem().equals(ToTObjects.GAZING_LILY);
+            if (!getUsing(itemStack) && hitscanRequired) {
+                BlockHitResult blockHit = ToTUtil.hitscanBlock(world, user, 64, RaycastContext.FluidHandling.NONE, (target) -> !target.equals(Blocks.AIR));
+                EntityHitResult entityHit = ToTUtil.hitscanEntity(world, user, 64, (target) -> target instanceof LivingEntity && !target.isSpectator() && user.canSee(target));
+                if (entityHit != null) {
 
-                setTargetPos(itemStack, (float)entityHit.getPos().x, (float)entityHit.getPos().y, (float)entityHit.getPos().z);
-                setUsing(itemStack, true);
-            }
-            if (entityHit == null) {
-                Vec3d pos = blockHit.getPos();
-                if(getFocusStack(itemStack).getItem().equals(ToTObjects.GAZING_LILY)) {
-                    pos = new Vec3d(blockHit.getBlockPos().getX(), blockHit.getBlockPos().getY(), blockHit.getBlockPos().getZ());
+                    setTargetPos(itemStack, (float) entityHit.getPos().x, (float) entityHit.getPos().y, (float) entityHit.getPos().z);
+                    setUsing(itemStack, true);
                 }
+                if (entityHit == null) {
+                    Vec3d pos = blockHit.getPos();
+                    if (getFocusStack(itemStack).getItem().equals(ToTObjects.GAZING_LILY)) {
+                        pos = new Vec3d(blockHit.getBlockPos().getX(), blockHit.getBlockPos().getY(), blockHit.getBlockPos().getZ());
+                    }
 
-                setTargetPos(itemStack, (float)pos.x, (float)pos.y, (float)pos.z);
-                setUsing(itemStack, true);
+                    setTargetPos(itemStack, (float) pos.x, (float) pos.y, (float) pos.z);
+                    setUsing(itemStack, true);
+                }
             }
         }
         return ItemUsage.consumeHeldItem(world, user, hand);

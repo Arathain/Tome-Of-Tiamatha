@@ -10,22 +10,22 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3q.model.AnimatedTickingGeoModel;
-import software.bernie.geckolib3q.model.provider.data.EntityModelData;
+import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
+import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class WeaverEntityModel extends AnimatedTickingGeoModel<WeaverEntity> {
     @Override
-    public Identifier getModelResource(WeaverEntity object) {
+    public Identifier getModelLocation(WeaverEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/weaver.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(WeaverEntity object) {
+    public Identifier getTextureLocation(WeaverEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/weaver/weaver.png");
     }
 
     @Override
-    public Identifier getAnimationResource(WeaverEntity animatable) {
+    public Identifier getAnimationFileLocation(WeaverEntity animatable) {
         return new Identifier(TomeOfTiamatha.MODID, "animations/entity/weaver.animation.json");
     }
 
