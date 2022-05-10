@@ -6,6 +6,7 @@ import net.arathain.tot.client.entity.model.drider.weaver.WebbingEntityModel;
 import net.arathain.tot.client.entity.renderer.drider.*;
 import net.arathain.tot.client.entity.renderer.drider.weaver.WeaverEntityRenderer;
 import net.arathain.tot.client.entity.renderer.drider.weaver.WebbingEntityRenderer;
+import net.arathain.tot.client.entity.renderer.raven.NevermoreEntityRenderer;
 import net.arathain.tot.client.entity.renderer.raven.RavenEntityRenderer;
 import net.arathain.tot.client.entity.shader.ToTShaderHandler;
 import net.arathain.tot.client.entity.string.StringClient;
@@ -35,6 +36,7 @@ public class TomeOfTiamathaClient implements ClientModInitializer {
     public void onInitializeClient(ModContainer mod) {
         StringClient.init();
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ToTObjects.HANGING_WEB);
+        EntityRendererRegistry.register(ToTEntities.NEVERMORE, NevermoreEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.DRIDER, DriderEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.ARACHNE, ArachneEntityRenderer::new);
         EntityRendererRegistry.register(ToTEntities.WEAVECHILD, WeavechildEntityRenderer::new);

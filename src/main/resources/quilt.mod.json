@@ -53,5 +53,9 @@
     ]
   },
   "access_widener": "tot.accesswidener",
-  "mixin": "tot.mixins.json"
+  "mixin": "tot.mixins.json",
+  "cardinal-components": [
+    "tot:drider",
+    "tot:alignment"
+  ]
 }

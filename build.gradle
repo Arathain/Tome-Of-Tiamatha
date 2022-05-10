@@ -60,7 +60,7 @@ dependencies {
 	modImplementation libs.quilt.loader
 	modImplementation libs.quilted.fabric.api
 
-	modImplementation ('software.bernie.geckolib:geckolib-quilt-1.18:3.0.2') {
+	modImplementation ('software.bernie.geckolib:geckolib-fabric-1.18:3.0.42') {
 		exclude(group: "net.fabricmc")
 		exclude(group: "net.fabricmc.fabric-api")
 	}

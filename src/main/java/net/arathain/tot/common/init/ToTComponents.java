@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class ToTComponents implements EntityComponentInitializer {
     public static final ComponentKey<DriderPlayerComponent> DRIDER_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(TomeOfTiamatha.MODID, "drider"), DriderPlayerComponent.class);
-    public static final ComponentKey<PlayerAlignmentComponent> ALIGNMENT_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(TomeOfTiamatha.MODID, "vi_alignment"), PlayerAlignmentComponent.class);
+    public static final ComponentKey<PlayerAlignmentComponent> ALIGNMENT_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(TomeOfTiamatha.MODID, "alignment"), PlayerAlignmentComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
