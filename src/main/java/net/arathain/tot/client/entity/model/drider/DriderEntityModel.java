@@ -76,6 +76,8 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
             if(entity.isBlocking() && entity.getItemUseTimeLeft() > 0 && entity.getMainHandStack().getUseAction() == UseAction.BLOCK){
                 sendHelp.setRotationX(sendHelp.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 : 1.3f));
                 sendHelp.setRotationY(sendHelp.getRotationY() + (MinecraftClient.getInstance().isPaused() ? 0 : 1));
+            } else if(entity.getItemUseTimeLeft() > 0 && (entity.getMainHandStack().getUseAction() == UseAction.SPEAR || entity.getOffHandStack().getUseAction() == UseAction.SPEAR)) {
+                sendHelp.setRotationZ(sendHelp.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 : 2.8f));
             } else if(entity.getItemUseTimeLeft() > 0 && (entity.getMainHandStack().getUseAction() == UseAction.BOW || entity.getOffHandStack().getUseAction() == UseAction.BOW)) {
                 sendHelp.setRotationX(sendHelp.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 : 1.3f));
                 sendHelp.setRotationX(sendHelp.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 :(extraData.headPitch * (float) Math.PI / 180F)));

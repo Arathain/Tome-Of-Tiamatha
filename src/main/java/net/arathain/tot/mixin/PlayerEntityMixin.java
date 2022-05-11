@@ -4,9 +4,11 @@ import net.arathain.tot.common.component.DriderPlayerComponent;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.arathain.tot.common.init.ToTComponents;
+import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.item.RemorseItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CobwebBlock;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -18,6 +20,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,14 +31,10 @@ import java.util.Optional;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
 
+    @Shadow public abstract float getAttackCooldownProgress(float baseTime);
+
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
-    }
-    @Inject(method = "attack", at = @At("HEAD"))
-    private void attack(Entity target, CallbackInfo ci) {
-        if(this.getStackInHand(Hand.MAIN_HAND).getItem() instanceof RemorseItem) {
-
-        }
     }
 
     @Inject(method = "shouldDismount", at = @At("HEAD"), cancellable = true)

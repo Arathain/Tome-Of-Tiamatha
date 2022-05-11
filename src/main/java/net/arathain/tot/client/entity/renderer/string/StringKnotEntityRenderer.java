@@ -142,9 +142,9 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         Vec3f offset = Helper.getChainOffset(srcPos, dstPos);
         matrices.translate(offset.getX(), 0, offset.getZ());
 
-        // Now we gather light information for the chain. Since the chain is lighter if there is more light.
-        BlockPos blockPosOfStart = new BlockPos(MathHelper.lerp(0.2, fromEntity.getCameraPosVec(tickDelta).x, toEntity.getCameraPosVec(tickDelta).x), MathHelper.lerp(0.2, fromEntity.getCameraPosVec(tickDelta).y, toEntity.getCameraPosVec(tickDelta).y), MathHelper.lerp(0.2, fromEntity.getCameraPosVec(tickDelta).z, toEntity.getCameraPosVec(tickDelta).z));
-        BlockPos blockPosOfEnd = new BlockPos(MathHelper.lerp(0.8, fromEntity.getCameraPosVec(tickDelta).x, toEntity.getCameraPosVec(tickDelta).x), MathHelper.lerp(0.8, fromEntity.getCameraPosVec(tickDelta).y, toEntity.getCameraPosVec(tickDelta).y), MathHelper.lerp(0.8, fromEntity.getCameraPosVec(tickDelta).z, toEntity.getCameraPosVec(tickDelta).z));
+        // Now we gather light information for the string. This is janky, but it somewhat works.
+        BlockPos blockPosOfStart = new BlockPos(MathHelper.lerp(0.3, fromEntity.getCameraPosVec(tickDelta).x, toEntity.getCameraPosVec(tickDelta).x), MathHelper.lerp(0.3, fromEntity.getCameraPosVec(tickDelta).y, toEntity.getCameraPosVec(tickDelta).y), MathHelper.lerp(0.3, fromEntity.getCameraPosVec(tickDelta).z, toEntity.getCameraPosVec(tickDelta).z));
+        BlockPos blockPosOfEnd = new BlockPos(MathHelper.lerp(0.7, fromEntity.getCameraPosVec(tickDelta).x, toEntity.getCameraPosVec(tickDelta).x), MathHelper.lerp(0.7, fromEntity.getCameraPosVec(tickDelta).y, toEntity.getCameraPosVec(tickDelta).y), MathHelper.lerp(0.7, fromEntity.getCameraPosVec(tickDelta).z, toEntity.getCameraPosVec(tickDelta).z));
         int blockLightLevelOfStart = fromEntity.world.getLightLevel(LightType.BLOCK, blockPosOfStart);
         int blockLightLevelOfEnd = toEntity.world.getLightLevel(LightType.BLOCK, blockPosOfEnd);
         int skylightLevelOfStart = fromEntity.world.getLightLevel(LightType.SKY, blockPosOfStart);

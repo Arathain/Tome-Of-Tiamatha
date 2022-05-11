@@ -26,7 +26,7 @@ public class DriderEyeLayer extends GeoLayerRenderer<DriderEntity> {
                   location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/eyes/drider_arathain_eyes.png");
               }
               RenderLayer armor = RenderLayer.getEyes(location);
-              this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getTextureLocation(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), -packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, (MathHelper.clamp(120f - packedLightIn, 0, 120f) / 160f));
+              this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), -packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, (MathHelper.clamp(120f - packedLightIn, 0, 120f) / 160f));
               ((DriderEntityRenderer) this.getRenderer()).isLayer = false;
           }
     }
