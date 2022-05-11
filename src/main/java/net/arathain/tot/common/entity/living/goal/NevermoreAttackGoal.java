@@ -50,7 +50,6 @@ public abstract class NevermoreAttackGoal extends Goal {
         if (this.attackCooldown == 0) {
             this.attack();
             this.nevermore.playSound(this.nevermore.getAttackSound(), 1.0F, 1.0F);
-            this.nevermore.stopAnger();
         }
     }
     protected abstract int getCooldown();

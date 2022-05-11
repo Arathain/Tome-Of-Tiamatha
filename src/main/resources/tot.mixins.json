@@ -4,7 +4,6 @@
   "package": "net.arathain.tot.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "TargetGoalMixin",
     "ArmorItemMixin",
     "EntityMixin",
     "EntityTrackerEntryMixin",
@@ -15,10 +14,12 @@
     "PlayerEntityMixin",
     "RaiderEntityMixin",
     "SpiderEntityMixin",
+    "TargetGoalMixin",
     "ThreadedAnvilChunkStorageMixin",
     "VillagerEntityMixin"
   ],
   "client": [
+    "MinecraftClientMixin",
     "AbstractClientPlayerEntityMixin",
     "InventoryScreenMixin",
     "PlayerEntityRendererMixin"
