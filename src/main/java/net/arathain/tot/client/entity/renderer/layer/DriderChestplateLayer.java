@@ -27,7 +27,7 @@ public class DriderChestplateLayer extends GeoLayerRenderer<DriderEntity> {
         if(!entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).isEmpty() || TomeOfTiamatha.CONFIG.clientside_pg_clean) {
             Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/" + entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem().toString() + ".png");
             if(entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).isEmpty() && TomeOfTiamatha.CONFIG.clientside_pg_clean) {
-                Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/pg_hahayes_default.png");
+               location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/pg_hahayes_default.png");
             }
             RenderLayer armor = RenderLayer.getArmorCutoutNoCull(location);
             GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn));
