@@ -3,11 +3,10 @@ package net.arathain.tot.common.entity.living.raven;
 import net.arathain.tot.common.entity.living.goal.RavenDeliverBundleGoal;
 import net.arathain.tot.common.entity.living.goal.RavenFollowOwnerGoal;
 import net.arathain.tot.common.init.ToTComponents;
+import net.arathain.tot.common.init.ToTEntities;
+import net.arathain.tot.common.init.ToTObjects;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.control.FlightMoveControl;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.BirdNavigation;
@@ -260,18 +259,18 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-//        RavenEntity child = MasonObjects.RAVEN.create(world);
-//        if (child != null) {
-//            child.initialize(world, world.getLocalDifficulty(getBlockPos()), SpawnReason.BREEDING, null, null);
-//            UUID owner = getOwnerUuid();
-//            if (owner != null) {
-//                child.setOwnerUuid(owner);
-//                child.setTamed(true);
-//            }
-//            if (entity instanceof RavenEntity && random.nextFloat() < 0.95f) {
-//                child.dataTracker.set(TYPE, random.nextBoolean() ? dataTracker.get(TYPE) : entity.getDataTracker().get(TYPE));
-//            }
-//        }
+        RavenEntity child = ToTEntities.RAVEN.create(world);
+        if (child != null) {
+            child.initialize(world, world.getLocalDifficulty(getBlockPos()), SpawnReason.BREEDING, null, null);
+            UUID owner = getOwnerUuid();
+            if (owner != null) {
+                child.setOwnerUuid(owner);
+                child.setTamed(true);
+            }
+            if (entity instanceof RavenEntity && random.nextFloat() < 0.95f) {
+                child.dataTracker.set(TYPE, random.nextBoolean() ? dataTracker.get(TYPE) : entity.getDataTracker().get(TYPE));
+            }
+        }
         return null;
     }
 
@@ -338,7 +337,6 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
             }
             if(entity instanceof PlayerEntity player && !this.world.isClient) {
                 ToTComponents.ALIGNMENT_COMPONENT.get(player).incrementRAlignment(-4);
-                System.out.println(ToTComponents.ALIGNMENT_COMPONENT.get(player).getRAlignment());
             }
             return super.damage(source, amount);
         }

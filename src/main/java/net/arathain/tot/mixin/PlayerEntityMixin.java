@@ -4,6 +4,7 @@ import net.arathain.tot.common.component.DriderPlayerComponent;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.arathain.tot.common.init.ToTComponents;
+import net.arathain.tot.common.init.ToTDamageSource;
 import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.item.RemorseItem;
 import net.minecraft.block.BlockState;
@@ -35,6 +36,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+    }
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void tot$remorse(DamageSource source, CallbackInfo ci) {
+        if(source.equals(ToTDamageSource.REMORSE) && !world.isClient() && ToTComponents.ALIGNMENT_COMPONENT.get(this).getRAlignment() < 20) {
+            ToTComponents.ALIGNMENT_COMPONENT.get(this).incrementRAlignment(40);
+        }
     }
 
     @Inject(method = "shouldDismount", at = @At("HEAD"), cancellable = true)

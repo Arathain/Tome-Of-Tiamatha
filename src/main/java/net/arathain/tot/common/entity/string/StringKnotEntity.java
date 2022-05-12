@@ -55,7 +55,7 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
     /**
      * The distance when it is visible.
      */
-    public static final double VISIBLE_RANGE = 2048.0D;
+    public static final double VISIBLE_RANGE = 4096.0D;
     /**
      * Ticks where the knot can live without any links.
      * This is important for 2 reasons: When the world loads, a 'secondary' knot might load before it's 'primary'
@@ -87,10 +87,12 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
 
     public StringKnotEntity(EntityType<? extends StringKnotEntity> entityType, World world) {
         super(entityType, world);
+        ignoreCameraFrustum = true;
     }
 
     public StringKnotEntity(World world, BlockPos pos) {
         super(ToTEntities.STRING_KNOT, world, pos);
+        ignoreCameraFrustum = true;
         setPosition((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D);
     }
 
@@ -545,9 +547,6 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
             // Interacted with a valid String item, create a new link
             onPlace();
             StringLink.create(this, player);
-            if (!player.isCreative()) {
-                player.getStackInHand(hand).decrement(1);
-            }
 
             return ActionResult.CONSUME;
         }
@@ -646,17 +645,6 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
             return packetByteBuf;
         };
         return StringPacketCreator.createSpawn(this, NetworkingPackages.S2C_SPAWN_STRING_KNOT_PACKET, extraData);
-    }
-
-    /**
-     * Checks if the knot model of the knot entity should be rendered.
-     * To determine if the knot entity including Strings should be rendered use {@link #shouldRender(double)}
-     *
-     * @return true if the knot is not attached to a wall.
-     */
-    @Environment(EnvType.CLIENT)
-    public boolean shouldRenderKnot() {
-        return false;
     }
 
     public void addLink(StringLink link) {

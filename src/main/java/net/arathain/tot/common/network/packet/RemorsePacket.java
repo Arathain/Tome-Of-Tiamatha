@@ -1,6 +1,7 @@
 package net.arathain.tot.common.network.packet;
 
 import net.arathain.tot.TomeOfTiamatha;
+import net.arathain.tot.common.init.ToTDamageSource;
 import net.arathain.tot.common.init.ToTObjects;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -46,7 +47,7 @@ public class RemorsePacket {
                 f *= 0.2F + h * h * 0.8F;
                 g *= h;
                 f += g;
-                player.damage(DamageSource.player(player), f);
+                player.damage(ToTDamageSource.REMORSE, f);
             }
         });
     }

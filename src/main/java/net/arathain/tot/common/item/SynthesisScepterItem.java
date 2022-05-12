@@ -143,26 +143,30 @@ public class SynthesisScepterItem extends MiningToolItem {
             assert targetPos != null;
             BlockPos blockPos = new BlockPos(targetPos.getFloat("X"), targetPos.getFloat("Y"), targetPos.getFloat("Z"));
             Block block = world.getBlockState(blockPos).getBlock();
-            // 1. Try with existing knot, regardless of hand item
-            StringKnotEntity knot = StringKnotEntity.getKnotAt(world, blockPos);
-            if (knot != null) {
-                if (knot.interact((PlayerEntity) user, user.getActiveHand()) == ActionResult.CONSUME) {
+            if (StringKnotEntity.canAttachTo(block) && user instanceof PlayerEntity player) {
+                // 1. Try with existing knot, regardless of hand item
+                StringKnotEntity knot = StringKnotEntity.getKnotAt(world, blockPos);
+                if (knot != null) {
+                    if (knot.interact(player, user.getActiveHand()) == ActionResult.CONSUME) {
+                        return stack;
+                    }
+                    return stack;
                 }
+
+                // 2. Check if any held chains can be attached.
+                List<StringLink> attachableChains = StringKnotEntity.getHeldStringsInRange(player, blockPos);
+
+                // Allow default interaction behaviour.
+
+
+                // 3. Create new knot if none exists and delegate interaction
+                knot = new StringKnotEntity(world, blockPos);
+                knot.setGraceTicks((byte) 0);
+                world.spawnEntity(knot);
+                knot.onPlace();
+                System.out.println("d");
+                knot.interact(player, player.getActiveHand());
             }
-
-            // 2. Check if any held chains can be attached.
-            List<StringLink> attachableChains = StringKnotEntity.getHeldStringsInRange((PlayerEntity) user, blockPos);
-
-            // Allow default interaction behaviour.
-            if (attachableChains.size() == 0);
-
-
-            // 3. Create new knot if none exists and delegate interaction
-            knot = new StringKnotEntity(world, blockPos);
-            knot.setGraceTicks((byte) 0);
-            world.spawnEntity(knot);
-            knot.onPlace();
-            knot.interact((PlayerEntity) user, user.getActiveHand());
         }
         if(!world.isClient() && hasFocus(stack) && getFocusStack(stack).getItem().equals(Items.TOTEM_OF_UNDYING)) {
             NbtCompound targetPos = (NbtCompound) stack.getNbt().get("targetPos");

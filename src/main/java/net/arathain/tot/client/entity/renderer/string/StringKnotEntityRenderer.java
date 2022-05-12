@@ -46,13 +46,7 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
 
     @Override
     public boolean shouldRender(StringKnotEntity entity, Frustum frustum, double x, double y, double z) {
-        if (entity.ignoreCameraFrustum) return true;
-        for (StringLink link : entity.getLinks()) {
-            if (link.primary != entity) continue;
-            if (link.secondary instanceof PlayerEntity) return true;
-            else if (link.secondary.shouldRender(x, y, z)) return true;
-        }
-        return super.shouldRender(entity, frustum, x, y, z);
+        return true;
     }
 
     public Identifier getTexture(StringKnotEntity StringKnotEntity) {
@@ -61,16 +55,6 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
 
     @Override
     public void render(StringKnotEntity stringKnotEntity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        // Render the knot
-        if (stringKnotEntity.shouldRenderKnot()) {
-            matrices.push();
-            Vec3d leashOffset = stringKnotEntity.method_30951(tickDelta).subtract(stringKnotEntity.getLerpedPos(tickDelta));
-            matrices.translate(leashOffset.x, leashOffset.y + 6.5 / 16f, leashOffset.z);
-            // The model is 6 px wide, but it should be rendered at 5px
-            matrices.scale(5 / 6f, 1, 5 / 6f);
-            matrices.pop();
-        }
-
         // Render the links
         List<StringLink> links = stringKnotEntity.getLinks();
         for (StringLink link : links) {
