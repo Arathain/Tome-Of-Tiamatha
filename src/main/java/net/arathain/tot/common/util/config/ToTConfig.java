@@ -11,6 +11,8 @@ public class ToTConfig implements Config {
     @Syncing
     public float stringHangAmount = 80.0F;
 
+    public boolean clientside_pg_clean = true;
+
     @Override
     public String getName() {
         return "tot";

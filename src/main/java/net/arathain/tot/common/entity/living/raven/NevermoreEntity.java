@@ -4,7 +4,6 @@ import net.arathain.tot.common.entity.living.goal.NevermoreLookAtTargetGoal;
 import net.arathain.tot.common.entity.living.goal.NevermoreYeetGoal;
 import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.init.ToTObjects;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -17,11 +16,9 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -32,15 +29,13 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TimeHelper;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.IAnimationTickable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -50,10 +45,10 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.UUID;
 
-public class NevermoreEntity extends MerchantEntity implements IAnimatable, Angerable {
+public class NevermoreEntity extends MerchantEntity implements IAnimatable, Angerable, IAnimationTickable {
     private int angerTime;
     private @Nullable UUID angryAt;
-    private static final UniformIntProvider ANGER_TIME_RANGE = TimeHelper.betweenSeconds(60, 790);
+    private static final UniformIntProvider ANGER_TIME_RANGE = TimeHelper.betweenSeconds(300, 1790);
     public static final TrackedData<Integer> ATTACK_STATE = DataTracker.registerData(NevermoreEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private final AnimationFactory factory = new AnimationFactory(this);
     private RevengeGoal revengeGoal;
@@ -73,7 +68,7 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
         this.goalSelector.add(9, new StopAndLookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
         this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
-        this.revengeGoal = new RevengeGoal(this);
+        this.revengeGoal = new RevengeGoal(this).setGroupRevenge();
         this.targetSelector.add(1, revengeGoal);
         this.targetSelector.add(3, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
     }
@@ -184,36 +179,26 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "controller", 5, this::predicate));
-        animationData.addAnimationController(new AnimationController<>(this, "attackController", 3, this::attackPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "controller", 3, this::predicate));
     }
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationBuilder animationBuilder = new AnimationBuilder();
         boolean isMoving = event.isMoving() || this.forwardSpeed != 0;
-        if(isMoving) {
-            animationBuilder.addAnimation("walk", true);
-        } else {
-            animationBuilder.addAnimation("idle", true);
+        if(this.getAttackState() == 1) {
+            animationBuilder.addAnimation("yeet", false);
+        }
+        if(this.getAttackState() == 0) {
+            if (isMoving) {
+                animationBuilder.addAnimation("walk", true);
+            } else if(!this.hasVehicle()) {
+                animationBuilder.addAnimation("idle", true);
+            }
         }
 
         if(!animationBuilder.getRawAnimationList().isEmpty()) {
             event.getController().setAnimation(animationBuilder);
         }
         return PlayState.CONTINUE;
-    }
-
-    private <E extends IAnimatable> PlayState attackPredicate(AnimationEvent<E> event) {
-        AnimationBuilder animationBuilder = new AnimationBuilder();
-
-        if(this.getAttackState() == 1) {
-            animationBuilder.addAnimation("yeet", false);
-        }
-
-        if(!animationBuilder.getRawAnimationList().isEmpty()) {
-            event.getController().setAnimation(animationBuilder);
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
     }
 
     @Override
@@ -252,5 +237,10 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
     }
     public SoundEvent getAttackSound() {
         return SoundEvents.ENTITY_IRON_GOLEM_ATTACK;
+    }
+
+    @Override
+    public int tickTimer() {
+        return age;
     }
 }

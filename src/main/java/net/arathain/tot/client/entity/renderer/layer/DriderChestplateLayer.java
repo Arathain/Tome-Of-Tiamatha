@@ -24,13 +24,15 @@ public class DriderChestplateLayer extends GeoLayerRenderer<DriderEntity> {
 
     @Override
     public void render(MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn, DriderEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if(!entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).isEmpty()) {
+        if(!entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).isEmpty() || TomeOfTiamatha.CONFIG.clientside_pg_clean) {
             Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/" + entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem().toString() + ".png");
+            if(entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).isEmpty() && TomeOfTiamatha.CONFIG.clientside_pg_clean) {
+                Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/pg_hahayes_default.png");
+            }
             RenderLayer armor = RenderLayer.getArmorCutoutNoCull(location);
             GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn));
             model.getBone("spider").get().setHidden(true);
             ((DriderEntityRenderer) driderEntityRenderer).isLayer = true;
-            //model.getBone("leftarm").get().setHidden(true);
             if (entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem() instanceof DyeableArmorItem) {
                 int i = ((DyeableArmorItem)entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem()).getColor((entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST)));
                 float f = (float)(i >> 16 & 0xFF) / 255.0F;
