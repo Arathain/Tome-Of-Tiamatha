@@ -29,6 +29,7 @@ public class ToTObjects {
     private static final Map<Item, Identifier> ITEMS = new LinkedHashMap<>();
 
     public static final TagKey<Item> MEAT = TagKey.of(Registry.ITEM_KEY, new Identifier(TomeOfTiamatha.MODID, "meat"));
+    public static final TagKey<Item> NO_DRIDER = TagKey.of(Registry.ITEM_KEY, new Identifier(TomeOfTiamatha.MODID, "drider_non_equippable"));
     //registry starts here
     public static final Block HANGING_WEB = createBlock("hanging_web", new HangingWebBlock(FabricBlockSettings.of(Material.COBWEB).noCollision().requiresTool().strength(4.0F).nonOpaque()), true);
     public static final Block WEAVEKIN_EGG = createBlock("weavekin_egg", new WeaverkinEggBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).requiresTool().strength(4.0F).nonOpaque()), true);

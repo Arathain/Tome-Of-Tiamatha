@@ -16,8 +16,14 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ElytraItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,6 +42,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+    }
+    @Inject(method = "canEquip", at = @At("HEAD"), cancellable = true)
+    public void tot$canEquip(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if(stack.isIn(ToTObjects.NO_DRIDER)) {
+            cir.setReturnValue(false);
+        }
     }
     @Inject(method = "onDeath", at = @At("HEAD"))
     private void tot$remorse(DamageSource source, CallbackInfo ci) {

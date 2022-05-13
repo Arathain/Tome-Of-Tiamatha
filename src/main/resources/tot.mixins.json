@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ArmorItemMixin",
+    "ElytraItemMixin",
     "EntityMixin",
     "EntityTrackerEntryMixin",
     "IronGolemEntityMixin",
@@ -12,6 +13,7 @@
     "LivingEntityMixin",
     "NbtHelperMixin",
     "PlayerEntityMixin",
+    "PlayerScreenHandlerMixin",
     "RaiderEntityMixin",
     "SpiderEntityMixin",
     "TargetGoalMixin",
@@ -19,9 +21,9 @@
     "VillagerEntityMixin"
   ],
   "client": [
-    "MinecraftClientMixin",
     "AbstractClientPlayerEntityMixin",
     "InventoryScreenMixin",
+    "MinecraftClientMixin",
     "PlayerEntityRendererMixin"
   ],
   "injectors": {

@@ -1,6 +1,7 @@
 package net.arathain.tot.common.entity.living.raven;
 
 import net.arathain.tot.common.entity.living.goal.NevermoreLookAtTargetGoal;
+import net.arathain.tot.common.entity.living.goal.NevermoreSummonGoal;
 import net.arathain.tot.common.entity.living.goal.NevermoreYeetGoal;
 import net.arathain.tot.common.init.ToTComponents;
 import net.arathain.tot.common.init.ToTObjects;
@@ -63,6 +64,7 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
         this.goalSelector.add(1, new NevermoreLookAtTargetGoal(this));
         this.goalSelector.add(2, new LookAtCustomerGoal(this));
         this.goalSelector.add(3, new NevermoreYeetGoal(this));
+        this.goalSelector.add(3, new NevermoreSummonGoal(this));
         this.goalSelector.add(5, new GoToWalkTargetGoal(this, 0.35D));
         this.goalSelector.add(8, new WanderAroundFarGoal(this, 0.35D));
         this.goalSelector.add(9, new StopAndLookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
@@ -108,7 +110,7 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
     @Override
     public ActionResult interactMob(PlayerEntity customer, Hand hand) {
         ItemStack itemStack = customer.getStackInHand(hand);
-        if (this.isAlive() && !this.hasCustomer() && !this.isBaby() && itemStack.isEmpty()) {
+        if (this.isAlive() && !this.hasCustomer() && !this.isBaby() && itemStack.isEmpty() && this.getTarget() == null) {
             if (hand == Hand.MAIN_HAND) {
                 customer.incrementStat(Stats.TALKED_TO_VILLAGER);
             }
@@ -185,7 +187,7 @@ public class NevermoreEntity extends MerchantEntity implements IAnimatable, Ange
         AnimationBuilder animationBuilder = new AnimationBuilder();
         boolean isMoving = event.isMoving() || this.forwardSpeed != 0;
         if(this.getAttackState() == 1) {
-            animationBuilder.addAnimation("yeet", false);
+            animationBuilder.addAnimation("yeet", true);
         }
         if(this.getAttackState() == 0) {
             if (isMoving) {

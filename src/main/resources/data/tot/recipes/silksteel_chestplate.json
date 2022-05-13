@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "BSB",
+    "#S#"
+  ],
+  "key": {
+    "#": {
+      "item": "tot:steelsilk"
+    },
+    "B": {
+      "item": "minecraft:black_dye"
+    },
+    "S": {
+      "item": "tot:silksteel_ingot"
+    }
+  },
+  "result": {
+    "item": "tot:silksteel_chestplate"
+  }
+}
