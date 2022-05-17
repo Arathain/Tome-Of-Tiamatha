@@ -35,6 +35,7 @@ import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.example.item.JackInTheBoxItem;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.IAnimationTickable;
 import software.bernie.geckolib3.core.PlayState;
