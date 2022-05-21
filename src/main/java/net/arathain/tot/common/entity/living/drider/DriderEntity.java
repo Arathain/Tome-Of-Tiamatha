@@ -8,6 +8,7 @@ import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -68,6 +69,11 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.ignoreCameraFrustum = false;
         this.stepHeight = 2f;
         this.setPersistent();
+    }
+
+    @Override
+    protected EntityNavigation createNavigation(World world) {
+        return new DriderEntityNavigation(this, world);
     }
 
     public void setPlayer(boolean player) {

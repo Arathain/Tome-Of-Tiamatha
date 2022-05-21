@@ -87,10 +87,10 @@ public class ArachneEmitShockwaveGoal extends Goal {
                         BlockPos abovePos = new BlockPos(pos).up();
                         BlockState state = world.getBlockState(pos);
                         BlockState stateAbove = world.getBlockState(abovePos);
-                        if (state.getMaterial() != Material.AIR && state.isOpaqueFullCube(world, pos) && world.getBlockEntity(abovePos) == null && !stateAbove.getMaterial().blocksMovement()) {
-                            FallingBlockEntity fallingBlock = FallingBlockEntity.fall(world, pos.add(0, 1, 0), state);
+                        if (state.getMaterial() != Material.AIR && state.isOpaqueFullCube(world, pos) && world.getBlockEntity(abovePos) == null && !stateAbove.getMaterial().blocksMovement() && !world.isClient) {
+                            FallingBlockEntity fallingBlock = FallingBlockEntity.fall(world, pos, state);
                             fallingBlock.setPosition(hitX + 0.5, hitY + 1, hitZ + 0.5);
-                            fallingBlock.setVelocity(0, 0.4 + factor * 0.2, 0);
+                            fallingBlock.setVelocity(0, 0.6 + factor * 0.2, 0);
                             world.spawnEntity(fallingBlock);
                         }
                     }

@@ -3,6 +3,7 @@ package net.arathain.tot.common.entity.living.drider.weaver;
 import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SandBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -11,6 +12,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -110,6 +113,9 @@ public class WebbingEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+        if(this.getFirstPassenger() instanceof LivingEntity) {
+            ((LivingEntity) this.getFirstPassenger()).addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 5, 5, true, true));
+        }
         if(ToTUtil.isDrider(this.getFirstPassenger())) {
             this.getWorld().addBlockBreakParticles(this.getBlockPos(), Blocks.COBWEB.getDefaultState());
             this.getFirstPassenger().dismountVehicle();
