@@ -46,7 +46,7 @@ public class WeaverkinEggBlockEntity extends BlockEntity implements IAnimatable 
         if (tickerWorld != null) {
             if(breakTicker >= 120) {
                 WeavechildEntity weavekin = new WeavechildEntity(ToTEntities.WEAVECHILD, tickerWorld);
-                weavekin.setPos(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
+                weavekin.setPos(pos.getX() + 0.5f, pos.getY() + 0.5, pos.getZ() + 0.5f);
                 weavekin.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000, 1));
                 tickerWorld.spawnEntity(weavekin);
                 tickerWorld.breakBlock(pos, false);
