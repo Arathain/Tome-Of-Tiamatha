@@ -1,0 +1,42 @@
+{
+  "name": "tot:floor_two_hallway_pool",
+  "fallback": "tot:end",
+  "elements": [
+    {
+      "weight": 25,
+      "element": {
+        "location": "tot:hallway_floor_two_long",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 30,
+      "element": {
+        "location": "tot:hallway_short_floor2",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 20,
+      "element": {
+        "location": "tot:trap_room1_floor2",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 20,
+      "element": {
+        "location": "tot:trap_room2_floor2",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

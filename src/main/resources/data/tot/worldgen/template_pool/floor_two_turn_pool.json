@@ -1,0 +1,42 @@
+{
+  "name": "tot:floor_two_turn_pool",
+  "fallback": "tot:end",
+  "elements": [
+    {
+      "weight": 30,
+      "element": {
+        "location": "tot:crosssection_4_floor2",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 25,
+      "element": {
+        "location": "tot:hallway_t_floor2",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 20,
+      "element": {
+        "location": "tot:turn_floor_two_2out",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 5,
+      "element": {
+        "location": "tot:stair_floor_3",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

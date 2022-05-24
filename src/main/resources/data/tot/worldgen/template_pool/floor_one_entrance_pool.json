@@ -1,0 +1,15 @@
+{
+  "name": "tot:floor_one_entrance_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "tot:entrance_bottom",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

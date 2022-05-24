@@ -1,0 +1,60 @@
+{
+  "name": "tot:floor_one_hallway_pool",
+  "fallback": "tot:end",
+  "elements": [
+    {
+      "weight": 21,
+      "element": {
+        "location": "tot:hallway_floor_one_short",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 19,
+      "element": {
+        "location": "tot:hallway_floor_one_short2",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 18,
+      "element": {
+        "location": "tot:hallway_floor_one_long",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 12,
+      "element": {
+        "location": "tot:trap_room1_floor1",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 10,
+      "element": {
+        "location": "tot:trap_room2_floor1",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 11,
+      "element": {
+        "location": "tot:trap_room3_floor1",
+        "processors": "tot:decayer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
