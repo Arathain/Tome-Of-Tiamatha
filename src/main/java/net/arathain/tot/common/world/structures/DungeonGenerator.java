@@ -77,11 +77,11 @@ public class DungeonGenerator {
 
             Box box = new Box(centerX - 280, y - 280, centerZ - 280, centerX + 280 + 1, y + 280 + 1, centerZ + 280 + 1);
             StructurePoolGenerator structurePoolGenerator = new StructurePoolGenerator(registry, size, pieceFactory, chunkGenerator, structureManager, list, chunkRandom);
-            structurePoolGenerator.structurePieces.addLast(new StoneholmShapedPoolStructurePiece(poolStructurePiece, new MutableObject<>(VoxelShapes.combineAndSimplify(VoxelShapes.cuboid(box), VoxelShapes.cuboid(Box.from(pieceBoundingBox)), BooleanBiFunction.ONLY_FIRST)), 0, null));
+            structurePoolGenerator.structurePieces.addLast(new ShapedPoolStructurePiece(poolStructurePiece, new MutableObject<>(VoxelShapes.combineAndSimplify(VoxelShapes.cuboid(box), VoxelShapes.cuboid(Box.from(pieceBoundingBox)), BooleanBiFunction.ONLY_FIRST)), 0, null));
 
             // Go through all structure pieces in the project.
             while (!structurePoolGenerator.structurePieces.isEmpty()) {
-                StoneholmShapedPoolStructurePiece shapedPoolStructurePiece = structurePoolGenerator.structurePieces.removeFirst();
+                ShapedPoolStructurePiece shapedPoolStructurePiece = structurePoolGenerator.structurePieces.removeFirst();
                 structurePoolGenerator.generatePiece(shapedPoolStructurePiece.piece, shapedPoolStructurePiece.pieceShape, shapedPoolStructurePiece.currentSize, shapedPoolStructurePiece.sourceBlockPos, heightLimitView);
             }
             list.forEach(structurePiecesCollector::addPiece);
@@ -100,7 +100,7 @@ public class DungeonGenerator {
         final StructureManager structureManager;
         final List<? super PoolStructurePiece> children;
         final Random random;
-        final Deque<StoneholmShapedPoolStructurePiece> structurePieces = Queues.newArrayDeque();
+        final Deque<ShapedPoolStructurePiece> structurePieces = Queues.newArrayDeque();
 
         final StructurePool end_cap;
 
@@ -248,7 +248,7 @@ public class DungeonGenerator {
                     this.children.add(poolStructurePiece);
 
                     if (currentSize + 1 <= this.maxSize) // Whilst this is not the end.
-                        this.structurePieces.addLast(new StoneholmShapedPoolStructurePiece(poolStructurePiece, structureShape, currentSize + 1, structureBlockPos));
+                        this.structurePieces.addLast(new ShapedPoolStructurePiece(poolStructurePiece, structureShape, currentSize + 1, structureBlockPos));
 
                     return true;
                 }
@@ -301,7 +301,7 @@ public class DungeonGenerator {
                     this.children.add(poolStructurePiece);
 
                     if (currentSize + 1 <= this.maxSize) // Whilst this is not the end.
-                        this.structurePieces.addLast(new StoneholmShapedPoolStructurePiece(poolStructurePiece, structureShape, currentSize + 1, structureBlockPos));
+                        this.structurePieces.addLast(new ShapedPoolStructurePiece(poolStructurePiece, structureShape, currentSize + 1, structureBlockPos));
 
                     return true;
                 }
@@ -311,6 +311,6 @@ public class DungeonGenerator {
         }
     }
 
-    record StoneholmShapedPoolStructurePiece(PoolStructurePiece piece, MutableObject<VoxelShape> pieceShape, int currentSize, BlockPos sourceBlockPos) {}
+    record ShapedPoolStructurePiece(PoolStructurePiece piece, MutableObject<VoxelShape> pieceShape, int currentSize, BlockPos sourceBlockPos) {}
 
 }

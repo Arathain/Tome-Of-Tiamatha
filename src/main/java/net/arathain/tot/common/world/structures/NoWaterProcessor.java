@@ -25,13 +25,6 @@ public class NoWaterProcessor extends StructureProcessor {
         if (structureBlockInfoWorld.state.contains(Properties.WATERLOGGED) && !chunk.getFluidState(structureBlockInfoWorld.pos).isEmpty()) {
             chunk.setBlockState(structureBlockInfoWorld.pos, structureBlockInfoWorld.state.rotate(data.getRotation()).with(Properties.WATERLOGGED, false), false);
         }
-
-        if(chunk.getBlockState(structureBlockInfoWorld.pos).getBlock() == Blocks.WATER) {
-            chunk.setBlockState(structureBlockInfoWorld.pos,Blocks.AIR.getDefaultState(),false);
-        }
-
-        System.err.println("No Water thingy doing something");
-
         return structureBlockInfoWorld;
     }
 
