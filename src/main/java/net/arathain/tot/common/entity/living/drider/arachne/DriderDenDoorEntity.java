@@ -16,11 +16,12 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class DriderDenDoorEntity extends Entity {
     private boolean open = false;
+    private boolean gate = false;
+    private int closeQueue = -1;
     private static final TrackedData<BlockPos> TARGET_POS = DataTracker.registerData(DriderDenDoorEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
     private int openTicks = 0;
     public DriderDenDoorEntity(EntityType<?> entityType, World world) {
@@ -41,6 +42,21 @@ public class DriderDenDoorEntity extends Entity {
         }
         return super.interact(player, hand);
     }
+    public void close() {
+        this.open = false;
+    }
+    public void open() {
+        this.open = true;
+        this.closeQueue = 6;
+    }
+    public void openPerm() {
+        this.open = true;
+    }
+    public void openCasual() {
+        if(!this.gate) {
+            this.open = true;
+        }
+    }
 
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
@@ -49,7 +65,10 @@ public class DriderDenDoorEntity extends Entity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        this.remove(RemovalReason.DISCARDED);
+        if(source.isSourceCreativePlayer()) {
+            this.remove(RemovalReason.DISCARDED);
+            return true;
+        }
         return false;
     }
 
@@ -77,10 +96,19 @@ public class DriderDenDoorEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+        if(this.age % 10 == 0 && !world.isClient) {
+            if(closeQueue > 0) {
+                closeQueue--;
+            }
+            if(closeQueue == 0) {
+                open = false;
+                closeQueue = -1;
+            }
+        }
         if(this.getTargetPos().equals(BlockPos.ORIGIN)) {
             this.setTargetPos(this.getBlockPos());
         }
-        if(open) {
+        if(!open) {
             if(openTicks > 0) {
                 openTicks--;
             }
@@ -103,6 +131,8 @@ public class DriderDenDoorEntity extends Entity {
     protected void readCustomDataFromNbt(NbtCompound nbt) {
         setTargetPos(NbtHelper.toBlockPos(nbt.getCompound("target_pos")));
         open = nbt.getBoolean("open");
+        gate = nbt.getBoolean("gate");
+        closeQueue = nbt.getInt("closeQueue");
         this.openTicks = nbt.getInt("openTicks");
     }
 
@@ -110,6 +140,8 @@ public class DriderDenDoorEntity extends Entity {
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.put("target_pos", NbtHelper.fromBlockPos(this.getTargetPos()));
         nbt.putBoolean("open", open);
+        nbt.putBoolean("gate", gate);
+        nbt.putInt("closeQueue", closeQueue);
         nbt.putInt("openTicks", this.openTicks);
     }
 

@@ -6,6 +6,7 @@ import net.arathain.tot.common.entity.living.goal.ArachneAttackLogicGoal;
 import net.arathain.tot.common.entity.living.goal.ArachneEmitShockwaveGoal;
 import net.arathain.tot.common.entity.living.goal.ArachneRevengeGoal;
 import net.arathain.tot.common.init.ToTEffects;
+import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.init.ToTWaves;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.CobwebBlock;
@@ -122,7 +123,7 @@ public class ArachneEntity extends DriderEntity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         if(!source.isOutOfWorld()) {
-            amount = MathHelper.clamp(amount, 0, 10);
+            amount = MathHelper.clamp(amount, 0, 8);
         }
         if(source.getAttacker() instanceof LivingEntity attacker && !this.world.isClient) {
             this.getWorld().getEntitiesByClass(SpiderEntity.class, this.getBoundingBox().expand(20), spiderEntity -> isAlive()).forEach(spooder -> {spooder.setTarget(attacker);});
@@ -240,9 +241,8 @@ public class ArachneEntity extends DriderEntity {
             waveTick();
         }
         if(getFireTicks() > 10) {
-            setFireTicks(10);
+            setFireTicks(8);
         }
-
         if (age % 5 == 0 && getHealth() < getMaxHealth() && isResting()) {
             heal(2);
         }
@@ -252,10 +252,12 @@ public class ArachneEntity extends DriderEntity {
                 if(this.getTarget() == null && forwardSpeed == 0 && isAtRestingPos()) {
                     setResting(true);
                     setWave(0);
+                    world.getOtherEntities(this, this.getBoundingBox().expand(100), entity -> entity instanceof DriderDenDoorEntity).forEach(entity -> ((DriderDenDoorEntity) entity).openCasual());
                 }
 
-            } else if(getTarget() != null && squaredDistanceTo(getTarget()) < 30) {
+            } else if(getTarget() != null && squaredDistanceTo(getTarget()) < 40) {
                 setResting(false);
+                world.getOtherEntities(this, this.getBoundingBox().expand(100), entity -> entity instanceof DriderDenDoorEntity).forEach(entity -> ((DriderDenDoorEntity) entity).close());
             }
         }
         if(isResting()) {
@@ -287,6 +289,7 @@ public class ArachneEntity extends DriderEntity {
 
     @Override
     public void onDeath(DamageSource source) {
+        world.getOtherEntities(this, this.getBoundingBox().expand(100), entity -> entity instanceof DriderDenDoorEntity).forEach(entity -> ((DriderDenDoorEntity) entity).openPerm());
         world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(entity -> ((ServerPlayerEntity) entity).removeStatusEffect(ToTEffects.BROODS_CURSE));
         super.onDeath(source);
     }
@@ -316,7 +319,7 @@ public class ArachneEntity extends DriderEntity {
 
                 BlockPos offsetPos = new BlockPos(x, this.getRestingPos().get().getY(), z);
                 for (int h = -10; h < 10; h++) {
-                    if ((world.getBlockState(offsetPos.add(0, h, 0)).isAir() || world.getBlockState(offsetPos.add(0, h, 0)).getBlock() instanceof CobwebBlock) && (world.getBlockState(offsetPos.add(0, h - 1, 0)).isSolidBlock(world, offsetPos.add(0, h - 1, 0)))) {
+                    if ((world.getBlockState(offsetPos.add(0, h, 0)).isAir() || world.getBlockState(offsetPos.add(0, h, 0)).getBlock() instanceof CobwebBlock) && (world.getBlockState(offsetPos.add(0, h - 1, 0)).isSolidBlock(world, offsetPos.add(0, h - 1, 0)) && world.getBlockState(offsetPos.add(0, h - 1, 0)).isIn(ToTObjects.ARACHNE_SPAWNABLE))) {
                         enemy.setPosition(offsetPos.getX(), offsetPos.getY() + h, offsetPos.getZ());
                         enemy.setPersistent();
                         world.spawnEntity(enemy);
@@ -354,7 +357,7 @@ public class ArachneEntity extends DriderEntity {
                     if(getWave() >= 8) setWave(0);
                     if(getWave() > wave || (wave != 0 && getWave() == 0)) {
                         waveTimer = 0;
-                        waveCooldown = 100;
+                        waveCooldown = 60;
                         this.playSound(SoundEvents.ENTITY_SPIDER_DEATH, 1.0f, 1.2f);
                         this.playSound(SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.0f, 1.2f);
                     }

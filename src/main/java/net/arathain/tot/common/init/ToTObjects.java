@@ -22,6 +22,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,9 +35,10 @@ public class ToTObjects {
 
     public static final TagKey<Item> MEAT = TagKey.of(Registry.ITEM_KEY, new Identifier(TomeOfTiamatha.MODID, "meat"));
     public static final TagKey<Item> NO_DRIDER = TagKey.of(Registry.ITEM_KEY, new Identifier(TomeOfTiamatha.MODID, "drider_non_equippable"));
+    public static final TagKey<Block> ARACHNE_SPAWNABLE = TagKey.of(Registry.BLOCK_KEY, new Identifier(TomeOfTiamatha.MODID, "arachne_spawnable"));
     //registry starts here
-    public static final Block HANGING_WEB = createBlock("hanging_web", new HangingWebBlock(FabricBlockSettings.of(Material.COBWEB).noCollision().requiresTool().strength(4.0F).nonOpaque()), true);
-    public static final Block WEAVEKIN_EGG = createBlock("weavekin_egg", new WeaverkinEggBlock(FabricBlockSettings.of(Material.SOLID_ORGANIC).requiresTool().strength(4.0F).nonOpaque()), true);
+    public static final Block HANGING_WEB = createBlock("hanging_web", new HangingWebBlock(QuiltBlockSettings.of(Material.COBWEB).noCollision().requiresTool().strength(4.0F).nonOpaque()), true);
+    public static final Block WEAVEKIN_EGG = createBlock("weavekin_egg", new WeaverkinEggBlock(QuiltBlockSettings.of(Material.SOLID_ORGANIC).requiresTool().strength(4.0F).nonOpaque()), true);
     public static final Item SILKSTEEL_HELMET = createItem("silksteel_helmet", new SilksteelArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.HEAD, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
     public static final Item SILKSTEEL_CHESTPLATE = createItem("silksteel_chestplate", new SilksteelArmorItem(ToTArmorMaterials.SILKSTEEL, EquipmentSlot.CHEST, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
     public static final Item SYNTHESIS_SCEPTRE = createItem("synthesis_sceptre", new SynthesisScepterItem(ToolMaterials.NETHERITE, new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.RARE)));
@@ -44,7 +47,7 @@ public class ToTObjects {
     public static final Item SILKSTEEL_SWORD = createItem("silksteel_sword", new SilksteelSwordItem(ToTToolMaterials.SILKSTEEL, 1, -2.0f, new Item.Settings().group(TomeOfTiamatha.GROUP)));
     public static final Item STEELSILK = createItem("steelsilk", new Item(new Item.Settings().group(TomeOfTiamatha.GROUP)));
     public static final Item GAZING_LILY = createItem("gazing_lily", new GazingLilyItem(new Item.Settings().group(TomeOfTiamatha.GROUP).rarity(Rarity.UNCOMMON)));
-    public static final Item SILKSTEEL_SHIELD = createItem("silksteel_shield", new SilksteelShieldItem(new FabricItemSettings().group(TomeOfTiamatha.GROUP).maxDamage(1600), 60, 8));
+    public static final Item SILKSTEEL_SHIELD = createItem("silksteel_shield", new SilksteelShieldItem(new QuiltItemSettings().group(TomeOfTiamatha.GROUP).maxDamage(1600), 60, 8));
 
     //TODO make this deal self-damage
     public static final Item REMORSE = createItem("remorse", new SwordItem(ToTToolMaterials.SILKSTEEL, 1, -2.2f, new Item.Settings().group(TomeOfTiamatha.GROUP)));

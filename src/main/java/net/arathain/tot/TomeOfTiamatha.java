@@ -1,18 +1,18 @@
 package net.arathain.tot;
 
 import draylar.omegaconfig.OmegaConfig;
-import net.arathain.tot.common.init.ToTEffects;
-import net.arathain.tot.common.init.ToTEntities;
-import net.arathain.tot.common.init.ToTObjects;
-import net.arathain.tot.common.init.ToTScaleTypes;
+import net.arathain.tot.common.init.*;
 import net.arathain.tot.common.network.packet.DriderComponentPacket;
 import net.arathain.tot.common.network.packet.RemorsePacket;
 import net.arathain.tot.common.util.ToTCallbacks;
+import net.arathain.tot.common.util.ToTUtil;
 import net.arathain.tot.common.util.config.ToTConfig;
-import net.arathain.tot.common.init.ToTStructures;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
@@ -38,6 +38,11 @@ public class TomeOfTiamatha implements ModInitializer {
 		ToTStructures.init();
 		ServerPlayNetworking.registerGlobalReceiver(DriderComponentPacket.ID, DriderComponentPacket::handle);
 		ServerPlayNetworking.registerGlobalReceiver(RemorsePacket.ID, RemorsePacket::handle);
+		ServerPlayerEvents.AFTER_RESPAWN.register(((oldPlayer, newPlayer, alive) -> {
+			if(ToTUtil.isDrider(oldPlayer) || ToTUtil.isDrider(newPlayer)) {
+				DriderComponentPacket.scale(newPlayer);
+			}
+		}));
 		UseBlockCallback.EVENT.register(ToTCallbacks::stringUseEvent);
 	}
 }

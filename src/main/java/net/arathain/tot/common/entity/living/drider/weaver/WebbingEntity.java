@@ -88,7 +88,7 @@ public class WebbingEntity extends Entity {
         }
         float f = 0.0f;
         float g = (float) ((this.isRemoved() ? (double) 0.01f : this.getMountedHeightOffset()) + passenger.getHeightOffset());
-        passenger.setPosition(this.getX(), this.getY() - 0.3, this.getZ());
+        passenger.setPosition(this.getX(), this.getY(), this.getZ());
         passenger.setYaw(MathHelper.clamp(passenger.getYaw(), this.getYaw() - 10f, this.getYaw() + 10f));
         passenger.setPitch(MathHelper.clamp(passenger.getPitch(), this.getPitch() -10f, this.getPitch() + 10f));
         passenger.setHeadYaw(MathHelper.clamp(passenger.getHeadYaw(), this.getYaw() - 10f, this.getYaw() + 10f));

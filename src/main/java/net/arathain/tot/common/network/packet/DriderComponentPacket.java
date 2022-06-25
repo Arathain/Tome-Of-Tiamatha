@@ -36,6 +36,12 @@ public class DriderComponentPacket {
             handleDridering(player);
         });
     }
+    public static void scale (PlayerEntity player) {
+        ScaleData width = ToTScaleTypes.MODIFY_WIDTH_TYPE.getScaleData(player);
+        ScaleData height = ToTScaleTypes.MODIFY_HEIGHT_TYPE.getScaleData(player);
+        width.setScale(width.getBaseScale() * DRIDER_WIDTH);
+        height.setScale(height.getBaseScale() * DRIDER_HEIGHT);
+    }
     @SuppressWarnings("ConstantConditions")
     public static void handleDridering(PlayerEntity player) {
         ToTComponents.DRIDER_COMPONENT.maybeGet(player).ifPresent(driderComponent -> {
@@ -43,16 +49,15 @@ public class DriderComponentPacket {
                 if(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() < 3) {
                     player.addStatusEffect( new StatusEffectInstance(ToTEffects.BROODS_CURSE, 1200, player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() + 1, player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() > 3, true));
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0));
+                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 80, 0));
                     driderComponent.setStage(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() + 1);
                     if(driderComponent.getStage() == 0) {
                         driderComponent.updateVariant();
                     }
                 } else if(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() >= 3) {
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 60, 0));
-                    ScaleData width = ToTScaleTypes.MODIFY_WIDTH_TYPE.getScaleData(player);
-                    ScaleData height = ToTScaleTypes.MODIFY_HEIGHT_TYPE.getScaleData(player);
-                    width.setScale(width.getBaseScale() * DRIDER_WIDTH);
-                    height.setScale(height.getBaseScale() * DRIDER_HEIGHT);
+                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0));
+                    scale(player);
                     driderComponent.setStage(player.getStatusEffect(ToTEffects.BROODS_CURSE).getAmplifier() + 1);
                     driderComponent.setDrider(true);
                     player.removeStatusEffect(ToTEffects.BROODS_CURSE);

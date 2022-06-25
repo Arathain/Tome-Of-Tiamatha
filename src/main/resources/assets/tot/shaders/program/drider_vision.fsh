@@ -16,7 +16,7 @@ float adjust(float x, float a) {
 }
 
 vec3 adjust(vec3 toAdjust, float amount) {
-    return vec3(adjust(toAdjust.r, amount), adjust(toAdjust.g, amount), adjust(toAdjust.b, amount));
+    return vec3(adjust(toAdjust.r, amount), adjust(toAdjust.g * 0.85, amount), adjust(toAdjust.b * 0.95, amount));
 }
 
 void main() {

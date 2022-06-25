@@ -1,5 +1,6 @@
 package net.arathain.tot.common.entity.living.goal;
 
+import net.arathain.tot.common.entity.living.drider.arachne.DriderDenDoorEntity;
 import net.arathain.tot.common.entity.living.drider.weaver.WeaverEntity;
 import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.minecraft.block.Block;
@@ -41,9 +42,12 @@ public class WeaverDepositWebbingGoal extends MoveToTargetPosGoal {
     @Override
     public void tick() {
         if(obj.hasPassengers()) {
+            if(obj.age % 5 ==0) {
+                obj.world.getOtherEntities(obj, obj.getBoundingBox().expand(4), entity -> entity instanceof DriderDenDoorEntity).forEach(entity -> ((DriderDenDoorEntity) entity).open());
+            }
             BlockPos blockPos = this.obj.getBlockPos();
             BlockPos blockPos2 = this.tweakToProperPos(blockPos, obj.getWorld());
-            if (this.hasReached() && blockPos2 != null) {
+            if ((this.hasReached() && blockPos2 != null) || getTargetPos().isWithinDistance(obj.getBlockPos(), this.getDesiredSquaredDistanceToTarget())) {
                 obj.getFirstPassenger().setPos(getTargetPos().getX() + 0.5f, getTargetPos().getY() + 1, getTargetPos().getZ() + 0.5f);
                 ((WebbingEntity) obj.getFirstPassenger()).setDeposited(true);
                 ((LivingEntity) obj.getFirstPassenger().getFirstPassenger()).addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 10, 10));
@@ -66,7 +70,7 @@ public class WeaverDepositWebbingGoal extends MoveToTargetPosGoal {
 
     @Override
     public double getDesiredSquaredDistanceToTarget() {
-        return 1;
+        return 2;
     }
 
     @Override

@@ -10,6 +10,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.pathing.EntityNavigation;
+import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
@@ -97,6 +99,11 @@ public class WeaverEntity extends DriderEntity implements RangedAttackMob {
         this.targetSelector.add(1, new RevengeGoal(this, SpiderEntity.class).setGroupRevenge());
         this.targetSelector.add(2, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
         this.targetSelector.add(2, new TargetGoal<>(this, IronGolemEntity.class, true));
+    }
+
+    @Override
+    protected EntityNavigation createNavigation(World world) {
+        return new MobNavigation(this, world);
     }
 
     @Override
