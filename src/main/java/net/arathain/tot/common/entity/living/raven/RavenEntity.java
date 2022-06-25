@@ -22,10 +22,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.GhastEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.HorseBaseEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -37,6 +34,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
@@ -64,6 +62,9 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         super(type, world);
         moveControl = new FlightMoveControl(this, 90, false);
     }
+    public float maxWingDeviation;
+    public float prevMaxWingDeviation;
+    private float whuhhuh = 1.0f;
     @Override
     protected void initGoals() {
         goalSelector.add(1, new SwimGoal(this));
@@ -242,9 +243,20 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
 
     @Override
     protected void addFlapEffects() {
-        playSound(SoundEvents.ENTITY_PARROT_FLY, 0.15f, 1);
+        if(!isSitting())
+            playSound(SoundEvents.ENTITY_PARROT_FLY, 0.15f, 1);
+        this.whuhhuh = this.field_28627 + this.maxWingDeviation / 2.0f;
     }
-
+    @Override
+    public void tickMovement() {
+        super.tickMovement();
+        this.flapWings();
+    }
+    private void flapWings() {
+        this.prevMaxWingDeviation = this.maxWingDeviation;
+        this.maxWingDeviation += (float)(this.onGround || this.hasVehicle() ? -1 : 4) * 0.3f;
+        this.maxWingDeviation = MathHelper.clamp(this.maxWingDeviation, 0.0f, 1.0f);
+    }
     @Override
     public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;

@@ -5,10 +5,12 @@ import net.arathain.tot.common.entity.living.entityinterface.Broodchild;
 import net.arathain.tot.common.entity.living.goal.ObedientRevengeGoal;
 import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.util.ToTUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
@@ -17,6 +19,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -48,6 +51,13 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
         this.targetSelector.add(2, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
         this.targetSelector.add(2, new TargetGoal<>(this, IronGolemEntity.class, 10, true, false, golem -> true));
     }
+    @Override
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+        return false;
+    }
+
+    @Override
+    protected void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {}
 
     @Override
     public void tick() {

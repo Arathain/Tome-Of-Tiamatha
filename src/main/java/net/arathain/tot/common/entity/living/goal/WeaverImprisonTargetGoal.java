@@ -23,7 +23,7 @@ public class WeaverImprisonTargetGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        return obj.getTarget() != null && obj.getTarget().hasStatusEffect(ToTEffects.BROODS_CURSE) && obj.getTarget().getStatusEffect(ToTEffects.BROODS_CURSE).getDuration() < 400;
+        return obj.getTarget() != null && obj.getTarget().hasStatusEffect(ToTEffects.BROODS_CURSE) && obj.getTarget().getStatusEffect(ToTEffects.BROODS_CURSE).getDuration() < 1200;
     }
 
     @Override

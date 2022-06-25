@@ -5,6 +5,7 @@ import net.arathain.tot.common.entity.living.goal.DriderAttackGoal;
 import net.arathain.tot.common.entity.living.goal.DriderShieldGoal;
 import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.util.ToTUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -33,6 +34,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
@@ -70,6 +72,14 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.stepHeight = 2f;
         this.setPersistent();
     }
+
+    @Override
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+        return false;
+    }
+
+    @Override
+    protected void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {}
 
     @Override
     protected EntityNavigation createNavigation(World world) {

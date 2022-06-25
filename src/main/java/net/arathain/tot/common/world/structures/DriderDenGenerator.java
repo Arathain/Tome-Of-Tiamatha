@@ -33,15 +33,15 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class DungeonGenerator {
+public class DriderDenGenerator {
 
 
     public static Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> generate(StructurePiecesGeneratorFactory.Context<StructurePoolFeatureConfig> inContext, PieceFactory pieceFactory, BlockPos pos) {
-        int size = 50;
+        int size = 30;
 
         DynamicRegistryManager registryManager = inContext.registryManager();
         Registry<StructurePool> registry = registryManager.get(Registry.STRUCTURE_POOL_KEY);
-        StructurePool structurePool = registry.get(DungeonStructure.START_POOL);
+        StructurePool structurePool = registry.get(DriderDenStructure.START_POOL);
 
         ChunkRandom chunkRandom = new ChunkRandom(new LegacySimpleRandom(0L));
         chunkRandom.setCarverSeed(inContext.seed(), inContext.chunkPos().x, inContext.chunkPos().z);

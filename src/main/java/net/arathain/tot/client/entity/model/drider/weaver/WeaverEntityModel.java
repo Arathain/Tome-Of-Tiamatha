@@ -2,12 +2,15 @@ package net.arathain.tot.client.entity.model.drider.weaver;
 
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.living.drider.weaver.WeaverEntity;
+import net.coderbot.iris.Iris;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
+import org.quiltmc.loader.api.QuiltLoader;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
@@ -41,7 +44,7 @@ public class WeaverEntityModel extends AnimatedTickingGeoModel<WeaverEntity> {
         leftGlove.setHidden(entity.getEquippedStack(EquipmentSlot.CHEST).isEmpty());
 
         if (head != null) {
-            head.setRotationX(head.getRotationX() + (extraData.headPitch * (float) Math.PI / 180F));
+            head.setRotationX(head.getRotationX() + (extraData.headPitch * (float) Math.PI / 180F * (QuiltLoader.isModLoaded("iris") && Iris.getIrisConfig().areShadersEnabled() ? 0.5f : 1)));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if(leftArm != null) {

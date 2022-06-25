@@ -1,10 +1,10 @@
 {
-  "type": "tot:boss_dungeon",
+  "type": "tot:drider_den",
   "config": {
     "start_pool": "tot:start_pool",
     "size": 1
   },
-  "biomes": "#tot:has_structure/boss_dungeon",
+  "biomes": "#tot:has_structure/drider_den",
   "adapt_noise": true,
   "spawn_overrides": {
     "monster": {

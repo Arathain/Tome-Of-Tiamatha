@@ -62,7 +62,7 @@ public class ArachneEntity extends DriderEntity {
     protected static final TrackedData<Boolean> WAVE_IN_PROGRESS = DataTracker.registerData(ArachneEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 
-    private final ServerBossBar bossBar = (new ServerBossBar(this.getDisplayName(), BossBar.Color.PINK, BossBar.Style.PROGRESS));
+    private final ToTBossBar bossBar = new ToTBossBar(this, BossBar.Color.PINK);
     public int slamTicks = 0;
     private int waveCooldown = 0;
     private int waveTimer = 0;
@@ -121,8 +121,9 @@ public class ArachneEntity extends DriderEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if(!source.isOutOfWorld())
-        amount = MathHelper.clamp(amount, 0, 10);
+        if(!source.isOutOfWorld()) {
+            amount = MathHelper.clamp(amount, 0, 10);
+        }
         if(source.getAttacker() instanceof LivingEntity attacker && !this.world.isClient) {
             this.getWorld().getEntitiesByClass(SpiderEntity.class, this.getBoundingBox().expand(20), spiderEntity -> isAlive()).forEach(spooder -> {spooder.setTarget(attacker);});
         }
@@ -132,7 +133,6 @@ public class ArachneEntity extends DriderEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.skipReadNbtData(nbt);
-        this.bossBar.setName(this.getDisplayName());
         if(nbt.contains("RestingPos")) {
             setRestingPos(NbtHelper.toBlockPos(nbt.getCompound("RestingPos")));
         }
@@ -225,7 +225,6 @@ public class ArachneEntity extends DriderEntity {
 
     @Override
     protected void mobTick() {
-        this.bossBar.setPercent(this.getHealth()/this.getMaxHealth());
         if(this.getAttackState() == 1) {
             slamTick();
         }
@@ -233,9 +232,13 @@ public class ArachneEntity extends DriderEntity {
     }
     @Override
     public void tick() {
+        if(this.age % 5 == 0) {
+            this.bossBar.update();
+        }
         super.tick();
-        if(!isResting())
-        waveTick();
+        if(!isResting()) {
+            waveTick();
+        }
         if(getFireTicks() > 10) {
             setFireTicks(10);
         }
@@ -293,8 +296,9 @@ public class ArachneEntity extends DriderEntity {
         if(waveCooldown > 0) waveCooldown--;
         if (!world.isClient && this.age % 5 == 0 && waveCooldown == 0) {
             int wave = this.getWave();
-            if(ToTWaves.ARACHNE_WAVES.isEmpty() || ToTWaves.ARACHNE_WAVES.size() == 0 || ToTWaves.ARACHNE_WAVES.get(wave) == null)
-            ToTWaves.updateArachneWaves(this.getRandom(), (int) Math.floor(Math.cbrt(this.getLocalDangerScale())));
+            if(ToTWaves.ARACHNE_WAVES.isEmpty() || ToTWaves.ARACHNE_WAVES.size() == 0 || ToTWaves.ARACHNE_WAVES.get(wave) == null) {
+                ToTWaves.updateArachneWaves(this.getRandom(), (int) Math.floor(Math.cbrt(this.getLocalDangerScale())));
+            }
 
             // check if there are enemies left to spawn
             List<MobEntity> enemiesLeft = world.getEntitiesByClass(MobEntity.class, this.getBoundingBox().expand(80f, 30f, 80f), entity -> entity instanceof Broodchild);

@@ -1,8 +1,7 @@
 package net.arathain.tot.common.world.structures;
 
 import com.mojang.serialization.Codec;
-import net.arathain.tot.TomeOfTiamatha;
-import net.minecraft.block.Blocks;
+import net.arathain.tot.common.init.ToTStructures;
 import net.minecraft.state.property.Properties;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
@@ -30,6 +29,6 @@ public class NoWaterProcessor extends StructureProcessor {
 
     @Override
     protected StructureProcessorType<?> getType() {
-        return StructureInit.NOWATER_PROCESSOR;
+        return ToTStructures.NOWATER_PROCESSOR;
     }
 }

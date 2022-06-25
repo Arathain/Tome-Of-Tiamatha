@@ -15,12 +15,12 @@ import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
 import java.util.Optional;
 
-public class DungeonStructure extends StructureFeature<StructurePoolFeatureConfig> {
+public class DriderDenStructure extends StructureFeature<StructurePoolFeatureConfig> {
 
     public static final Identifier START_POOL = new Identifier(TomeOfTiamatha.MODID, "start_pool");
 
-    public DungeonStructure(Codec<StructurePoolFeatureConfig> codec) {
-        super(codec, DungeonStructure::createPiecesGenerator, PostPlacementProcessor.EMPTY);
+    public DriderDenStructure(Codec<StructurePoolFeatureConfig> codec) {
+        super(codec, DriderDenStructure::createPiecesGenerator, PostPlacementProcessor.EMPTY);
     }
 
     public static Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> createPiecesGenerator(StructurePiecesGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
@@ -33,6 +33,6 @@ public class DungeonStructure extends StructureFeature<StructurePoolFeatureConfi
 
         BlockPos blockPos = new BlockPos(x, y - 6, z);
 
-        return DungeonGenerator.generate(context, PoolStructurePiece::new, blockPos);
+        return DriderDenGenerator.generate(context, PoolStructurePiece::new, blockPos);
     }
 }

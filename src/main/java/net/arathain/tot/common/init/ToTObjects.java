@@ -16,6 +16,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -27,6 +28,8 @@ import java.util.Map;
 public class ToTObjects {
     private static final Map<Block, Identifier> BLOCKS = new LinkedHashMap<>();
     private static final Map<Item, Identifier> ITEMS = new LinkedHashMap<>();
+    private static final Map<SoundEvent, Identifier> SOUND_EVENTS = new LinkedHashMap<>();
+    public static final SoundEvent ENTITY_RAVEN_CAW = createSoundEvent("entity.raven.caw");
 
     public static final TagKey<Item> MEAT = TagKey.of(Registry.ITEM_KEY, new Identifier(TomeOfTiamatha.MODID, "meat"));
     public static final TagKey<Item> NO_DRIDER = TagKey.of(Registry.ITEM_KEY, new Identifier(TomeOfTiamatha.MODID, "drider_non_equippable"));
@@ -61,23 +64,16 @@ public class ToTObjects {
         ITEMS.put(item, new Identifier(TomeOfTiamatha.MODID, name));
         return item;
     }
+    private static SoundEvent createSoundEvent(String name) {
+        Identifier id = new Identifier(TomeOfTiamatha.MODID, name);
+        SoundEvent soundEvent = new SoundEvent(id);
+        SOUND_EVENTS.put(soundEvent, id);
+        return soundEvent;
+    }
 
     public static void init() {
+        SOUND_EVENTS.keySet().forEach(effect -> Registry.register(Registry.SOUND_EVENT, SOUND_EVENTS.get(effect), effect));
         BLOCKS.keySet().forEach(block -> Registry.register(Registry.BLOCK, BLOCKS.get(block), block));
         ITEMS.keySet().forEach(item -> Registry.register(Registry.ITEM, ITEMS.get(item), item));
-        ShieldBlockCallback.EVENT.register((defender, source, amount, hand, shield) -> {
-            if(shield.getItem().equals(SILKSTEEL_SHIELD)) {
-                Entity attacker = source.getAttacker();
-
-                assert attacker != null;
-                if(defender instanceof PlayerEntity) {
-                    attacker.damage(DamageSource.player((PlayerEntity) defender), (int)Math.round(amount * 0.33F));
-                } else {
-                    attacker.damage(DamageSource.mob(defender), (int)Math.round(amount * 0.33F));
-                }
-            }
-
-            return ActionResult.PASS;
-        });
     }
 }

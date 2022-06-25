@@ -2,6 +2,7 @@ package net.arathain.tot.client.entity.model.drider;
 
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
+import net.coderbot.iris.Iris;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.PillagerEntityRenderer;
@@ -12,6 +13,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
+import org.quiltmc.loader.api.QuiltLoader;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -44,7 +46,7 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
         IBone sendHelp = this.getAnimationProcessor().getBone("rightarm");
 
         if (head != null) {
-            head.setRotationX(head.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 :(extraData.headPitch * (float) Math.PI / 180F)));
+            head.setRotationX(head.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 :(extraData.headPitch * (float) Math.PI / 180F * (QuiltLoader.isModLoaded("iris") && Iris.getIrisConfig().areShadersEnabled() ? 0.5f : 1))));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if (torso != null) {

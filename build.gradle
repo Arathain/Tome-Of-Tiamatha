@@ -12,6 +12,12 @@ group = project.maven_group
 
 repositories {
 	maven {
+		url 'https://api.modrinth.com/maven'
+		content {
+			includeGroup 'maven.modrinth'
+		}
+	}
+	maven {
 		name = "Curse"
 		url = "https://www.cursemaven.com"
 	}
@@ -59,6 +65,12 @@ dependencies {
 	}
 	modImplementation libs.quilt.loader
 	modImplementation libs.quilted.fabric.api
+
+	modRuntimeOnly("maven.modrinth:sodium:mc1.18.2-0.4.1")
+	modCompileOnly("maven.modrinth:iris:1.18.x-v1.2.5")
+	modRuntimeOnly("maven.modrinth:iris:1.18.x-v1.2.5")
+	runtimeOnly compileOnly("org.anarres:jcpp:1.4.14") // for iris
+	runtimeOnly('org.joml:joml:1.10.4') // for sodium
 
 	modImplementation ('software.bernie.geckolib:geckolib-fabric-1.18:3.0.42') {
 		exclude(group: "net.fabricmc")
