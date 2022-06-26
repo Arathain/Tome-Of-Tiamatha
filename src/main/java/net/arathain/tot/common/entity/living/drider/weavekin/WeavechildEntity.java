@@ -20,6 +20,8 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -58,6 +60,15 @@ public class WeavechildEntity extends SpiderEntity implements IAnimatable, IAnim
 
     @Override
     protected void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition) {}
+    public void setVelocity(double x, double y, double z, float speed, float divergence) {
+        Vec3d vec3d = new Vec3d(x, y, z).normalize().add(this.random.nextGaussian() * 0.0075F * (double)divergence, this.random.nextGaussian() * 0.0075F * (double)divergence, this.random.nextGaussian() * 0.0075F * (double)divergence).multiply((double)speed);
+        this.setVelocity(vec3d);
+        double d = vec3d.horizontalLength();
+        this.setYaw((float)(MathHelper.atan2(vec3d.x, vec3d.z) * 180.0F / (float)Math.PI));
+        this.setPitch((float)(MathHelper.atan2(vec3d.y, d) * 180.0F / (float)Math.PI));
+        this.prevYaw = this.getYaw();
+        this.prevPitch = this.getPitch();
+    }
 
     @Override
     public void tick() {

@@ -128,9 +128,9 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityTag) {
-        this.initEquipment(difficulty);
         this.getAttributeInstance(EntityAttributes.GENERIC_FOLLOW_RANGE).addPersistentModifier(new EntityAttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05, EntityAttributeModifier.Operation.MULTIPLY_BASE));
         this.setLeftHanded(this.random.nextFloat() < 0.05f);
+        this.initEquipment(difficulty);
         if (entityData == null) {
             entityData = new SpiderData();
             if (world.getDifficulty() == Difficulty.HARD && world.getRandom().nextFloat() < 0.1f * difficulty.getClampedLocalDifficulty()) {
@@ -352,7 +352,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     static class DriderTargetGoal<T extends LivingEntity>
             extends TargetGoal<T> {
         public DriderTargetGoal(SpiderEntity spider, Class<T> targetEntityClass) {
-            super((MobEntity)spider, targetEntityClass, true);
+            super(spider, targetEntityClass, true);
         }
 
         @Override

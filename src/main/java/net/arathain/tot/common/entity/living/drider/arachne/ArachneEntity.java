@@ -63,7 +63,7 @@ public class ArachneEntity extends DriderEntity {
     protected static final TrackedData<Boolean> WAVE_IN_PROGRESS = DataTracker.registerData(ArachneEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 
-    private final ToTBossBar bossBar = new ToTBossBar(this, BossBar.Color.PINK);
+    private final ToTBossBar bossBar = new ToTBossBar(this, BossBar.Color.PURPLE);
     public int slamTicks = 0;
     private int waveCooldown = 0;
     private int waveTimer = 0;

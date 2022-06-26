@@ -2,8 +2,10 @@ package net.arathain.tot.common.entity.living.drider.weaver;
 
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
 import net.arathain.tot.common.entity.living.drider.arachne.ArachneEntity;
+import net.arathain.tot.common.entity.living.drider.weavekin.WeavechildEntity;
 import net.arathain.tot.common.entity.living.goal.*;
 import net.arathain.tot.common.init.ToTEffects;
+import net.arathain.tot.common.init.ToTEntities;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Blocks;
@@ -23,6 +25,8 @@ import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -67,6 +71,20 @@ public class WeaverEntity extends DriderEntity implements RangedAttackMob {
         this.dataTracker.set(ACTION_STATE, state);
     }
 
+    public void attack(LivingEntity target, float pullProgress) {
+        WeavechildEntity entity = new WeavechildEntity(ToTEntities.WEAVECHILD, world);
+        entity.setPos(this.getX() + 0.5f, this.getY() + 1, this.getZ() + 0.5f);
+        double y = this.getTarget().getY() - (double)0.9F;
+        double x = this.getTarget().getX() - this.getX();
+        double e = y - entity.getY();
+        double z = this.getTarget().getZ() - this.getZ();
+        float rt = MathHelper.sqrt((float) (x * x + e * e + z * z)) * 0.2F;
+        entity.setVelocity(x,e + rt, z, 3f, 0);
+        entity.setYaw(this.getYaw());
+        this.playSound(SoundEvents.ITEM_CROSSBOW_LOADING_END, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.world.spawnEntity(entity);
+    }
+
     protected void copyEntityData(Entity entity) {
         entity.setBodyYaw(this.getYaw());
         float f = MathHelper.wrapDegrees(entity.getYaw() - this.getYaw());
@@ -79,17 +97,7 @@ public class WeaverEntity extends DriderEntity implements RangedAttackMob {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(4, new BowAttackGoal<>(this, 1, 20, 20) {
-            @Override
-            protected boolean isHoldingBow() {
-                return super.isHoldingBow() && this.actor.getTarget() != null && !this.actor.getTarget().hasStatusEffect(ToTEffects.BROODS_CURSE) && !this.actor.hasPassengers();
-            }
-
-            @Override
-            public boolean shouldContinue() {
-                return super.shouldContinue() && this.actor.getTarget() != null && !this.actor.getTarget().hasStatusEffect(ToTEffects.BROODS_CURSE) && !this.actor.hasPassengers();
-            }
-        });
+        this.goalSelector.add(4, new WeaverYeetChildGoal(this, 1, 20, 20));
         this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8));
         this.goalSelector.add(1, new WeaverPickUpWebbingGoal(this));
         this.goalSelector.add(1, new WeaverImprisonTargetGoal(this));
@@ -127,16 +135,13 @@ public class WeaverEntity extends DriderEntity implements RangedAttackMob {
         passenger.setYaw(this.getYaw());
         passenger.setHeadYaw(this.getHeadYaw());
         this.copyEntityData(passenger);
-        if (passenger instanceof AnimalEntity && this.getPassengerList().size() > 1) {
-            int j = passenger.getId() % 2 == 0 ? 90 : 270;
-            passenger.setBodyYaw(((AnimalEntity)passenger).bodyYaw + (float)j);
-            passenger.setHeadYaw(passenger.getHeadYaw() + (float)j);
-        }
     }
 
     @Override
     protected void initEquipment(LocalDifficulty difficulty) {
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
+        this.setEquipmentDropChance(EquipmentSlot.MAINHAND, 0);
+        this.setLeftHanded(false);
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -165,18 +170,5 @@ public class WeaverEntity extends DriderEntity implements RangedAttackMob {
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
-    }
-    //TODO: replace with custom projectile
-    @Override
-    public void attack(LivingEntity target, float pullProgress) {
-        FallingBlockEntity thrown = new FallingBlockEntity(this.world, this.getX(), this.getY(), this.getZ(), Blocks.COBWEB.getDefaultState());
-        double d = target.getX() - this.getX();
-        double e = target.getBodyY(0.3333333333333333) - thrown.getY();
-        double f = target.getZ() - this.getZ();
-        double g = Math.sqrt(d * d + f * f);
-        thrown.setVelocity(d, e + g * 0.1F, f);
-        thrown.setHurtEntities(2.0F, 10);
-        this.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.world.spawnEntity(thrown);
     }
 }

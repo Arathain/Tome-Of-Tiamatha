@@ -14,7 +14,7 @@ public class ToTBossBar extends ServerBossBar {
     private final MobEntity obj;
     private final Set<ServerPlayerEntity> invis = new HashSet<>();
     public ToTBossBar(MobEntity entity, Color color) {
-        super(entity.getDisplayName(), color, BossBar.Style.PROGRESS);
+        super(entity.getDisplayName(), color, Style.PROGRESS);
         obj = entity;
     }
 
