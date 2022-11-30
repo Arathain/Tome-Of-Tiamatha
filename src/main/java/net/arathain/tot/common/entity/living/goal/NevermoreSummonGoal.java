@@ -8,6 +8,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.random.RandomGenerator;
 
 import java.util.Random;
 
@@ -40,7 +41,7 @@ public class NevermoreSummonGoal extends NevermoreAttackGoal {
     protected void attack() {
         LivingEntity target = this.nevermore.getTarget();
         if(target != null && !(nevermore.getWorld().getOtherEntities(nevermore, nevermore.getBoundingBox().expand(40), (entity -> entity instanceof RavenEntity)).size() > 8)) {
-            Random random = nevermore.getRandom();
+            RandomGenerator random = nevermore.getRandom();
             for (int i = 1; i < random.nextInt(8) + 1; i++) {
                 RavenEntity raven = new RavenEntity(ToTEntities.RAVEN, nevermore.world);
                 raven.setPosition(nevermore.getPos().add((random.nextFloat() * 0.4f - 0.2f), (random.nextFloat() * 0.4f - 0.2f), (random.nextFloat() * 0.4f - 0.2f)));

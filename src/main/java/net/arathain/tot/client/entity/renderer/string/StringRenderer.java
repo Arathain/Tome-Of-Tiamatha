@@ -2,7 +2,7 @@ package net.arathain.tot.client.entity.renderer.string;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.arathain.tot.common.util.StringUtils;
-import net.minecraft.client.render.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;

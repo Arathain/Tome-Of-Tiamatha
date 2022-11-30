@@ -3,7 +3,7 @@ package net.arathain.tot.client.entity.renderer.drider.weaver;
 import net.arathain.tot.client.entity.model.drider.weaver.WeaverEntityModel;
 import net.arathain.tot.common.entity.living.drider.weaver.WeaverEntity;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,6 +16,6 @@ public class WeaverEntityRenderer extends GeoEntityRenderer<WeaverEntity> {
     }
     @Override
     public RenderLayer getRenderType(WeaverEntity animatable, float partialTicks, MatrixStack stack, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(getTextureLocation(animatable));
+        return RenderLayer.getEntityTranslucent(getTextureResource(animatable));
     }
 }

@@ -17,7 +17,6 @@
     "PlayerScreenHandlerMixin",
     "RaiderEntityMixin",
     "SpiderEntityMixin",
-    "StructureFeatureAccessor",
     "StructurePoolMixin",
     "TargetGoalMixin",
     "ThreadedAnvilChunkStorageMixin",

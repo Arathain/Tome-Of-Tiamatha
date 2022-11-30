@@ -1,15 +1,15 @@
 package net.arathain.tot.client.entity.renderer.drider;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arathain.tot.client.entity.model.drider.DriderEntityModel;
-import net.arathain.tot.client.entity.renderer.layer.*;
+import net.arathain.tot.client.entity.renderer.layer.DriderChestplateLayer;
+import net.arathain.tot.client.entity.renderer.layer.DriderEyeLayer;
+import net.arathain.tot.client.entity.renderer.layer.DriderHelmetLayer;
 import net.arathain.tot.common.entity.living.drider.DriderEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.PillagerEntityRenderer;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -20,9 +20,11 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
     private DriderEntity driderEntity;
+    private final HeldItemRenderer ren;
     public boolean isLayer = false;
     public DriderEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new DriderEntityModel());
+        this.ren = ctx.getHeldItemRenderer();
         this.addLayer(new DriderHelmetLayer(this));
         this.addLayer(new DriderChestplateLayer(this));
         this.addLayer(new DriderEyeLayer(this));
@@ -36,7 +38,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
 
     @Override
     public RenderLayer getRenderType(DriderEntity animatable, float partialTicks, MatrixStack stack, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(this.getTextureLocation(animatable));
+        return RenderLayer.getEntityTranslucent(this.getTextureResource(animatable));
     }
 
 
@@ -61,7 +63,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
                 stack.scale(0.68f, 0.68f, 0.68f);
                 stack.translate(0.35,0.5,0.9f);
             }
-            MinecraftClient.getInstance().getHeldItemRenderer().renderItem(driderEntity, mainHand, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, false, stack, rtb, packedLightIn);
+            ren.renderItem(driderEntity, mainHand, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, false, stack, rtb, packedLightIn);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
 
@@ -86,7 +88,7 @@ public class DriderEntityRenderer extends GeoEntityRenderer<DriderEntity> {
                 stack.scale(0.68f, 0.68f, 0.68f);
                 stack.translate(-0.35, 0.5, 0.9f);
             }
-            MinecraftClient.getInstance().getHeldItemRenderer().renderItem(driderEntity, offHand, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, true, stack, rtb, packedLightIn);
+            ren.renderItem(driderEntity, offHand, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, true, stack, rtb, packedLightIn);
             stack.pop();
             bufferIn = rtb.getBuffer(RenderLayer.getEntityTranslucent(whTexture));
         }

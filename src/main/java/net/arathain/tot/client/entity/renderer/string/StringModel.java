@@ -1,7 +1,7 @@
 package net.arathain.tot.client.entity.renderer.string;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix3f;
@@ -34,7 +34,7 @@ public class StringModel {
             buffer
                     .vertex(modelMatrix, vertices[i*3], vertices[i*3+1] , vertices[i*3+2])
                     .color(255, 255, 255, 255)
-                    .texture(uvs[i*2], uvs[i*2+1])
+                    .uv(uvs[i*2], uvs[i*2+1])
                     .overlay(OverlayTexture.DEFAULT_UV)
                     .light(light)
                     .normal(normalMatrix, 0, 1, 0)

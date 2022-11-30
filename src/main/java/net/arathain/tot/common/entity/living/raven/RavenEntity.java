@@ -35,6 +35,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
@@ -85,7 +86,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3).add(EntityAttributes.GENERIC_FLYING_SPEED, 0.7);
     }
     @Override
-    protected void initEquipment(LocalDifficulty difficulty) {
+    protected void initEquipment(RandomGenerator random, LocalDifficulty difficulty) {
         this.setEquipmentDropChance(EquipmentSlot.MAINHAND, 1);
     }
 
@@ -155,7 +156,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
         super.mobTick();
         ItemStack stack = this.getStackInHand(Hand.MAIN_HAND);
         if(!stack.isEmpty() && stack.hasCustomName()) {
-            PlayerEntity entity = getServer().getPlayerManager().getPlayer(stack.getName().asString());
+            PlayerEntity entity = getServer().getPlayerManager().getPlayer(stack.getName().getString());
             if(entity != null && entity.getUuid() != null) {
                 this.setReceiverUuid(entity.getUuid());
             } else {
@@ -245,7 +246,7 @@ public class RavenEntity extends TameableEntity implements IAnimatable, IAnimati
     protected void addFlapEffects() {
         if(!isSitting())
             playSound(SoundEvents.ENTITY_PARROT_FLY, 0.15f, 1);
-        this.whuhhuh = this.field_28627 + this.maxWingDeviation / 2.0f;
+        this.whuhhuh = this.flyingSpeed + this.maxWingDeviation / 2.0f;
     }
     @Override
     public void tickMovement() {

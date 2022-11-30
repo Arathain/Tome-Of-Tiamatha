@@ -3,7 +3,7 @@ package net.arathain.tot.common.network.packet;
 import net.arathain.tot.TomeOfTiamatha;
 import net.arathain.tot.common.init.ToTDamageSource;
 import net.arathain.tot.common.init.ToTObjects;
-import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
+import net.fabricmc.fabric.impl.screenhandler.client.ClientNetworking;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
@@ -19,6 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +32,7 @@ public class RemorsePacket {
         if(entity != null)
             buf.writeInt(entity.getId());
 
-        ClientSidePacketRegistryImpl.INSTANCE.sendToServer(ID, buf);
+        ClientPlayNetworking.send(ID, buf);
     }
 
     public static void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {

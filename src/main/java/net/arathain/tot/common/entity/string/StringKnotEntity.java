@@ -36,6 +36,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -482,10 +483,10 @@ public class StringKnotEntity extends AbstractDecorationEntity implements String
     /**
      * The offset where a leash / string will visually connect to.
      */
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     @Override
-    public Vec3d method_30951(float f) {
-        return getLerpedPos(f);
+    public Vec3d getClientCameraPosVec(float tickDelta) {
+        return getLerpedPos(tickDelta);
     }
 
     @Override

@@ -11,6 +11,7 @@ import net.minecraft.item.ToolItem;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.random.RandomGenerator;
 
 import java.util.Random;
 
@@ -63,7 +64,7 @@ public interface StringLinkEntity {
      * @param item The item subject of an interaction
      * @return true if a chain link entity can be destroyed with the item
      */
-    static boolean canDestroyWith(Item item, Random random) {
+    static boolean canDestroyWith(Item item, RandomGenerator random) {
         return item.getDefaultStack().isIn(CommonTags.SHEARS) || item instanceof ToolItem tool && random.nextInt(20 - MathHelper.ceil(tool.getMaterial().getAttackDamage())) == 2;
     }
 

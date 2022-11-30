@@ -7,17 +7,17 @@ import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
 
 public class NevermoreEntityModel extends AnimatedTickingGeoModel<NevermoreEntity> {
     @Override
-    public Identifier getModelLocation(NevermoreEntity object) {
+    public Identifier getModelResource(NevermoreEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/nevermore.geo.json");
     }
 
     @Override
-    public Identifier getTextureLocation(NevermoreEntity object) {
+    public Identifier getTextureResource(NevermoreEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "textures/entity/raven/nevermore.png");
     }
 
     @Override
-    public Identifier getAnimationFileLocation(NevermoreEntity animatable) {
+    public Identifier getAnimationResource(NevermoreEntity animatable) {
         return new Identifier(TomeOfTiamatha.MODID, "animations/entity/nevermore.animation.json");
     }
 }

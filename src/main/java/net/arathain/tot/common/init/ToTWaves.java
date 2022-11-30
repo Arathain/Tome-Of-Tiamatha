@@ -2,14 +2,14 @@ package net.arathain.tot.common.init;
 
 import net.arathain.tot.common.entity.living.drider.arachne.waves.WaveSpawnEntry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.random.RandomGenerator;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class ToTWaves {
     public static final ArrayList<ArrayList<WaveSpawnEntry>> ARACHNE_WAVES = new ArrayList<>();
 
-    public static void updateArachneWaves(Random random, int dangerScale) {
+    public static void updateArachneWaves(RandomGenerator random, int dangerScale) {
         ARACHNE_WAVES.clear();
         for (int i = 1; i <= 9; i++) {
             ARACHNE_WAVES.add(new ArrayList<>());

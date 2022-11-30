@@ -95,7 +95,7 @@ public class WeavethrallEntity extends WeavechildEntity implements TameableHosti
                     this.setTamed(true);
                     this.setOwnerUuid(player.getUuid());
                     this.reset();
-                    this.emitGameEvent(GameEvent.MOB_INTERACT, this.getCameraBlockPos());
+                    this.emitGameEvent(GameEvent.ENTITY_INTERACT, this);
                     this.world.sendEntityStatus(this, (byte)7);
                     return ActionResult.SUCCESS;
                 } else {
@@ -106,7 +106,7 @@ public class WeavethrallEntity extends WeavechildEntity implements TameableHosti
                     stack.decrement(1);
                 }
                 heal(stack.getItem().getFoodComponent().getHunger());
-                this.emitGameEvent(GameEvent.MOB_INTERACT, this.getCameraBlockPos());
+                this.emitGameEvent(GameEvent.ENTITY_INTERACT, this);
                 return ActionResult.SUCCESS;
             }
         }

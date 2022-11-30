@@ -30,7 +30,7 @@ public class DriderChestplateLayer extends GeoLayerRenderer<DriderEntity> {
                location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/pg_hahayes_default.png");
             }
             RenderLayer armor = RenderLayer.getArmorCutoutNoCull(location);
-            GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn));
+            GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelResource(entitylivingbaseIn));
             model.getBone("spider").get().setHidden(true);
             ((DriderEntityRenderer) driderEntityRenderer).isLayer = true;
             if (entitylivingbaseIn.getEquippedStack(EquipmentSlot.CHEST).getItem() instanceof DyeableArmorItem) {

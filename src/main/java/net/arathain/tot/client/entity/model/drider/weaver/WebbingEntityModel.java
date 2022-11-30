@@ -2,7 +2,7 @@ package net.arathain.tot.client.entity.model.drider.weaver;
 
 import net.arathain.tot.common.entity.living.drider.weaver.WebbingEntity;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 

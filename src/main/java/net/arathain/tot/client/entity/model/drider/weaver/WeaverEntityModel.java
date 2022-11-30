@@ -18,17 +18,17 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class WeaverEntityModel extends AnimatedTickingGeoModel<WeaverEntity> {
     @Override
-    public Identifier getModelLocation(WeaverEntity object) {
+    public Identifier getModelResource(WeaverEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/weaver.geo.json");
     }
 
     @Override
-    public Identifier getTextureLocation(WeaverEntity object) {
+    public Identifier getTextureResource(WeaverEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/weaver/weaver.png");
     }
 
     @Override
-    public Identifier getAnimationFileLocation(WeaverEntity animatable) {
+    public Identifier getAnimationResource(WeaverEntity animatable) {
         return new Identifier(TomeOfTiamatha.MODID, "animations/entity/weaver.animation.json");
     }
 

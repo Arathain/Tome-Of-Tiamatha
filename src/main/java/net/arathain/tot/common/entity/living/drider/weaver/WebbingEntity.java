@@ -60,7 +60,7 @@ public class WebbingEntity extends Entity {
             return true;
         }
         this.scheduleVelocityUpdate();
-        this.emitGameEvent(GameEvent.ENTITY_DAMAGED, source.getAttacker());
+        this.emitGameEvent(GameEvent.ENTITY_DAMAGE, source.getAttacker());
         if (((!(source.getAttacker() == this.getFirstPassenger()) || this.age > 2000) && amount >= 6) || source.isExplosive() || source.isFire() || source.isSourceCreativePlayer()) {
             this.discard();
         }

@@ -4,18 +4,14 @@ import net.arathain.tot.common.init.ToTObjects;
 import net.arathain.tot.common.util.ToTUtil;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -32,7 +28,7 @@ public abstract class ItemStackMixin {
     private void addUnusableTooltip(@Nullable PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir, List<Text> list) {
         if(player != null) {
             if(ToTUtil.isDrider(player) && ((ItemStack)(Object)this).isFood() && (!((ItemStack)(Object)this).isIn(ToTObjects.MEAT) && !Objects.requireNonNull(((ItemStack) (Object) this).getItem().getFoodComponent()).isMeat())) {
-                MutableText preventText = new TranslatableText("tot.text.drider_not_meat").formatted(Formatting.DARK_RED);
+                MutableText preventText = Text.translatable("tot.text.drider_not_meat").formatted(Formatting.DARK_RED);
                 list.add(preventText);
             }
         }

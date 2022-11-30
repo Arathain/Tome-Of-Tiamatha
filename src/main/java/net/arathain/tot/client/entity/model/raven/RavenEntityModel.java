@@ -7,17 +7,17 @@ import software.bernie.geckolib3.model.AnimatedTickingGeoModel;
 
 public class RavenEntityModel extends AnimatedTickingGeoModel<RavenEntity> {
     @Override
-    public Identifier getModelLocation(RavenEntity object) {
+    public Identifier getModelResource(RavenEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "geo/entity/raven.geo.json");
     }
 
     @Override
-    public Identifier getTextureLocation(RavenEntity object) {
+    public Identifier getTextureResource(RavenEntity object) {
         return new Identifier(TomeOfTiamatha.MODID, "textures/entity/raven/raven_"+ object.getRavenType().toString().toLowerCase() + ".png");
     }
 
     @Override
-    public Identifier getAnimationFileLocation(RavenEntity animatable) {
+    public Identifier getAnimationResource(RavenEntity animatable) {
         return new Identifier(TomeOfTiamatha.MODID, "animations/entity/raven.animation.json");
     }
 }

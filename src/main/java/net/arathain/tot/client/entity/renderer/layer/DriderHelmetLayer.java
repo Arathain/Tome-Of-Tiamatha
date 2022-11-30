@@ -27,7 +27,7 @@ public class DriderHelmetLayer extends GeoLayerRenderer<DriderEntity> {
         if(!entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).isEmpty()) {
             Identifier location = new Identifier(TomeOfTiamatha.MODID, "textures/entity/drider/armor/" + entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).getItem().toString() + ".png");
             RenderLayer armor = RenderLayer.getArmorCutoutNoCull(location);
-            GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn));
+            GeoModel model = this.getEntityModel().getModel(this.getEntityModel().getModelResource(entitylivingbaseIn));
             model.getBone("spider").get().setHidden(true);
             ((DriderEntityRenderer) driderEntityRenderer).isLayer = true;
             if (entitylivingbaseIn.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof DyeableArmorItem) {
@@ -35,10 +35,10 @@ public class DriderHelmetLayer extends GeoLayerRenderer<DriderEntity> {
                 float f = (float)(i >> 16 & 0xFF) / 255.0F;
                 float g = (float)(i >> 8 & 0xFF) / 255.0F;
                 float h = (float)(i & 0xFF) / 255.0F;
-                this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, f, g, h, 1.0f);
+                this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelResource(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, f, g, h, 1.0f);
             }
             else {
-                this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelLocation(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f);
+                this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelResource(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, armor, matrixStackIn, bufferIn, bufferIn.getBuffer(armor), packedLightIn, OverlayTexture.DEFAULT_UV, 1.0f, 1.0f, 1.0f, 1.0f);
             }
             ((DriderEntityRenderer) driderEntityRenderer).isLayer = false;
             model.getBone("spider").get().setHidden(false);

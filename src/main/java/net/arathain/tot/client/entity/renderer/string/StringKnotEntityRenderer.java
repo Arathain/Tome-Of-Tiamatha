@@ -2,6 +2,7 @@ package net.arathain.tot.client.entity.renderer.string;
 
 import com.github.legoatoom.connectiblechains.ConnectibleChains;
 import com.github.legoatoom.connectiblechains.util.Helper;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arathain.tot.common.entity.string.StringKnotEntity;
 import net.arathain.tot.common.entity.string.StringLink;
 import net.arathain.tot.common.util.StringUtils;
@@ -14,7 +15,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
@@ -67,9 +67,9 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         if (ConnectibleChains.runtimeConfig.doDebugDraw()) {
             matrices.push();
             // F stands for "from", T for "to"
-            Text holdingCount = new LiteralText("F: " + stringKnotEntity.getLinks().stream()
+            Text holdingCount = Text.literal("F: " + stringKnotEntity.getLinks().stream()
                     .filter(l -> l.primary == stringKnotEntity).count());
-            Text heldCount = new LiteralText("T: " + stringKnotEntity.getLinks().stream()
+            Text heldCount = Text.literal("T: " + stringKnotEntity.getLinks().stream()
                     .filter(l -> l.secondary == stringKnotEntity).count());
             matrices.translate(0, 0.25, 0);
             this.renderLabelIfPresent(stringKnotEntity, holdingCount, matrices, vertexConsumers, light);
@@ -105,7 +105,7 @@ public class StringKnotEntityRenderer extends EntityRenderer<StringKnotEntity> {
         if (toEntity instanceof AbstractDecorationEntity) {
             dstPos = toEntity.getPos().add(toEntity.getLeashOffset());
         } else {
-            dstPos = toEntity.method_30951(tickDelta);
+            dstPos = toEntity.getLerpedPos(tickDelta);
         }
 
         // The leash pos offset

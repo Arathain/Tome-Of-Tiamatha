@@ -36,6 +36,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -101,7 +102,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
         this.targetSelector.add(1, new RevengeGoal(this, SpiderEntity.class).setGroupRevenge());
         this.targetSelector.add(2, new TargetGoal<>(this, PlayerEntity.class, 10, true, false, player -> !ToTUtil.isDrider(player)));
         this.targetSelector.add(2, new TargetGoal<>(this, IronGolemEntity.class, true));
-        this.targetSelector.add(3, new DriderTargetGoal<>(this, IronGolemEntity.class));
+        this.targetSelector.add(3, new TargetGoal<>(this, IronGolemEntity.class, true));
     }
 
     @Override
@@ -110,7 +111,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     }
 
     @Override
-    protected void initEquipment(LocalDifficulty difficulty) {
+    protected void initEquipment(RandomGenerator random, LocalDifficulty difficulty) {
         this.setStackInHand(Hand.MAIN_HAND, Items.DIAMOND_SWORD.getDefaultStack());
         this.setStackInHand(Hand.OFF_HAND, random.nextInt(10) == 1 ? Items.DIAMOND_SWORD.getDefaultStack() : ToTObjects.SILKSTEEL_SHIELD.getDefaultStack());
         this.equipStack(EquipmentSlot.HEAD, ToTObjects.SILKSTEEL_HELMET.getDefaultStack());
@@ -130,7 +131,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityTag) {
         this.getAttributeInstance(EntityAttributes.GENERIC_FOLLOW_RANGE).addPersistentModifier(new EntityAttributeModifier("Random spawn bonus", this.random.nextGaussian() * 0.05, EntityAttributeModifier.Operation.MULTIPLY_BASE));
         this.setLeftHanded(this.random.nextFloat() < 0.05f);
-        this.initEquipment(difficulty);
+        this.initEquipment(this.random, difficulty);
         if (entityData == null) {
             entityData = new SpiderData();
             if (world.getDifficulty() == Difficulty.HARD && world.getRandom().nextFloat() < 0.1f * difficulty.getClampedLocalDifficulty()) {
@@ -272,7 +273,7 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
             this.disableShield(true);
     }
     @Override
-    protected void damageShield(float damage) {
+    public void damageShield(float damage) {
         if (this.activeItemStack.getUseAction() == UseAction.BLOCK) {
             if (damage >= 3.0F) {
                 int i = 1 + MathHelper.floor(damage);
@@ -347,22 +348,6 @@ public class DriderEntity extends SpiderEntity implements IAnimatable, IAnimatio
     @Override
     public int tickTimer() {
         return age;
-    }
-
-    static class DriderTargetGoal<T extends LivingEntity>
-            extends TargetGoal<T> {
-        public DriderTargetGoal(SpiderEntity spider, Class<T> targetEntityClass) {
-            super(spider, targetEntityClass, true);
-        }
-
-        @Override
-        public boolean canStart() {
-            float f = this.mob.getBrightnessAtEyes();
-            if (f >= 0.5f) {
-                return false;
-            }
-            return super.canStart();
-        }
     }
 
     public enum Type {

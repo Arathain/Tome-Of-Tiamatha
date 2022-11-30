@@ -18,7 +18,6 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
@@ -64,13 +63,13 @@ public class SynthesisScepterItem extends MiningToolItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (hasFocus(stack)) {
-            tooltip.add(new LiteralText(getFocusStack(stack).toString()).formatted(Formatting.GOLD));
+            tooltip.add(Text.literal(getFocusStack(stack).toString()).formatted(Formatting.GOLD));
         }
         if (hasPrim(stack)) {
-            tooltip.add(new LiteralText(getPrimaryEffectStack(stack).toString()).formatted(Formatting.DARK_PURPLE));
+            tooltip.add(Text.literal(getPrimaryEffectStack(stack).toString()).formatted(Formatting.DARK_PURPLE));
         }
         if (hasSec(stack)) {
-            tooltip.add(new LiteralText(getSecondaryEffectStack(stack).toString()).formatted(Formatting.LIGHT_PURPLE));
+            tooltip.add(Text.literal(getSecondaryEffectStack(stack).toString()).formatted(Formatting.LIGHT_PURPLE));
         }
     }
     public static boolean hasFocus(ItemStack stack) {
@@ -206,9 +205,8 @@ public class SynthesisScepterItem extends MiningToolItem {
         setUsing(user.getStackInHand(user.getActiveHand()), false);
     }
 
-
     @Override
-    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
+    public boolean onClickedOnOther(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
         if (clickType != ClickType.RIGHT) {
             return false;
         }
@@ -225,6 +223,7 @@ public class SynthesisScepterItem extends MiningToolItem {
         }
         return true;
     }
+
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType != ClickType.RIGHT || !slot.canTakePartial(player)) {

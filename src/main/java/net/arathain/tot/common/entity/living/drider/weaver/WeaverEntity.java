@@ -33,6 +33,7 @@ import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -120,10 +121,7 @@ public class WeaverEntity extends DriderEntity implements RangedAttackMob {
         updatePassengerPosition(this.getFirstPassenger());
     }
 
-    @Override
-    public boolean canBeControlledByRider() {
-        return false;
-    }
+
     @Override
     public void updatePassengerPosition(Entity passenger) {
         if (!this.hasPassenger(passenger)) {
@@ -138,7 +136,7 @@ public class WeaverEntity extends DriderEntity implements RangedAttackMob {
     }
 
     @Override
-    protected void initEquipment(LocalDifficulty difficulty) {
+    protected void initEquipment(RandomGenerator random, LocalDifficulty difficulty) {
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
         this.setEquipmentDropChance(EquipmentSlot.MAINHAND, 0);
         this.setLeftHanded(false);

@@ -35,7 +35,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -314,8 +313,8 @@ public class ArachneEntity extends DriderEntity {
                 enemy.initialize((ServerWorldAccess) world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.MOB_SUMMONED, null, null);
 
                 var angle = Math.random() * Math.PI * 2;
-                float x = (float) (this.getRestingPos().get().getX() + (Math.cos(angle) * (16f - random.nextFloat(2f) * 2)));
-                float z = (float) (this.getRestingPos().get().getZ() + (Math.sin(angle) * (16f - random.nextFloat(2f) * 2)));
+                float x = (float) (this.getRestingPos().get().getX() + (Math.cos(angle) * (16f - random.nextFloat() * 2)));
+                float z = (float) (this.getRestingPos().get().getZ() + (Math.sin(angle) * (16f - random.nextFloat() * 2)));
 
                 BlockPos offsetPos = new BlockPos(x, this.getRestingPos().get().getY(), z);
                 for (int h = -10; h < 10; h++) {
@@ -344,7 +343,7 @@ public class ArachneEntity extends DriderEntity {
                             this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2400, 1));
                             world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(serverPlayerEntity -> {
                                 ((ServerPlayerEntity) serverPlayerEntity).sendMessage(
-                                        new TranslatableText("info.tot.broods_curse", world.getRegistryKey().getValue().getPath()).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)), true);
+                                        Text.translatable("info.tot.broods_curse", world.getRegistryKey().getValue().getPath()).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)), true);
                             });
                             world.getOtherEntities(this, this.getBoundingBox().expand(20), entity -> entity instanceof ServerPlayerEntity).forEach(entity -> ((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(ToTEffects.BROODS_CURSE, 3600, 0)));
                             this.setWave(wave + 1);

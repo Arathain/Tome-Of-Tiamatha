@@ -4,7 +4,7 @@ import net.arathain.tot.client.entity.model.raven.RavenEntityModel;
 import net.arathain.tot.common.entity.living.raven.RavenEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
