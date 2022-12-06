@@ -30,7 +30,7 @@ public class ToTShaderHandler {
     private static void onEndTick(MinecraftClient client) {
         if (client.player != null && client.cameraEntity != null && client.player.age % 10 == 0) {
             if (ToTUtil.isDrider(client.player) || ToTComponents.DRIDER_COMPONENT.get(client.player).getStage() > 0) {
-                DRIDER_VISION.findUniform1f("BrightnessAdjust").set((float) (Math.pow(ToTComponents.DRIDER_COMPONENT.get(client.player).getStage(), 2) / 10f));
+                DRIDER_VISION.findUniform1f("BrightnessAdjust").set((float) (Math.pow(ToTComponents.DRIDER_COMPONENT.get(client.player).getStage(), 2.5) / 10f));
             }
         }
     }

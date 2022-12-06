@@ -1,0 +1,16 @@
+{
+  "name": "tot:den/cent_crossroads",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+
+        "location": "tot:den_cross_central",
+        "processors": "tot:unwaterer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

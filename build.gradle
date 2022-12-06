@@ -33,6 +33,7 @@ repositories {
 	maven {
 		url = "https://jitpack.io"
 	}
+	maven { url 'https://masa.dy.fi/maven' }
 	maven {
 		name = 'Quilt'
 		url = 'https://maven.quiltmc.org/repository/snapshot'
@@ -126,6 +127,8 @@ dependencies {
 		exclude(group: "net.fabricmc")
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+	modRuntimeOnly "carpet:fabric-carpet:${project.minecraft_version}-${project.carpet_core_version}"
+
 	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}

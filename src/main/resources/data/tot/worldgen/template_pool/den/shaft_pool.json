@@ -1,0 +1,16 @@
+{
+  "name": "tot:den/shaft_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+
+        "location": "tot:den_landing",
+        "processors": "tot:unwaterer",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

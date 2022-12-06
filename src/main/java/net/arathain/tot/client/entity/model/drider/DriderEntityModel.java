@@ -46,7 +46,7 @@ public class DriderEntityModel extends AnimatedGeoModel<DriderEntity> {
         IBone sendHelp = this.getAnimationProcessor().getBone("rightarm");
 
         if (head != null) {
-            head.setRotationX(head.getRotationX() + (MinecraftClient.getInstance().isPaused() ? 0 :(extraData.headPitch * (float) Math.PI / 180F * (QuiltLoader.isModLoaded("iris") && Iris.getIrisConfig().areShadersEnabled() ? 0.5f : 1))));
+            head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
         if (torso != null) {
